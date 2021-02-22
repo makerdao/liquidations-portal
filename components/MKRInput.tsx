@@ -1,16 +1,16 @@
 import { useState, forwardRef } from 'react';
 import { Input, Text, Box } from 'theme-ui';
 
-import { MKR } from '../lib/maker';
+import Bignumber from 'bignumber.js';
 import CurrencyObject from '../types/currency';
 
 type Props = {
   placeholder?: string;
-  onChange: (value: CurrencyObject) => void;
-  min?: CurrencyObject;
-  max?: CurrencyObject;
+  onChange: (value: Bignumber) => void;
+  min?: Bignumber;
+  max?: Bignumber;
   error?: string | false;
-  style?: {} 
+  style?: {};
 };
 
 const MKRInput = forwardRef<HTMLInputElement, Props>(
@@ -23,7 +23,7 @@ const MKRInput = forwardRef<HTMLInputElement, Props>(
 
       /* eslint-disable no-useless-escape */
       if (!/^((0|[1-9]\d*)(\.\d+)?)?$/.test(newValueStr)) return; // only non-negative valid numbers
-      const newValue = MKR(newValueStr || '0');
+      const newValue = new Bignumber(newValueStr || '0');
       const invalidValue = (min && newValue.lt(min)) || (max && newValue.gt(max));
       if (invalidValue) {
         return;
@@ -32,7 +32,7 @@ const MKRInput = forwardRef<HTMLInputElement, Props>(
       onChange(newValue);
       setCurrentValueStr(newValueStr);
     }
-    
+
     return (
       <Box>
         <Input
