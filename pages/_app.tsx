@@ -5,6 +5,7 @@ import { Global } from '@emotion/core';
 
 import '@reach/dialog/styles.css';
 import '@reach/tooltip/styles.css';
+
 import { fetchJson } from '../lib/utils';
 import theme from '../lib/theme';
 import Header from '../components/Header';
