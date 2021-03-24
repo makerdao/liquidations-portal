@@ -11,15 +11,13 @@ import PrimaryLayout from '../components/layouts/Primary';
 import AuctionOverviewCard from '../components/auctions/AuctionOverviewCard';
 import Stack from '../components/layouts/Stack';
 
-type Props = {};
-
 const auctions = [{ id: 998 }];
 
-export default function Auctions({}: Props) {
+export default function Auctions(): JSX.Element {
   return (
     <div>
       <Head>
-        <title>Maker Liquidations Portal - Auctions</title>
+        <title>Maker Liquidation Portal - Auctions</title>
       </Head>
 
       <PrimaryLayout shortenFooter={true} sx={{ maxWidth: [null, null, null, 'page', 'dashboard'] }}>
@@ -35,7 +33,7 @@ export default function Auctions({}: Props) {
         <SidebarLayout sx={{ mt: 4 }}>
           <Stack>
             {auctions.map(auction => (
-              <AuctionOverviewCard auction={auction} />
+              <AuctionOverviewCard key={auction.id} auction={auction} />
             ))}
           </Stack>
           <Stack gap={3}>

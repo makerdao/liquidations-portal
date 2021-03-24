@@ -7,14 +7,13 @@ import { Global } from '@emotion/core';
 import AuctionPreviewCard from '../components/index/AuctionPreviewCard';
 import PrimaryLayout from '../components/layouts/Primary';
 import Stack from '../components/layouts/Stack';
+import SystemStats from '../components/index/SystemStats';
 
-type Props = {};
-
-export default function LandingPage({}: Props) {
+export default function LandingPage(): JSX.Element {
   return (
     <div>
       <Head>
-        <title>Maker liquidations Portal</title>
+        <title>Maker Liquidation Portal</title>
       </Head>
 
       <PrimaryLayout sx={{ maxWidth: 'page' }}>
@@ -42,7 +41,7 @@ export default function LandingPage({}: Props) {
                   </Text>
                   <Flex sx={{ width: ['100%', '85%'], justifyContent: 'center', alignSelf: 'center' }}>
                     <NavLink
-                      href={`/education`}
+                      href={'/education'}
                       sx={{
                         fontSize: 2,
                         px: '3',
@@ -66,6 +65,10 @@ export default function LandingPage({}: Props) {
                 </Stack>
               </Container>
             </Stack>
+          </section>
+
+          <section>
+            <SystemStats />
           </section>
 
           <section>
