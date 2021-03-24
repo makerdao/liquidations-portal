@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Flex, NavLink, Container, Close, Box, IconButton, jsx } from 'theme-ui';
+import { Flex, NavLink, Container, Close, Box, IconButton, Divider, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 
 import { getNetwork } from '../lib/maker';
@@ -34,6 +34,33 @@ const Header = (props): JSX.Element => {
         </IconButton>
       </Link>
       <Flex sx={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Link href={{ pathname: '/auctions', query: { network } }} passHref>
+          <NavLink
+            p={0}
+            sx={{
+              display: ['none', 'block'],
+              ml: [0, 4, 'auto'],
+              color: router?.asPath?.startsWith('/auctions') ? 'primary' : undefined
+            }}
+          >
+            Auctions
+          </NavLink>
+        </Link>
+
+        <Link href={{ pathname: '/education', query: { network } }} passHref>
+          <NavLink
+            p={0}
+            sx={{
+              display: ['none', 'block'],
+              ml: [0, 4, 4, 5],
+              mr: [0, 'auto', 4, 5],
+              color: router?.asPath?.startsWith('/education') ? 'primary' : undefined
+            }}
+          >
+            Education
+          </NavLink>
+        </Link>
+
         <AccountSelect sx={{ ml: ['auto', 3, 0] }} />
 
         <IconButton
@@ -74,6 +101,14 @@ const MobileMenu = ({ hide, network, router }) => {
       >
         <Link href={{ pathname: '/', query: { network } }}>
           <NavLink>Home</NavLink>
+        </Link>
+        <Divider sx={{ width: '100%' }} />
+        <Link href={{ pathname: '/auctions', query: { network } }}>
+          <NavLink>Auctions</NavLink>
+        </Link>
+        <Divider sx={{ width: '100%' }} />
+        <Link href={{ pathname: '/education', query: { network } }}>
+          <NavLink>Education</NavLink>
         </Link>
       </Flex>
     </Container>

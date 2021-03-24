@@ -19,7 +19,6 @@ import { fadeIn, slideUp } from '../../lib/keyframes';
 import AccountBox from './AccountBox';
 import TransactionBox from './TransactionBox';
 import AddressIcon from './AddressIcon';
-import VotingWeight from './VotingWeight';
 import NetworkAlertModal from './NetworkAlertModal';
 import useAccountsStore from '../../stores/accounts';
 
@@ -274,7 +273,6 @@ const AccountSelect = props => {
                     // This needs to be the change function for the wallet select dropdown
                     change={() => setChangeWallet(true)}
                   />
-                  <VotingWeight sx={{ borderBottom: '1px solid secondaryMuted', py: 1 }} />
                   {txs?.length > 0 && <TransactionBox txs={txs} />}
                   <Button
                     variant="primaryOutline"
