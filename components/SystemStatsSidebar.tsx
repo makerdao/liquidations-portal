@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { Card, Flex, Link as ExternalLink, Text, Box, Heading, jsx } from 'theme-ui';
+import { Badge, Card, Flex, Link as ExternalLink, Text, Box, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 import useSWR, { mutate } from 'swr';
 import Skeleton from 'react-loading-skeleton';
@@ -71,19 +71,23 @@ export default function SystemStatsSidebar({ fields = [], ...props }: { fields: 
   return (
     <>
       <Box sx={{ display: ['none', 'block'] }} {...props}>
-        <Flex sx={{ flexDirection: 'row', justifyContent: 'space-between', mb: 2, mt: 4 }}>
-          <Heading as="h3" variant="microHeading">
-            System Info
-          </Heading>
-          <ExternalLink
-            href="https://daistats.com/"
-            target="_blank"
-            sx={{ color: 'accentBlue', fontSize: 3, ':hover': { color: 'blueLinkHover' } }}
-          >
+        <Flex sx={{ justifyContent: 'space-between', mb: 1 }}>
+          <Flex sx={{ alignItems: 'center' }}>
+            <Badge variant="circle" p="3px" mr="3" />
+            <Text sx={{ fontSize: '20px', fontWeight: '500' }}>System Status</Text>
+          </Flex>
+          <ExternalLink href="https://daistats.com/" target="_blank">
             <Flex sx={{ alignItems: 'center' }}>
-              <Text>
-                See more
-                <Icon ml={2} name="arrowTopRight" size={2} />
+              <Text
+                sx={{
+                  color: 'accentBlue',
+                  fontSize: [2, 3],
+                  fontWeight: '500',
+                  ':hover': { color: 'blueLinkHover' }
+                }}
+              >
+                See all
+                <Icon ml={2} name="arrowTopRight" size="2" />
               </Text>
             </Flex>
           </ExternalLink>

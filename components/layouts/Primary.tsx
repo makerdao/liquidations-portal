@@ -17,7 +17,7 @@ const PrimaryLayout = ({
   shortenFooter = false,
   fade = true,
   ...props
-}: React.PropsWithChildren<Props>) => {
+}: React.PropsWithChildren<Props>): JSX.Element => {
   return (
     <Flex
       sx={{
