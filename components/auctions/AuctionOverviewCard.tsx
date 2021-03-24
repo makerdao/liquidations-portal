@@ -13,7 +13,10 @@ import BidModal from './BidModal';
 
 // Remove and replace with data from the plugin
 const mocks = {
-  colAvailable: '9899.78'
+  colAvailable: '9899.78',
+  minBid: '9899.78',
+  maxBid: '120',
+  vatBalance: '9992.00'
 };
 
 type Props = {
@@ -31,8 +34,11 @@ const AuctionOverviewCard = ({ auction, ...props }: Props): JSX.Element => {
       <BidModal
         showDialog={showDialog}
         onDismiss={() => setShowDialog(false)}
-        colAvailable={mocks.colAvailable}
         mobile={bpi === 0}
+        colAvailable={mocks.colAvailable}
+        minBid={mocks.minBid}
+        maxBid={mocks.maxBid}
+        vatBalance={mocks.vatBalance}
       />
 
       <div {...props}>
