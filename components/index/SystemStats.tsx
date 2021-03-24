@@ -1,5 +1,6 @@
 /** @jsx jsx */
-import { Badge, Box, Flex, Text, jsx } from 'theme-ui';
+import { Badge, Box, Link as ExternalLink, Flex, Text, jsx } from 'theme-ui';
+import { Icon } from '@makerdao/dai-ui-icons';
 
 export default function SystemStats(): JSX.Element {
   const mockStats = [
@@ -12,9 +13,26 @@ export default function SystemStats(): JSX.Element {
 
   return (
     <Box>
-      <Flex sx={{ alignItems: 'center' }}>
-        <Badge variant="circle" p="3px" mr="3" />
-        <Text sx={{ fontSize: '20px', fontWeight: '500' }}>System Status</Text>
+      <Flex sx={{ justifyContent: 'space-between' }}>
+        <Flex sx={{ alignItems: 'center' }}>
+          <Badge variant="circle" p="3px" mr="3" />
+          <Text sx={{ fontSize: '20px', fontWeight: '500' }}>System Status</Text>
+        </Flex>
+        <ExternalLink href="https://daistats.com/" target="_blank">
+          <Flex sx={{ alignItems: 'center' }}>
+            <Text
+              sx={{
+                color: 'accentBlue',
+                fontSize: [2, 3],
+                fontWeight: '500',
+                ':hover': { color: 'blueLinkHover' }
+              }}
+            >
+              View more stats
+              <Icon ml={2} name="arrowTopRight" size="2" />
+            </Text>
+          </Flex>
+        </ExternalLink>
       </Flex>
       <Flex sx={{ justifyContent: 'space-between', px: 4, py: 4 }}>
         {mockStats.map(stat => (
