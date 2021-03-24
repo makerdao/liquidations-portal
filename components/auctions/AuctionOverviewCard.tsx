@@ -9,6 +9,12 @@ import { fadeIn, slideUp } from '../../lib/keyframes';
 import { getNetwork } from '../../lib/maker';
 import CountdownTimer from '../CountdownTimer';
 import Auction from '../../types/auction';
+import BidModal from './BidModal';
+
+// Remove and replace with data from the plugin
+const mocks = {
+  colAvailable: '9899.78'
+};
 
 type Props = {
   auction: Auction;
@@ -22,18 +28,12 @@ const AuctionOverviewCard = ({ auction, ...props }: Props): JSX.Element => {
 
   return (
     <>
-      <DialogOverlay isOpen={showDialog} onDismiss={() => setShowDialog(false)}>
-        <DialogContent
-          aria-label="Place a bid"
-          sx={
-            bpi === 0
-              ? { variant: 'dialog.mobile', animation: `${slideUp} 350ms ease` }
-              : { variant: 'dialog.desktop', animation: `${fadeIn} 350ms ease`, width: '450px' }
-          }
-        >
-          <Text as="h2">Unlock DAI to Bid</Text>
-        </DialogContent>
-      </DialogOverlay>
+      <BidModal
+        showDialog={showDialog}
+        onDismiss={() => setShowDialog(false)}
+        colAvailable={mocks.colAvailable}
+        mobile={bpi === 0}
+      />
 
       <div {...props}>
         <Grid sx={{ variant: 'cards.primary', p: 0 }} columns="1fr 1fr 1fr 1fr">
