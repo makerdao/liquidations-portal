@@ -1,15 +1,55 @@
 /** @jsx jsx */
+import useSWR from 'swr';
 import { Badge, Box, Grid, Link as ExternalLink, Flex, Text, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 
+async function getSystemStats(): Promise<string[]> {
+  // update this section once dai.js plugin is updated
+
+  // const maker = await getMaker();
+  // return Promise.all([
+  //   maker.service('mcd:savings').getYearlyRate(),
+  //   maker.service('mcd:systemData').getTotalDai()
+  // ]);
+
+  // for now return whatever data
+  return Promise.all([
+    Promise.resolve('15'),
+    Promise.resolve('3'),
+    Promise.resolve('10'),
+    Promise.resolve('1478'),
+    Promise.resolve('9999')
+  ]);
+}
+
 export default function SystemStats(): JSX.Element {
-  const mockStats = [
-    { title: 'Number of undercollateralized vaults', value: '15' },
-    { title: 'Active auctions', value: '3' },
-    { title: 'Inactive Auctions', value: '10' },
-    { title: 'Dai required for auctions', value: '1478' },
-    { title: 'Limit per collateral type (hole)', value: '9999 DAI' }
+  const { data, error } = useSWR<string[]>('/system-stats-landing', getSystemStats);
+
+  const fieldMap = [
+    'Number of undercollateralized vaults',
+    'Active auctions',
+    'Inactive Auctions',
+    'Dai required for auctions',
+    'Limit per collateral type (hole)'
   ];
+
+  const statData = fieldMap.map((stat, i) => {
+    return { title: stat, value: data ? data[i] : '' };
+  });
+
+  if (error) {
+    return (
+      <Flex sx={{ alignItems: 'center' }}>
+        <Flex sx={{ alignItems: 'center' }}>
+          <Badge variant="circle" p="3px" mr="3" bg="warning" />
+          <Text sx={{ fontSize: '20px', fontWeight: '500' }}>System Status</Text>
+        </Flex>
+        <Text sx={{ fontSize: 3, color: 'textSecondary', ml: 3 }}>
+          {"We're unable to fetch system data at this time"}
+        </Text>
+      </Flex>
+    );
+  }
 
   return (
     <>
@@ -37,7 +77,7 @@ export default function SystemStats(): JSX.Element {
           </ExternalLink>
         </Flex>
         <Flex sx={{ justifyContent: 'space-between', p: 4 }}>
-          {mockStats.map(stat => (
+          {statData.map(stat => (
             <Flex key={stat.title} sx={{ flexDirection: 'column', maxWidth: '11rem' }}>
               <Text sx={{ fontSize: 3, color: 'textSecondary', height: '72px' }}>{stat.title}</Text>
               <Text sx={{ fontSize: 6, mt: 1 }}>{stat.value}</Text>
@@ -60,7 +100,7 @@ export default function SystemStats(): JSX.Element {
               </Flex>
             </ExternalLink>
           </Flex>
-          {mockStats.map(stat => (
+          {statData.map(stat => (
             <Flex key={stat.title} sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text sx={{ fontSize: 2, color: 'textSecondary' }}>{stat.title}</Text>
               <Text sx={{ fontSize: 2 }}>{stat.value}</Text>
