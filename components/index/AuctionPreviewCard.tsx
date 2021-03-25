@@ -7,7 +7,7 @@ type Props = {
   auction?: Auction;
 };
 
-export default function AuctionPreviewCard({ auction, ...otherProps }: Props) {
+export default function AuctionPreviewCard({ auction, ...otherProps }: Props): JSX.Element {
   return (
     <ExternalLink
       target="_blank"

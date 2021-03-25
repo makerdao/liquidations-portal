@@ -19,7 +19,7 @@ import mixpanel from 'mixpanel-browser';
 
 export const reportWebVitals = vitalslog;
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   const dev = process.env.NODE_ENV === 'development';
   const router = useRouter();
   useEffect(() => {
