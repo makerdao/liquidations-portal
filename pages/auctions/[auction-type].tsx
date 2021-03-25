@@ -3,17 +3,19 @@ import Head from 'next/head';
 import { Heading, Text, Box, Flex, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 import { Global } from '@emotion/core';
-
-import SystemStatsSidebar from '../components/SystemStatsSidebar';
-import ResourceBox from '../components/ResourceBox';
-import SidebarLayout from '../components/layouts/Sidebar';
-import PrimaryLayout from '../components/layouts/Primary';
-import AuctionOverviewCard from '../components/auctions/AuctionOverviewCard';
-import Stack from '../components/layouts/Stack';
+import { useRouter } from 'next/router';
+import SystemStatsSidebar from '../../components/SystemStatsSidebar';
+import ResourceBox from '../../components/ResourceBox';
+import SidebarLayout from '../../components/layouts/Sidebar';
+import PrimaryLayout from '../../components/layouts/Primary';
+import AuctionOverviewCard from '../../components/auctions/AuctionOverviewCard';
+import Stack from '../../components/layouts/Stack';
 
 const auctions = [{ id: 998 }];
 
 export default function Auctions(): JSX.Element {
+  const router = useRouter();
+  const type = router.query['auction-type']?.toString();
   return (
     <div>
       <Head>
@@ -23,7 +25,9 @@ export default function Auctions(): JSX.Element {
       <PrimaryLayout shortenFooter={true} sx={{ maxWidth: [null, null, null, 'page', 'dashboard'] }}>
         <Stack gap={2}>
           <Box>
-            <Heading as="h2">Active Auctions</Heading>
+            <Heading as="h2">{`Active Auctions - ${
+              type ? type.charAt(0).toUpperCase() + type.slice(1) : ''
+            }`}</Heading>
           </Box>
           <Flex sx={{ alignItems: 'center' }} onClick={console.log}>
             <Icon name="edit" size={3} mr={1} sx={{ color: 'primary' }} />

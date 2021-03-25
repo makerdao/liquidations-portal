@@ -24,6 +24,7 @@
     "@makerdao/i18n-helper": "^0.1.8",
     "@metamask/jazzicon": "^2.0.0",
     "@reach/dialog": "^0.10.5",
+    "@reach/menu-button": "^0.13.2",
     "@reach/tooltip": "^0.10.3",
     "@theme-ui/match-media": "^0.3.1",
     "@types/theme-ui": "^0.3.2",

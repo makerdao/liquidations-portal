@@ -1,14 +1,16 @@
 /** @jsx jsx */
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Flex, NavLink, Container, Close, Box, IconButton, Divider, jsx } from 'theme-ui';
+import { Flex, NavLink, Container, Close, Box, IconButton, Divider, jsx, Text } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 
 import { getNetwork } from '../lib/maker';
 import AccountSelect from './header/AccountSelect';
 import { useState, useEffect } from 'react';
-
-const Header = (props): JSX.Element => {
+import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button';
+// name.charAt(0).toUpperCase() + name.slice(1)
+const COLLATERAL_TYPES = ['link', 'eth'];
+const Header = (props: any): JSX.Element => {
   const network = getNetwork();
   const router = useRouter();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -34,18 +36,43 @@ const Header = (props): JSX.Element => {
         </IconButton>
       </Link>
       <Flex sx={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Link href={{ pathname: '/auctions', query: { network } }} passHref>
-          <NavLink
-            p={0}
-            sx={{
-              display: ['none', 'block'],
-              ml: [0, 4, 'auto'],
-              color: router?.asPath?.startsWith('/auctions') ? 'primary' : undefined
+        {/* <Link href={{ pathname: '/auctions', query: { network } }} passHref> */}
+        <Menu>
+          <MenuButton
+            style={{
+              borderWidth: 0,
+              backgroundColor: 'inherit'
             }}
           >
-            Auctions
-          </NavLink>
-        </Link>
+            <Text
+              p={2}
+              sx={{
+                fontSize: 3,
+                display: ['none', 'block'],
+                ml: [0, 4, 'auto'],
+                color: router?.asPath?.startsWith('/auctions') ? 'primary' : undefined
+              }}
+            >
+              Auctions
+            </Text>
+            <MenuList
+              style={{
+                padding: '32px',
+                paddingTop: '16px',
+                paddingLeft: '16px'
+              }}
+            >
+              {COLLATERAL_TYPES.map((type, index) => {
+                return (
+                  <MenuItem key={index} onSelect={() => router.push(`/auctions/${type}`)}>
+                    <Text py={2}>{type.charAt(0).toUpperCase() + type.slice(1)}</Text>
+                  </MenuItem>
+                );
+              })}
+            </MenuList>
+          </MenuButton>
+        </Menu>
+        {/* </Link> */}
 
         <Link href={{ pathname: '/education', query: { network } }} passHref>
           <NavLink
@@ -106,6 +133,16 @@ const MobileMenu = ({ hide, network, router }) => {
         <Link href={{ pathname: '/auctions', query: { network } }}>
           <NavLink>Auctions</NavLink>
         </Link>
+        {COLLATERAL_TYPES.map((type, index) => {
+          return (
+            <>
+              <Divider sx={{ width: '100%' }} />
+              <Link href={{ pathname: `/auctions/${type}`, query: { network } }}>
+                <NavLink> - {type.charAt(0).toUpperCase() + type.slice(1)}</NavLink>
+              </Link>
+            </>
+          );
+        })}
         <Divider sx={{ width: '100%' }} />
         <Link href={{ pathname: '/education', query: { network } }}>
           <NavLink>Education</NavLink>
