@@ -88,7 +88,7 @@ export default function SystemStats(): JSX.Element {
               {stat.value ? (
                 <Text sx={{ fontSize: 6, mt: 1 }}>{stat.value}</Text>
               ) : (
-                <Box sx={{ mt: 3, width: 6 }}>
+                <Box sx={{ mt: 3, width: 5 }}>
                   <Skeleton />
                 </Box>
               )}
