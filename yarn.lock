@@ -967,15 +967,15 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-ui-icons-branding@^0.0.39":
-  version "0.0.39"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-ui-icons-branding/-/dai-ui-icons-branding-0.0.39.tgz#c4826db284b40f3c3536fac4f5ebf9544f0eccd1"
-  integrity sha512-DA8qaFLpRL81wnfwUhuDSYMfTcGJdFC7GdKohQoHoZvhBa0H4mJz8R0R+/M0Jtt5kjxf6D/2Bx8NOfXEAWkYCg==
+"@makerdao/dai-ui-icons-branding@^0.0.66":
+  version "0.0.66"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-ui-icons-branding/-/dai-ui-icons-branding-0.0.66.tgz#e895b8fddb1162e97dc67222f6389d6f07fdd401"
+  integrity sha512-6qGxA6QaKamT15btGNJRcHBphXMH2mfl+TchmRRvAstQI0YvNL8uaMVEpOMiNtnZxRyaQHect4XF8ZOEPG1C6Q==
 
-"@makerdao/dai-ui-icons@^0.0.39":
-  version "0.0.39"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-ui-icons/-/dai-ui-icons-0.0.39.tgz#744174a186e4528f365e3482fbf22ae52b0177c1"
-  integrity sha512-pKT+AYwH5ZFSu992tzHdK7PxlP7cMlFm0+sqPA6WBtVxp1fH19clOPc7AaGO7Rj6mtA5gu3kZPy1qJlRSvzC3w==
+"@makerdao/dai-ui-icons@^0.0.66":
+  version "0.0.66"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-ui-icons/-/dai-ui-icons-0.0.66.tgz#eb66311441f68fd2f55bc5488dfaaac032c9bd9f"
+  integrity sha512-PWI6BmfxdT5/GnqNL9cA3J9UXZpvZ9+jexLnHj1IGgxgai3CKbolYFjcX29xs0e8KaDxeVnnA5IWrAr/zoP22Q==
 
 "@makerdao/dai-ui-theme-maker-neue@^0.0.47":
   version "0.0.47"

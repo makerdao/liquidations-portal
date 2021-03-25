@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import useSWR from 'swr';
-import { Button, Flex, Text, Image, jsx, Input, Heading, Divider } from 'theme-ui';
-import { Icon } from '@makerdao/dai-ui-icons';
+import { Button, Flex, Text, jsx, Input, Heading, Divider } from 'theme-ui';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 
+import LogoBanner from './LogoBanner';
 import { fadeIn, slideUp } from '../../lib/keyframes';
 import getMaker from '../../lib/maker';
 import Auction from '../../types/auction';
@@ -35,7 +35,7 @@ const BidModal = ({ showDialog, onDismiss, mobile, auction, vatBalance }: Props)
       >
         <Flex sx={{ flexDirection: 'column' }}>
           <Heading>Place a Bid</Heading>
-          <Image variant="bannerSmall" src={'/assets/link-banner-texture.png'} />
+          <LogoBanner name={name} icon="chainlink" />
           <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', my: 2 }}>
             <Text sx={{ fontWeight: 'bold' }}>Collateral Available</Text>
             <Heading variant="mediumHeading">
