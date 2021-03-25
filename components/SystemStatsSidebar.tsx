@@ -32,23 +32,23 @@ async function getSystemStats(): Promise<string[]> {
 // if we are on the browser, trigger a prefetch as soon as possible
 if (typeof window !== 'undefined') {
   getSystemStats().then(stats => {
-    mutate('/system-stats', stats, false);
+    mutate('/system-stats-sidebar', stats, false);
   });
 }
 
 export default function SystemStatsSidebar(): JSX.Element {
-  const { data, error } = useSWR<string[]>('/system-stats-landing', getSystemStats);
+  const { data, error } = useSWR<string[]>('/system-stats-sidebar', getSystemStats);
 
   const fieldMap = [
-    'Undercollateralized Vaults',
-    'Active Auctions',
-    'Inactive Auctions',
-    'Dai required for Auctions',
-    'Limit per collateral available'
+    { title: 'Undercollateralized Vaults', format: val => val },
+    { title: 'Active Auctions', format: val => val },
+    { title: 'Inactive Auctions', format: val => val },
+    { title: 'Dai required for Auctions', format: val => val },
+    { title: 'Limit per collateral available', format: val => val }
   ];
 
   const statData = fieldMap.map((stat, i) => {
-    return { title: stat, value: data ? data[i] : '' };
+    return { title: stat.title, value: data ? stat.format(data[i]) : null };
   });
 
   if (error) {

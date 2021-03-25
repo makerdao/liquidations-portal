@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import { Badge, Box, Grid, Link as ExternalLink, Flex, Text, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 import Skeleton from 'react-loading-skeleton';
@@ -27,19 +27,27 @@ async function getSystemStats(): Promise<string[]> {
   ]);
 }
 
+// if we are on the browser, trigger a prefetch as soon as possible
+if (typeof window !== 'undefined') {
+  getSystemStats().then(stats => {
+    mutate('/system-stats-landing', stats, false);
+  });
+}
+
 export default function SystemStats(): JSX.Element {
   const { data, error } = useSWR<string[]>('/system-stats-landing', getSystemStats);
 
+  // format property can be used to specify how to format data the particular value
   const fieldMap = [
-    'Undercollateralized Vaults requiring Kicking',
-    'Active Auctions',
-    'Inactive Auctions',
-    'Dai required for Auctions',
-    'Global Max'
+    { title: 'Undercollateralized Vaults requiring Kicking', format: val => val },
+    { title: 'Active Auctions', format: val => val },
+    { title: 'Inactive Auctions', format: val => val },
+    { title: 'Dai required for Auctions', format: val => val },
+    { title: 'Global Max', format: val => val }
   ];
 
   const statData = fieldMap.map((stat, i) => {
-    return { title: stat, value: data ? data[i] : '' };
+    return { title: stat.title, value: data ? stat.format(data[i]) : null };
   });
 
   if (error) {
