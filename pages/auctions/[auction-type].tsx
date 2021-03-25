@@ -18,7 +18,7 @@ export default function Auctions(): JSX.Element {
   const router = useRouter();
   const type = router.query['auction-type']?.toString();
   // UPDATE TO PULL THE RIGHT AUCTIONS
-  const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
+  const { data: auctions } = useSWR(`/auctions/fetch-${type}`, () => getMaker().then(fetchAuctions));
   return (
     <div>
       <Head>
@@ -28,9 +28,7 @@ export default function Auctions(): JSX.Element {
       <PrimaryLayout shortenFooter={true} sx={{ maxWidth: [null, null, null, 'page', 'dashboard'] }}>
         <Stack gap={2}>
           <Box>
-            <Heading as="h2">{`Active Auctions - ${
-              type ? type.charAt(0).toUpperCase() + type.slice(1) : ''
-            }`}</Heading>
+            <Heading as="h2">{`Active Auctions - ${type?.toUpperCase()}`}</Heading>
           </Box>
           <Flex sx={{ alignItems: 'center' }} onClick={console.log}>
             <Icon name="edit" size={3} mr={1} sx={{ color: 'primary' }} />
@@ -39,9 +37,12 @@ export default function Auctions(): JSX.Element {
         </Stack>
         <SidebarLayout sx={{ mt: 4 }}>
           <Stack>
-            {auctions?.map(auction => (
-              <AuctionOverviewCard key={auction.id} auction={auction} />
-            ))}
+            {auctions?.map(
+              auction =>
+                auction.name === type?.toUpperCase() && (
+                  <AuctionOverviewCard key={auction.id} auction={auction} />
+                )
+            )}
           </Stack>
           <Stack gap={3}>
             <SystemStatsSidebar />

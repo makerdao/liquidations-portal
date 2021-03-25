@@ -9,7 +9,7 @@ import AccountSelect from './header/AccountSelect';
 import { useState, useEffect } from 'react';
 import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button';
 // name.charAt(0).toUpperCase() + name.slice(1)
-const COLLATERAL_TYPES = ['link', 'eth'];
+const COLLATERAL_TYPES = ['link', 'yfi'];
 const Header = (props: any): JSX.Element => {
   const network = getNetwork();
   const router = useRouter();
@@ -65,7 +65,7 @@ const Header = (props: any): JSX.Element => {
               {COLLATERAL_TYPES.map((type, index) => {
                 return (
                   <MenuItem key={index} onSelect={() => router.push(`/auctions/${type}`)}>
-                    <Text py={2}>{type.charAt(0).toUpperCase() + type.slice(1)}</Text>
+                    <Text py={2}>{type.toUpperCase()}</Text>
                   </MenuItem>
                 );
               })}
@@ -138,7 +138,7 @@ const MobileMenu = ({ hide, network, router }) => {
             <>
               <Divider sx={{ width: '100%' }} />
               <Link href={{ pathname: `/auctions/${type}`, query: { network } }}>
-                <NavLink> - {type.charAt(0).toUpperCase() + type.slice(1)}</NavLink>
+                <NavLink> - {type.toUpperCase()}</NavLink>
               </Link>
             </>
           );
