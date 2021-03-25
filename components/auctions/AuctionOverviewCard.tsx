@@ -14,7 +14,7 @@ import BidModal from './BidModal';
 // Remove and replace with data from the plugin
 const mocks = {
   colAvailable: '9899.78',
-  minBid: '9899.78',
+  dustLimit: '9899.78',
   maxBid: '120',
   vatBalance: '9992.00'
 };
@@ -29,7 +29,7 @@ const AuctionOverviewCard = ({ auction, ...props }: Props): JSX.Element => {
   const network = getNetwork();
   const bpi = useBreakpointIndex();
 
-  const { name, initialCollateral, urn, collateralAvailable, daiNeeded, minBid, maxBid } = auction;
+  const { name, initialCollateral, urn, collateralAvailable, daiNeeded, dustLimit, maxBid } = auction;
 
   return (
     <>
@@ -91,8 +91,8 @@ const AuctionOverviewCard = ({ auction, ...props }: Props): JSX.Element => {
             <Button onClick={() => setShowDialog(true)}>Place a bid</Button>
             <Flex sx={{ justifyContent: 'space-between' }}>
               <Flex sx={{ flexDirection: 'column' }}>
-                <Text sx={{ color: 'textSecondary' }}>Min bid</Text>
-                <Text>{minBid} Dai</Text>
+                <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
+                <Text>{dustLimit} Dai</Text>
               </Flex>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Max bid</Text>

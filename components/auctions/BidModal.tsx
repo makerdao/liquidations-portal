@@ -21,7 +21,7 @@ const BidModal = ({ showDialog, onDismiss, mobile, auction, vatBalance }: Props)
     getMaker().then(maker => maker.getToken('DAI').balance())
   );
 
-  const { name, collateralAvailable, minBid, maxBid } = auction;
+  const { name, collateralAvailable, dustLimit, maxBid } = auction;
 
   return (
     <DialogOverlay isOpen={showDialog} onDismiss={onDismiss}>
@@ -60,8 +60,8 @@ const BidModal = ({ showDialog, onDismiss, mobile, auction, vatBalance }: Props)
             <Input placeholder="0.0"></Input>
             <Flex sx={{ justifyContent: 'space-between', my: 2, px: 2 }}>
               <Flex sx={{ flexDirection: 'column' }}>
-                <Text sx={{ color: 'textSecondary' }}>Min bid</Text>
-                <Text>{minBid} Dai</Text>
+                <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
+                <Text>{dustLimit} Dai</Text>
               </Flex>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Max bid</Text>

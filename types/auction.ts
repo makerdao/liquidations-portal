@@ -5,7 +5,7 @@ type Auction = {
   urn: string;
   collateralAvailable: string;
   daiNeeded: string;
-  minBid: string;
+  dustLimit: string;
   maxBid: string;
 };
 

@@ -20,7 +20,7 @@ const mockAuctions: Auction[] = [
     urn: '0x123',
     collateralAvailable: '3000',
     daiNeeded: '4000',
-    minBid: '111',
+    dustLimit: '111',
     maxBid: '999'
   },
   {
@@ -30,7 +30,7 @@ const mockAuctions: Auction[] = [
     urn: '0x345',
     collateralAvailable: '1000',
     daiNeeded: '6000',
-    minBid: '222',
+    dustLimit: '222',
     maxBid: '888'
   }
 ];
