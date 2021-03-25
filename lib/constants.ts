@@ -10,3 +10,8 @@ export const ETHERSCAN_PREFIXES = {
   [SupportedNetworks.MAINNET]: '',
   [SupportedNetworks.KOVAN]: 'kovan.'
 };
+
+export const COLLATERAL_LOGOS = {
+  link: 'chainlink',
+  yfi: 'yfi'
+};

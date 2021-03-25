@@ -2,10 +2,8 @@
 import { useState } from 'react';
 import { Button, Text, Flex, Grid, jsx } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import { DialogOverlay, DialogContent } from '@reach/dialog';
 
 import Stack from '../layouts/Stack';
-import { fadeIn, slideUp } from '../../lib/keyframes';
 import { getNetwork } from '../../lib/maker';
 import CountdownTimer from '../CountdownTimer';
 import Auction from '../../types/auction';
@@ -49,24 +47,12 @@ const AuctionOverviewCard = ({ auction, ...props }: Props): JSX.Element => {
               <Text sx={{ fontWeight: 'semiBold', fontSize: 3 }}>Auction ID {auction.id}</Text>
             </Flex>
             <CountdownTimer endText="Poll ended" endDate={'1617115343902'} />
-            {/* <Text
-              variant="caps"
-              sx={{
-                color: 'textSecondary'
-              }}
-            >
-              <Text>Auction ID {auction.id}</Text>
-              {/* {new Date(poll.startDate).toLocaleString('default', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric'
-              })} */}
           </Stack>
           <Stack gap={4}>
             <Flex sx={{ flexDirection: 'column', color: 'textSecondary' }}>
               <Text sx={{ color: 'textSecondary' }}>Initial Collateral</Text>
               <Text>
-                {initialCollateral} {name}
+                {initialCollateral} {name.toUpperCase()}
               </Text>
             </Flex>
             <Flex sx={{ flexDirection: 'column' }}>
@@ -79,11 +65,11 @@ const AuctionOverviewCard = ({ auction, ...props }: Props): JSX.Element => {
             <Flex sx={{ flexDirection: 'column' }}>
               <Text sx={{ color: 'textSecondary' }}>Collateral Available</Text>
               <Text>
-                {collateralAvailable} {name}
+                {collateralAvailable} {name.toUpperCase()}
               </Text>
             </Flex>
             <Flex sx={{ flexDirection: 'column' }}>
-              <Text sx={{ color: 'textSecondary' }}>Dai to raise</Text>
+              <Text sx={{ color: 'textSecondary' }}>DAI to raise</Text>
               <Text>{daiNeeded} DAI</Text>
             </Flex>
           </Stack>
@@ -92,11 +78,11 @@ const AuctionOverviewCard = ({ auction, ...props }: Props): JSX.Element => {
             <Flex sx={{ justifyContent: 'space-between' }}>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
-                <Text>{dustLimit} Dai</Text>
+                <Text>{dustLimit} DAI</Text>
               </Flex>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Max bid</Text>
-                <Text>{maxBid} Dai</Text>
+                <Text>{maxBid} DAI</Text>
               </Flex>
             </Flex>
           </Flex>

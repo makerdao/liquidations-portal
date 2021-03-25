@@ -7,6 +7,7 @@ import LogoBanner from './LogoBanner';
 import { fadeIn, slideUp } from '../../lib/keyframes';
 import getMaker from '../../lib/maker';
 import Auction from '../../types/auction';
+import { COLLATERAL_LOGOS } from '../../lib/constants';
 
 type Props = {
   showDialog: boolean;
@@ -35,7 +36,7 @@ const BidModal = ({ showDialog, onDismiss, mobile, auction, vatBalance }: Props)
       >
         <Flex sx={{ flexDirection: 'column' }}>
           <Heading>Place a Bid</Heading>
-          <LogoBanner name={name} icon="chainlink" />
+          <LogoBanner name={name} icon={COLLATERAL_LOGOS[name]} />
           <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', my: 2 }}>
             <Text sx={{ fontWeight: 'bold' }}>Collateral Available</Text>
             <Heading variant="mediumHeading">

@@ -38,10 +38,7 @@ export default function Auctions(): JSX.Element {
         <SidebarLayout sx={{ mt: 4 }}>
           <Stack>
             {auctions?.map(
-              auction =>
-                auction.name === type?.toUpperCase() && (
-                  <AuctionOverviewCard key={auction.id} auction={auction} />
-                )
+              auction => auction.name === type && <AuctionOverviewCard key={auction.id} auction={auction} />
             )}
           </Stack>
           <Stack gap={3}>

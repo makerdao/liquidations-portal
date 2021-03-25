@@ -15,7 +15,7 @@ import getMaker from '../lib/maker';
 const mockAuctions: Auction[] = [
   {
     id: 123,
-    name: 'LINK',
+    name: 'link',
     initialCollateral: '8000',
     urn: '0x123',
     collateralAvailable: '3000',
@@ -25,7 +25,7 @@ const mockAuctions: Auction[] = [
   },
   {
     id: 234,
-    name: 'YFI',
+    name: 'yfi',
     initialCollateral: '4000',
     urn: '0x345',
     collateralAvailable: '1000',

@@ -10,7 +10,7 @@ type Props = {
 const LogoBanner = ({ name, icon }: Props): JSX.Element => {
   return (
     <Flex sx={{ position: 'relative', display: 'inline-block' }}>
-      <Image variant="bannerSmall" src={'/assets/link-banner-texture.png'} />
+      <Image variant="bannerSmall" src={`/assets/${name}-banner-texture.png`} />
       <Flex
         sx={{
           justifyContent: 'center',
@@ -29,7 +29,7 @@ const LogoBanner = ({ name, icon }: Props): JSX.Element => {
             fontSize: 8
           }}
         >
-          {name}
+          {name.toUpperCase()}
         </Text>
       </Flex>
     </Flex>
