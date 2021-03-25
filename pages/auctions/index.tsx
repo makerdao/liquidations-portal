@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import Head from 'next/head';
+import useSWR from 'swr';
 import { Heading, Text, Box, Flex, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 import { Global } from '@emotion/core';
@@ -10,10 +11,11 @@ import SidebarLayout from '../../components/layouts/Sidebar';
 import PrimaryLayout from '../../components/layouts/Primary';
 import AuctionOverviewCard from '../../components/auctions/AuctionOverviewCard';
 import Stack from '../../components/layouts/Stack';
-
-const auctions = [{ id: 998 }];
+import getMaker from '../../lib/maker';
+import { fetchAuctions } from '../index'; //todo move to lib/api
 
 export default function Auctions(): JSX.Element {
+  const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
   return (
     <div>
       <Head>
@@ -32,7 +34,7 @@ export default function Auctions(): JSX.Element {
         </Stack>
         <SidebarLayout sx={{ mt: 4 }}>
           <Stack>
-            {auctions.map(auction => (
+            {auctions?.map(auction => (
               <AuctionOverviewCard key={auction.id} auction={auction} />
             ))}
           </Stack>

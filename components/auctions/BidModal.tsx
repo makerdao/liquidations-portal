@@ -6,29 +6,22 @@ import { DialogOverlay, DialogContent } from '@reach/dialog';
 
 import { fadeIn, slideUp } from '../../lib/keyframes';
 import getMaker from '../../lib/maker';
+import Auction from '../../types/auction';
 
 type Props = {
   showDialog: boolean;
   onDismiss: () => void;
   mobile: boolean;
-  colAvailable: string;
-  minBid: string;
-  maxBid: string;
+  auction: Auction;
   vatBalance: string;
 };
 
-const BidModal = ({
-  showDialog,
-  onDismiss,
-  mobile,
-  colAvailable,
-  minBid,
-  maxBid,
-  vatBalance
-}: Props): JSX.Element => {
+const BidModal = ({ showDialog, onDismiss, mobile, auction, vatBalance }: Props): JSX.Element => {
   const { data: daiBalance } = useSWR('/balances/dai', () =>
     getMaker().then(maker => maker.getToken('DAI').balance())
   );
+
+  const { name, collateralAvailable, minBid, maxBid } = auction;
 
   return (
     <DialogOverlay isOpen={showDialog} onDismiss={onDismiss}>
@@ -45,7 +38,9 @@ const BidModal = ({
           <Image variant="bannerSmall" src={'/assets/link-banner-texture.png'} />
           <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', my: 2 }}>
             <Text sx={{ fontWeight: 'bold' }}>Collateral Available</Text>
-            <Heading variant="mediumHeading">{colAvailable}</Heading>
+            <Heading variant="mediumHeading">
+              {collateralAvailable} {name}
+            </Heading>
           </Flex>
           <Divider />
           <Flex sx={{ justifyContent: 'space-between', my: 2 }}>
@@ -79,7 +74,7 @@ const BidModal = ({
             <Flex sx={{ flexDirection: 'column' }}>
               <Text sx={{ fontWeight: 'bold' }}>Amount of Collateral</Text>
               <Text variant="caps" sx={{ fontWeight: 'body', fontSize: 5, color: 'text', pl: 2 }}>
-                0.00 LINK
+                0.00 {name}
               </Text>
             </Flex>
             <Text sx={{ color: 'textSecondary', pr: 2 }}>≈ $0.00</Text>
