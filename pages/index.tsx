@@ -1,15 +1,46 @@
 /** @jsx jsx */
 import Head from 'next/head';
+import useSWR from 'swr';
 import { Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 import { Global } from '@emotion/core';
 
+import Auction from '../types/auction';
 import AuctionPreviewCard from '../components/index/AuctionPreviewCard';
 import PrimaryLayout from '../components/layouts/Primary';
 import Stack from '../components/layouts/Stack';
 import SystemStats from '../components/index/SystemStats';
+import getMaker from '../lib/maker';
+
+const mockAuctions: Auction[] = [
+  {
+    id: 123,
+    name: 'LINK',
+    initialCollateral: '8000',
+    urn: '0x123',
+    collateralAvailable: '3000',
+    daiNeeded: '4000',
+    minBid: '111',
+    maxBid: '999'
+  },
+  {
+    id: 234,
+    name: 'YFI',
+    initialCollateral: '4000',
+    urn: '0x345',
+    collateralAvailable: '1000',
+    daiNeeded: '6000',
+    minBid: '222',
+    maxBid: '888'
+  }
+];
+
+export async function fetchAuctions(): Promise<Auction[]> {
+  return Promise.resolve(mockAuctions);
+}
 
 export default function LandingPage(): JSX.Element {
+  const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
   return (
     <div>
       <Head>
@@ -75,8 +106,9 @@ export default function LandingPage(): JSX.Element {
             <Stack>
               <Heading as="h2">Active Auctions</Heading>
               <Grid gap={4} columns={[1, 3]}>
-                <AuctionPreviewCard />
-                <AuctionPreviewCard />
+                {auctions?.map(auction => (
+                  <AuctionPreviewCard key={auction.id} auction={auction} />
+                ))}
               </Grid>
             </Stack>
           </section>
