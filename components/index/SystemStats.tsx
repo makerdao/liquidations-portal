@@ -2,6 +2,9 @@
 import useSWR from 'swr';
 import { Badge, Box, Grid, Link as ExternalLink, Flex, Text, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
+import Skeleton from 'react-loading-skeleton';
+
+import Stack from '../layouts/Stack';
 
 async function getSystemStats(): Promise<string[]> {
   // update this section once dai.js plugin is updated
@@ -18,7 +21,9 @@ async function getSystemStats(): Promise<string[]> {
     Promise.resolve('3'),
     Promise.resolve('10'),
     Promise.resolve('1478'),
-    Promise.resolve('9999')
+    new Promise(resolve => {
+      setTimeout(resolve, 3000, '9999');
+    })
   ]);
 }
 
@@ -26,11 +31,11 @@ export default function SystemStats(): JSX.Element {
   const { data, error } = useSWR<string[]>('/system-stats-landing', getSystemStats);
 
   const fieldMap = [
-    'Number of undercollateralized vaults',
-    'Active auctions',
+    'Undercollateralized Vaults requiring Kicking',
+    'Active Auctions',
     'Inactive Auctions',
-    'Dai required for auctions',
-    'Limit per collateral type (hole)'
+    'Dai required for Auctions',
+    'Global Max'
   ];
 
   const statData = fieldMap.map((stat, i) => {
@@ -41,11 +46,11 @@ export default function SystemStats(): JSX.Element {
     return (
       <Flex sx={{ alignItems: 'center' }}>
         <Flex sx={{ alignItems: 'center' }}>
-          <Badge variant="circle" p="3px" mr="3" bg="warning" />
+          <Badge variant="circle" p="3px" mr="3" bg="error" />
           <Text sx={{ fontSize: '20px', fontWeight: '500' }}>System Status</Text>
         </Flex>
         <Text sx={{ fontSize: 3, color: 'textSecondary', ml: 3 }}>
-          {"We're unable to fetch system data at this time"}
+          {'Unable to fetch system data at this time'}
         </Text>
       </Flex>
     );
@@ -79,8 +84,14 @@ export default function SystemStats(): JSX.Element {
         <Flex sx={{ justifyContent: 'space-between', p: 4 }}>
           {statData.map(stat => (
             <Flex key={stat.title} sx={{ flexDirection: 'column', maxWidth: '11rem' }}>
-              <Text sx={{ fontSize: 3, color: 'textSecondary', height: '72px' }}>{stat.title}</Text>
-              <Text sx={{ fontSize: 6, mt: 1 }}>{stat.value}</Text>
+              <Text sx={{ fontSize: 3, color: 'textSecondary', height: '3rem' }}>{stat.title}</Text>
+              {stat.value ? (
+                <Text sx={{ fontSize: 6, mt: 1 }}>{stat.value}</Text>
+              ) : (
+                <Box sx={{ mt: 3, width: 6 }}>
+                  <Skeleton />
+                </Box>
+              )}
             </Flex>
           ))}
         </Flex>
@@ -100,12 +111,23 @@ export default function SystemStats(): JSX.Element {
               </Flex>
             </ExternalLink>
           </Flex>
-          {statData.map(stat => (
-            <Flex key={stat.title} sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text sx={{ fontSize: 2, color: 'textSecondary' }}>{stat.title}</Text>
-              <Text sx={{ fontSize: 2 }}>{stat.value}</Text>
-            </Flex>
-          ))}
+          <Stack gap={3}>
+            {statData.map(stat => (
+              <Flex
+                key={stat.title}
+                sx={{ flexDirection: 'row', justifyContent: 'space-between', height: '3rem' }}
+              >
+                <Text sx={{ fontSize: 2, color: 'textSecondary' }}>{stat.title}</Text>
+                {stat.value ? (
+                  <Text sx={{ fontSize: 2 }}>{stat.value}</Text>
+                ) : (
+                  <Box sx={{ width: 4 }}>
+                    <Skeleton />
+                  </Box>
+                )}
+              </Flex>
+            ))}
+          </Stack>
         </Grid>
       </Box>
     </>
