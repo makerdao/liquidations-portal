@@ -37,7 +37,7 @@ export default function Auctions(): JSX.Element {
             ))}
           </Stack>
           <Stack gap={3}>
-            <SystemStatsSidebar fields={['savings rate', 'total dai']} />
+            <SystemStatsSidebar />
             <ResourceBox />
           </Stack>
         </SidebarLayout>
