@@ -56,7 +56,7 @@ export default function SystemStatsSidebar(): JSX.Element {
       <Flex sx={{ flexDirection: 'column' }}>
         <Flex sx={{ alignItems: 'center' }}>
           <Badge variant="circle" p="3px" mr="3" bg="error" />
-          <Text sx={{ fontSize: '20px', fontWeight: '500' }}>System Status</Text>
+          <Text sx={{ fontSize: 5, fontWeight: 'semiBold' }}>System Status</Text>
         </Flex>
         <Text sx={{ fontSize: 3, color: 'textSecondary' }}>{'Unable to fetch system data at this time'}</Text>
       </Flex>
@@ -69,7 +69,7 @@ export default function SystemStatsSidebar(): JSX.Element {
         <Flex sx={{ justifyContent: 'space-between', mb: 1 }}>
           <Flex sx={{ alignItems: 'center' }}>
             <Badge variant="circle" p="3px" mr="3" />
-            <Text sx={{ fontSize: '20px', fontWeight: '500' }}>System Status</Text>
+            <Text sx={{ fontSize: 5, fontWeight: 'semiBold' }}>System Status</Text>
           </Flex>
           <ExternalLink href="https://daistats.com/" target="_blank">
             <Flex sx={{ alignItems: 'center' }}>
@@ -77,7 +77,7 @@ export default function SystemStatsSidebar(): JSX.Element {
                 sx={{
                   color: 'accentBlue',
                   fontSize: [2, 3],
-                  fontWeight: '500',
+                  fontWeight: 'semiBold',
                   ':hover': { color: 'blueLinkHover' }
                 }}
               >

@@ -27,7 +27,7 @@ const LinkListHeader = props => (
   <Box
     as="div"
     sx={{
-      fontWeight: '500',
+      fontWeight: 'semiBold',
       marginBottom: '0.2rem',
       color: 'black',
       fontSize: 14.3
