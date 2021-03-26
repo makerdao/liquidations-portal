@@ -1,5 +1,6 @@
 /** @jsx jsx */
-import { Text, Box, Image, Link as ExternalLink, Flex, jsx } from 'theme-ui';
+import Link from 'next/link';
+import { Text, Button, Box, Image, Flex, jsx } from 'theme-ui';
 
 import Auction from '../../types/auction';
 import { COLLATERAL_MAP } from '../../lib/constants';
@@ -11,34 +12,57 @@ type Props = {
 export default function AuctionPreviewCard({ auction, ...otherProps }: Props): JSX.Element | null {
   if (!auction) return null;
 
-  const { collateralAvailable } = auction;
+  const { collateralAvailable, name } = auction;
   const { cardTexturePng, iconSvg, symbol } = COLLATERAL_MAP[auction.name];
 
   return (
-    <ExternalLink
-      target="_blank"
-      variant="card"
-      // href={blogPost.link}
-      sx={{
-        p: [3, 3],
-        borderRadius: 'medium',
-        width: 304,
-        height: 264,
-        ':hover': { borderColor: 'onSecondary', boxShadow: 'faint' }
-      }}
-      {...otherProps}
-    >
-      <Box>
-        <Box sx={{ position: 'relative' }}>
-          <Image
-            src={cardTexturePng}
+    <Link href={`/auctions/${name}`}>
+      <Box
+        variant="cards.tight"
+        sx={{
+          p: [3, 3],
+          borderRadius: 'medium',
+          width: 304,
+          height: 264,
+          ':hover': { borderColor: 'onSecondary', 'div:first-child': { opacity: 1 }, cursor: 'pointer' }
+        }}
+        {...otherProps}
+      >
+        <Box
+          sx={{
+            position: 'relative'
+          }}
+        >
+          <Flex
             sx={{
-              objectFit: 'cover',
-              height: 160,
+              position: 'absolute',
+              top: 0,
               width: '100%',
-              borderRadius: '5px'
+              height: '160px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: '5px',
+              background: 'rgba(0, 0, 0, 0.5)',
+              opacity: 0,
+              transition: 'opacity 0.3s',
+              zIndex: 1
             }}
-          />
+          >
+            <Button variant="buttons.primaryLarge" sx={{ margin: 'auto' }}>
+              View auctions
+            </Button>
+          </Flex>
+          <Box sx={{ position: 'relative' }}>
+            <Image
+              src={cardTexturePng}
+              sx={{
+                objectFit: 'cover',
+                height: 160,
+                width: '100%',
+                borderRadius: '5px'
+              }}
+            />
+          </Box>
           <Flex
             sx={{
               justifyContent: 'center',
@@ -120,6 +144,6 @@ export default function AuctionPreviewCard({ auction, ...otherProps }: Props): J
           </Box>
         </Flex>
       </Box>
-    </ExternalLink>
+    </Link>
   );
 }
