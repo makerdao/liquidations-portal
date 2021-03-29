@@ -8,16 +8,24 @@ import { fadeIn, slideUp } from '../../lib/keyframes';
 import getMaker from '../../lib/maker';
 import Auction from '../../types/auction';
 import { COLLATERAL_LOGOS } from '../../lib/constants';
+import BigNumber from 'bignumber.js';
+import { fromRad } from '../../lib/utils';
 
 type Props = {
   showDialog: boolean;
   onDismiss: () => void;
   mobile: boolean;
   auction: Auction;
-  vatBalance: string;
+  vatBalance: BigNumber | undefined;
 };
 
-const BidModal = ({ showDialog, onDismiss, mobile, auction, vatBalance }: Props): JSX.Element => {
+const BidModal = ({
+  showDialog,
+  onDismiss,
+  mobile,
+  auction,
+  vatBalance = new BigNumber(0)
+}: Props): JSX.Element => {
   const { data: daiBalance } = useSWR('/balances/dai', () =>
     getMaker().then(maker => maker.getToken('DAI').balance())
   );
@@ -47,7 +55,7 @@ const BidModal = ({ showDialog, onDismiss, mobile, auction, vatBalance }: Props)
           <Flex sx={{ justifyContent: 'space-between', my: 2 }}>
             <Text>DAI in the VAT</Text>
             <Flex sx={{ flexDirection: 'column', alignItems: 'flex-end' }}>
-              <Text>{vatBalance} DAI</Text>
+              <Text>{fromRad(vatBalance).toFormat(2)} DAI</Text>
               <Text>Deposit</Text>
             </Flex>
           </Flex>

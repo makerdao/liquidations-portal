@@ -7,21 +7,15 @@ import Stack from '../layouts/Stack';
 import { getNetwork } from '../../lib/maker';
 import CountdownTimer from '../CountdownTimer';
 import Auction from '../../types/auction';
+import BigNumber from 'bignumber.js';
 import BidModal from './BidModal';
-
-// Remove and replace with data from the plugin
-const mocks = {
-  colAvailable: '9899.78',
-  dustLimit: '9899.78',
-  maxBid: '120',
-  vatBalance: '9992.00'
-};
 
 type Props = {
   auction: Auction;
+  vatBalance: BigNumber | undefined;
 };
 
-const AuctionOverviewCard = ({ auction, ...props }: Props): JSX.Element => {
+const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Element => {
   const [showDialog, setShowDialog] = useState(false);
 
   const network = getNetwork();
@@ -36,7 +30,7 @@ const AuctionOverviewCard = ({ auction, ...props }: Props): JSX.Element => {
         onDismiss={() => setShowDialog(false)}
         mobile={bpi === 0}
         auction={auction}
-        vatBalance={mocks.vatBalance}
+        vatBalance={vatBalance}
       />
 
       <div {...props}>

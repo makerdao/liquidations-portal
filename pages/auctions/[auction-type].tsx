@@ -5,6 +5,7 @@ import { Heading, Text, Box, Flex, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 import { Global } from '@emotion/core';
 import { useRouter } from 'next/router';
+import BigNumber from 'bignumber.js';
 import SystemStatsSidebar from '../../components/SystemStatsSidebar';
 import ResourceBox from '../../components/ResourceBox';
 import SidebarLayout from '../../components/layouts/Sidebar';
@@ -12,13 +13,21 @@ import PrimaryLayout from '../../components/layouts/Primary';
 import AuctionOverviewCard from '../../components/auctions/AuctionOverviewCard';
 import Stack from '../../components/layouts/Stack';
 import getMaker from '../../lib/maker';
+import Auction from '../../types/auction';
 import { fetchAuctions } from '../index'; //todo move to lib/api
 
 export default function Auctions(): JSX.Element {
   const router = useRouter();
   const type = router.query['auction-type']?.toString();
   // UPDATE TO PULL THE RIGHT AUCTIONS
-  const { data: auctions } = useSWR(`/auctions/fetch-${type}`, () => getMaker().then(fetchAuctions));
+  const { data: auctions } = useSWR<Auction[]>(`/auctions/fetch-${type}`, () =>
+    getMaker().then(fetchAuctions)
+  );
+  const { data: vatBalance } = useSWR<BigNumber>('/balances/vat', () =>
+    getMaker().then(maker =>
+      maker.service('smartContract').getContract('MCD_VAT').dai(maker.currentAddress())
+    )
+  );
   return (
     <div>
       <Head>
@@ -38,7 +47,10 @@ export default function Auctions(): JSX.Element {
         <SidebarLayout sx={{ mt: 4 }}>
           <Stack>
             {auctions?.map(
-              auction => auction.name === type && <AuctionOverviewCard key={auction.id} auction={auction} />
+              auction =>
+                auction.name === type && (
+                  <AuctionOverviewCard key={auction.id} auction={auction} vatBalance={vatBalance} />
+                )
             )}
           </Stack>
           <Stack gap={3}>

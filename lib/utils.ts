@@ -1,4 +1,5 @@
 import { cloneElement } from 'react';
+import BigNumber from 'bignumber.js';
 import { jsx, SxStyleProp } from 'theme-ui';
 import { css } from '@theme-ui/css';
 import { SupportedNetworks, ETHERSCAN_PREFIXES } from './constants';
@@ -129,3 +130,7 @@ export function cutMiddle(text = '', left = 6, right = 4) {
 
 export const formatRound = (num, decimals = 2) =>
   isNaN(num) ? '----' : round(num, decimals).toLocaleString({}, { minimumFractionDigits: decimals });
+
+export function fromRad(value): BigNumber {
+  return new BigNumber(value).shiftedBy(-45);
+}
