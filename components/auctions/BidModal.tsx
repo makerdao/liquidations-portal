@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import useSWR from 'swr';
-import { Button, Flex, Text, jsx, Input, Heading, Divider } from 'theme-ui';
+import { Button, Flex, Text, jsx, Input, Heading, Divider, Close } from 'theme-ui';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 
 import LogoBanner from './LogoBanner';
@@ -43,12 +43,13 @@ const BidModal = ({
         }
       >
         <Flex sx={{ flexDirection: 'column' }}>
+          <Close sx={{ alignSelf: 'flex-end' }} onClick={onDismiss} />
           <Heading>Place a Bid</Heading>
-          <LogoBanner name={name} icon={COLLATERAL_LOGOS[name]} />
+          <LogoBanner name={name.toUpperCase()} icon={COLLATERAL_LOGOS[name]} />
           <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', my: 2 }}>
             <Text sx={{ fontWeight: 'bold' }}>Collateral Available</Text>
             <Heading variant="mediumHeading">
-              {collateralAvailable} {name}
+              {collateralAvailable} {name.toUpperCase()}
             </Heading>
           </Flex>
           <Divider />

@@ -29,7 +29,7 @@ const LogoBanner = ({ name, icon }: Props): JSX.Element => {
             fontSize: 8
           }}
         >
-          {name.toUpperCase()}
+          {name}
         </Text>
       </Flex>
     </Flex>
