@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { Heading, Text, Box, Flex, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 import { Global } from '@emotion/core';
+import BigNumber from 'bignumber.js';
 
 import SystemStatsSidebar from '../../components/SystemStatsSidebar';
 import ResourceBox from '../../components/ResourceBox';
@@ -16,6 +17,11 @@ import { fetchAuctions } from '../index'; //todo move to lib/api
 
 export default function Auctions(): JSX.Element {
   const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
+  const { data: vatBalance } = useSWR<BigNumber>('/balances/vat', () =>
+    getMaker().then(maker =>
+      maker.service('smartContract').getContract('MCD_VAT').dai(maker.currentAddress())
+    )
+  );
   return (
     <div>
       <Head>
@@ -35,7 +41,7 @@ export default function Auctions(): JSX.Element {
         <SidebarLayout sx={{ mt: 4 }}>
           <Stack>
             {auctions?.map(auction => (
-              <AuctionOverviewCard key={auction.id} auction={auction} />
+              <AuctionOverviewCard key={auction.id} auction={auction} vatBalance={vatBalance} />
             ))}
           </Stack>
           <Stack gap={3}>
