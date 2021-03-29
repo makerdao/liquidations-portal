@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { Box, Flex, jsx } from 'theme-ui';
+import { Box, jsx } from 'theme-ui';
 import Skeleton from 'react-loading-skeleton';
 
 export default function AuctionPreviewCard(): JSX.Element {
@@ -14,10 +14,9 @@ export default function AuctionPreviewCard(): JSX.Element {
       }}
     >
       <Skeleton height={160} width={270} />
-      <Flex sx={{ flexDirection: 'column', alignItems: 'space-between', mt: 2 }}>
-        <Skeleton />
-        <Skeleton />
-      </Flex>
+      <Box sx={{ mt: 2 }}>
+        <Skeleton count={2} />
+      </Box>
     </Box>
   );
 }
