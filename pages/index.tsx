@@ -7,6 +7,7 @@ import { Global } from '@emotion/core';
 
 import Auction from '../types/auction';
 import AuctionPreviewCard from '../components/index/AuctionPreviewCard';
+import AuctionPreviewSkeleton from '../components/index/AuctionPreviewSkeleton';
 import PrimaryLayout from '../components/layouts/Primary';
 import Stack from '../components/layouts/Stack';
 import SystemStats from '../components/index/SystemStats';
@@ -106,9 +107,11 @@ export default function LandingPage(): JSX.Element {
             <Stack>
               <Heading as="h2">Active Auctions</Heading>
               <Grid gap={4} columns={[1, 3]}>
-                {auctions?.map(auction => (
-                  <AuctionPreviewCard key={auction.id} auction={auction} />
-                ))}
+                {auctions ? (
+                  auctions.map(auction => <AuctionPreviewCard key={auction.id} auction={auction} />)
+                ) : (
+                  <AuctionPreviewSkeleton />
+                )}
               </Grid>
             </Stack>
           </section>
