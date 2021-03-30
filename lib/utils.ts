@@ -134,3 +134,9 @@ export const formatRound = (num, decimals = 2) =>
 export function fromRad(value): BigNumber {
   return new BigNumber(value).shiftedBy(-45);
 }
+
+export const calculateCollateralAmt = (colAmt: BigNumber, colPrice: BigNumber): BigNumber =>
+  colAmt.div(colPrice);
+
+export const calculateColValue = (colAmt: BigNumber, colPrice: BigNumber): BigNumber =>
+  colAmt.times(colPrice);

@@ -1,15 +1,19 @@
 /** @jsx jsx */
+import { useState } from 'react';
 import useSWR from 'swr';
 import { Button, Flex, Text, jsx, Input, Heading, Divider, Close } from 'theme-ui';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
+import BigNumber from 'bignumber.js';
 
-import LogoBanner from './LogoBanner';
+import Auction from '../../types/auction';
 import { fadeIn, slideUp } from '../../lib/keyframes';
 import getMaker from '../../lib/maker';
-import Auction from '../../types/auction';
 import { COLLATERAL_LOGOS } from '../../lib/constants';
-import BigNumber from 'bignumber.js';
-import { fromRad } from '../../lib/utils';
+import { fromRad, calculateCollateralAmt, calculateColValue } from '../../lib/utils';
+import LogoBanner from './LogoBanner';
+
+// TODO where do we get collateral price info?
+const colPrice = new BigNumber(28.19);
 
 type Props = {
   showDialog: boolean;
@@ -26,11 +30,24 @@ const BidModal = ({
   auction,
   vatBalance = new BigNumber(0)
 }: Props): JSX.Element => {
+  const [colAmtStr, setColAmtStr] = useState<string>('0.00');
+  const [colPriceStr, setColPriceStr] = useState<string>('0.00');
+
+  const { name, collateralAvailable, dustLimit, maxBid } = auction;
+
   const { data: daiBalance } = useSWR('/balances/dai', () =>
     getMaker().then(maker => maker.getToken('DAI').balance())
   );
 
-  const { name, collateralAvailable, dustLimit, maxBid } = auction;
+  function updateValue(e: { currentTarget: { value: string } }) {
+    const newValueStr = e.currentTarget.value;
+    if (!/^((0|[1-9]\d*)(\.\d+)?)?$/.test(newValueStr)) return; // only non-negative valid numbers
+
+    const newDaiAmt = new BigNumber(newValueStr || '0');
+    const colAmount = calculateCollateralAmt(newDaiAmt, colPrice);
+    setColAmtStr(colAmount.toFormat(2));
+    setColPriceStr(calculateColValue(colAmount, colPrice).toFormat(2));
+  }
 
   return (
     <DialogOverlay isOpen={showDialog} onDismiss={onDismiss}>
@@ -80,7 +97,7 @@ const BidModal = ({
                 Wallet balance: {daiBalance && daiBalance.toBigNumber().toFormat(2)}
               </Text>
             </Flex>
-            <Input placeholder="0.0"></Input>
+            <Input placeholder="0.0" onChange={updateValue} type="number"></Input>
             <Flex sx={{ justifyContent: 'space-between', my: 2, px: 2 }}>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
@@ -97,10 +114,10 @@ const BidModal = ({
             <Flex sx={{ flexDirection: 'column' }}>
               <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Amount of Collateral</Text>
               <Text variant="caps" sx={{ fontWeight: 'body', fontSize: 5, color: 'textMuted', pl: 2 }}>
-                0.00 {name}
+                {colAmtStr} {name}
               </Text>
             </Flex>
-            <Text sx={{ color: 'textSecondary', pr: 2 }}>≈ $0.00</Text>
+            <Text sx={{ color: 'textSecondary', pr: 2 }}>≈ ${colPriceStr}</Text>
           </Flex>
           <Button sx={{ mt: 3 }}>Place a bid</Button>
         </Flex>
