@@ -48,6 +48,36 @@ export default function LandingPage(): JSX.Element {
         <title>Maker Liquidation Portal</title>
       </Head>
 
+      {/* full width banner image */}
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: [300, 465],
+          width: '100vw',
+          zIndex: -1,
+          position: 'absolute',
+          backgroundImage: 'url(/assets/hero-visual.svg)',
+          backgroundSize: ['cover'],
+          backgroundPosition: 'top center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
+
+      {/* full width white background */}
+      <Box
+        sx={{
+          display: ['none', 'block'],
+          position: 'absolute',
+          bg: 'surface',
+          width: '100vw',
+          top: 525,
+          left: 0,
+          bottom: 280,
+          zIndex: -2
+        }}
+      />
+
       <PrimaryLayout sx={{ maxWidth: 'page' }}>
         <Stack gap={[5, 6]}>
           <section>
@@ -102,25 +132,27 @@ export default function LandingPage(): JSX.Element {
           <section>
             <SystemStats />
           </section>
-
-          <section>
-            <Stack>
-              <Heading as="h2">Active Auctions</Heading>
-              <Grid gap={4} columns={[1, 3]}>
-                {auctions ? (
-                  auctions.map(auction => <AuctionPreviewCard key={auction.id} auction={auction} />)
-                ) : (
-                  <AuctionPreviewSkeleton />
-                )}
-              </Grid>
-            </Stack>
-          </section>
         </Stack>
+
+        <section sx={{ py: 4 }}>
+          <Stack>
+            <Heading as="h3" sx={{ fontWeight: 'heading' }}>
+              Active Auctions
+            </Heading>
+            <Grid gap={4} columns={[1, 3]}>
+              {auctions ? (
+                auctions.map(auction => <AuctionPreviewCard key={auction.id} auction={auction} />)
+              ) : (
+                <AuctionPreviewSkeleton />
+              )}
+            </Grid>
+          </Stack>
+        </section>
       </PrimaryLayout>
       <Global
         styles={theme => ({
           body: {
-            backgroundColor: theme.colors.surface
+            backgroundColor: theme.colors.background
           }
         })}
       />

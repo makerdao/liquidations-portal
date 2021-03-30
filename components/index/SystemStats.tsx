@@ -77,22 +77,22 @@ export default function SystemStats(): JSX.Element {
             <Flex sx={{ alignItems: 'center' }}>
               <Text
                 sx={{
-                  color: 'accentBlue',
+                  color: 'text',
                   fontSize: [2, 3],
                   fontWeight: 'semiBold',
                   ':hover': { color: 'blueLinkHover' }
                 }}
               >
-                View more stats
-                <Icon ml={2} name="arrowTopRight" size="2" />
+                View more
+                <Icon ml={2} name="arrowTopRight" size="2" color="primary" />
               </Text>
             </Flex>
           </ExternalLink>
         </Flex>
-        <Flex sx={{ justifyContent: 'space-between', p: 4 }}>
+        <Flex sx={{ justifyContent: 'space-between', py: 5 }}>
           {statData.map(stat => (
             <Flex key={stat.title} sx={{ flexDirection: 'column', maxWidth: '11rem' }}>
-              <Text sx={{ fontSize: 3, color: 'textSecondary', height: '3rem' }}>{stat.title}</Text>
+              <Text sx={{ fontSize: 3, color: 'badgeGrey', height: '3rem' }}>{stat.title}</Text>
               {stat.value ? (
                 <Text sx={{ fontSize: 6, mt: 1 }}>{stat.value}</Text>
               ) : (
@@ -106,15 +106,15 @@ export default function SystemStats(): JSX.Element {
       </Box>
 
       {/* Mobile */}
-      <Box sx={{ display: ['block', 'none'], backgroundColor: 'background', p: 2 }}>
+      <Box sx={{ display: ['block', 'none'], backgroundColor: 'surface', p: 2 }}>
         <Grid sx={{ p: 3 }}>
-          <Flex sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Flex sx={{ flexDirection: 'row', justifyContent: 'space-between', mb: 3 }}>
             <Text sx={{ fontSize: 3, fontWeight: 'semiBold', color: 'text' }}>System Stats</Text>
             <ExternalLink href="https://daistats.com/" target="_blank">
               <Flex sx={{ alignItems: 'center' }}>
-                <Text sx={{ color: 'accentBlue', fontSize: 3 }}>
+                <Text sx={{ fontSize: 3, color: 'text', fontWeight: 'semiBold' }}>
                   View more
-                  <Icon ml="2" name="arrowTopRight" size="2" />
+                  <Icon ml="2" name="arrowTopRight" size="2" color="primary" />
                 </Text>
               </Flex>
             </ExternalLink>
@@ -125,7 +125,7 @@ export default function SystemStats(): JSX.Element {
                 key={stat.title}
                 sx={{ flexDirection: 'row', justifyContent: 'space-between', height: '3rem' }}
               >
-                <Text sx={{ fontSize: 2, color: 'textSecondary' }}>{stat.title}</Text>
+                <Text sx={{ fontSize: 2, color: 'badgeGrey' }}>{stat.title}</Text>
                 {stat.value ? (
                   <Text sx={{ fontSize: 2 }}>{stat.value}</Text>
                 ) : (

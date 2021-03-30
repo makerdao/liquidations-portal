@@ -16,7 +16,7 @@ const FooterContainer = props => (
       pt: 5,
       pb: 3,
       width: '100%',
-      backgroundColor: '#FFFFFF'
+      backgroundColor: 'background'
     }}
   >
     {props.children}
@@ -286,6 +286,7 @@ class LongFooter extends React.Component {
                 sx={{
                   fontSize: 15,
                   borderRadius: '5px 0px 0px 5px',
+                  bg: 'surface',
                   '::placeholder': {
                     color: 'formGrey',
                     opacity: 1,

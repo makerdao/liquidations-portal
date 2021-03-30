@@ -24,7 +24,7 @@ export default function AuctionPreviewCard({ auction, ...otherProps }: Props): J
           borderRadius: 'medium',
           width: 304,
           height: 264,
-          ':hover': { borderColor: 'onSecondary', 'div:first-child': { opacity: 1 }, cursor: 'pointer' }
+          ':hover': { borderColor: 'onSecondary', 'div:first-of-type': { opacity: 1 }, cursor: 'pointer' }
         }}
         {...otherProps}
       >
