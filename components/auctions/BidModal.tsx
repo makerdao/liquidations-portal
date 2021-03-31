@@ -30,8 +30,8 @@ const BidModal = ({
   auction,
   vatBalance = new BigNumber(0)
 }: Props): JSX.Element => {
+  const [value, setValue] = useState<string>('');
   const [colAmtStr, setColAmtStr] = useState<string>('0.00');
-  const [colPriceStr, setColPriceStr] = useState<string>('0.00');
 
   const { name, collateralAvailable, dustLimit, maxBid } = auction;
 
@@ -39,15 +39,23 @@ const BidModal = ({
     getMaker().then(maker => maker.getToken('DAI').balance())
   );
 
-  function updateValue(e: { currentTarget: { value: string } }) {
+  const updateValue = (e: { currentTarget: { value: string } }) => {
     const newValueStr = e.currentTarget.value;
     if (!/^((0|[1-9]\d*)(\.\d+)?)?$/.test(newValueStr)) return; // only non-negative valid numbers
+
+    setValue(newValueStr);
 
     const newDaiAmt = new BigNumber(newValueStr || '0');
     const colAmount = calculateCollateralAmt(newDaiAmt, colPrice);
     setColAmtStr(colAmount.toFormat(2));
-    setColPriceStr(calculateColValue(colAmount, colPrice).toFormat(2));
-  }
+  };
+
+  const setMax = () => {
+    // if the user's vat balance is greater than the value of the available collateral, just use that
+    const colAvailableValue = calculateColValue(new BigNumber(collateralAvailable), colPrice);
+    const max = fromRad(vatBalance).gt(colAvailableValue) ? colAvailableValue : fromRad(vatBalance);
+    setValue(max.toFormat());
+  };
 
   return (
     <DialogOverlay isOpen={showDialog} onDismiss={onDismiss}>
@@ -93,11 +101,11 @@ const BidModal = ({
           <Flex sx={{ flexDirection: 'column', my: 3 }}>
             <Flex sx={{ justifyContent: 'space-between' }}>
               <Text sx={{ fontWeight: 'semiBold', fontSize: 3 }}>Amount of Dai</Text>
-              <Text sx={{ fontSize: 3, color: 'textMuted' }}>
+              <Text sx={{ fontSize: 3, color: 'textMuted' }} onClick={setMax}>
                 Wallet balance: {daiBalance && daiBalance.toBigNumber().toFormat(2)}
               </Text>
             </Flex>
-            <Input placeholder="0.0" onChange={updateValue} type="number"></Input>
+            <Input placeholder="0.0" onChange={updateValue} type="number" value={value}></Input>
             <Flex sx={{ justifyContent: 'space-between', my: 2, px: 2 }}>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
@@ -117,7 +125,6 @@ const BidModal = ({
                 {colAmtStr} {name}
               </Text>
             </Flex>
-            <Text sx={{ color: 'textSecondary', pr: 2 }}>≈ ${colPriceStr}</Text>
           </Flex>
           <Button sx={{ mt: 3 }}>Place a bid</Button>
         </Flex>
