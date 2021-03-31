@@ -93,7 +93,7 @@ const BidModal = ({
             <Text>DAI in the VAT</Text>
             <Flex sx={{ flexDirection: 'column', alignItems: 'flex-end' }}>
               <Text>{fromRad(vatBalance).toFormat(2)} DAI</Text>
-              <Button variant="textual" sx={{ color: 'primary', fontSize: 2, p: 0 }}>
+              <Button variant="textual" sx={{ color: 'primary', fontSize: 3, p: 0 }}>
                 Deposit
               </Button>
             </Flex>
@@ -101,11 +101,34 @@ const BidModal = ({
           <Flex sx={{ flexDirection: 'column', my: 3 }}>
             <Flex sx={{ justifyContent: 'space-between' }}>
               <Text sx={{ fontWeight: 'semiBold', fontSize: 3 }}>Amount of Dai</Text>
-              <Text sx={{ fontSize: 3, color: 'textMuted' }} onClick={setMax}>
+              <Text sx={{ fontSize: 3, color: 'textMuted' }}>
                 Wallet balance: {daiBalance && daiBalance.toBigNumber().toFormat(2)}
               </Text>
             </Flex>
-            <Input placeholder="0.0" onChange={updateValue} type="number" value={value}></Input>
+            <Flex sx={{ width: '100%', position: 'relative', justifyContent: 'space-between' }}>
+              <Input
+                sx={{ width: '100%' }}
+                placeholder="0.00"
+                onChange={updateValue}
+                type="number"
+                value={value}
+              />
+              <Button
+                variant="textual"
+                sx={{
+                  color: 'text',
+                  fontSize: 3,
+                  p: 0,
+                  position: 'absolute',
+                  right: '30px',
+                  top: '10px',
+                  cursor: 'pointer'
+                }}
+                onClick={setMax}
+              >
+                Set Max
+              </Button>
+            </Flex>
             <Flex sx={{ justifyContent: 'space-between', my: 2, px: 2 }}>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
