@@ -7,6 +7,7 @@ type Auction = {
   daiNeeded: string;
   dustLimit: string;
   maxBid: string;
+  endDate: number;
 };
 
 export default Auction;

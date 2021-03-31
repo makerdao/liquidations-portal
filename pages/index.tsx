@@ -22,7 +22,8 @@ const mockAuctions: Auction[] = [
     collateralAvailable: '3000',
     daiNeeded: '4000',
     dustLimit: '111',
-    maxBid: '999'
+    maxBid: '999',
+    endDate: 1619894140000
   },
   {
     id: 234,
@@ -32,7 +33,8 @@ const mockAuctions: Auction[] = [
     collateralAvailable: '1000',
     daiNeeded: '6000',
     dustLimit: '222',
-    maxBid: '888'
+    maxBid: '888',
+    endDate: 1619894140000
   }
 ];
 
