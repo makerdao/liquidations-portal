@@ -140,3 +140,6 @@ export const calculateCollateralAmt = (colAmt: BigNumber, colPrice: BigNumber): 
 
 export const calculateColValue = (colAmt: BigNumber, colPrice: BigNumber): BigNumber =>
   colAmt.times(colPrice);
+
+export const zeroPad = (num: string, width = 2): string =>
+  num.length >= width ? num : '0'.repeat(width - num.length) + num;

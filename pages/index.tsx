@@ -67,7 +67,7 @@ export default function LandingPage(): JSX.Element {
       {/* full width white background */}
       <Box
         sx={{
-          display: ['none', 'block'],
+          display: ['none', 'none', 'block'],
           position: 'absolute',
           bg: 'surface',
           width: '100vw',
