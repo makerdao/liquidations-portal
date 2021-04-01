@@ -8,7 +8,6 @@ import BigNumber from 'bignumber.js';
 import Auction from '../../types/auction';
 import { fadeIn, slideUp } from '../../lib/keyframes';
 import getMaker from '../../lib/maker';
-import { COLLATERAL_LOGOS } from '../../lib/constants';
 import { fromRad, calculateCollateralAmt, calculateColValue } from '../../lib/utils';
 import LogoBanner from './LogoBanner';
 
@@ -81,7 +80,7 @@ const BidModal = ({
             onClick={onDismiss}
           />
           <Heading sx={{ fontWeight: 'bold' }}>Place a Bid</Heading>
-          <LogoBanner name={name.toUpperCase()} icon={COLLATERAL_LOGOS[name]} />
+          <LogoBanner name={name.toUpperCase()} />
           <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', my: 2 }}>
             <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Collateral Available</Text>
             <Heading variant="mediumHeading">

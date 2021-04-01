@@ -11,11 +11,6 @@ export const ETHERSCAN_PREFIXES = {
   [SupportedNetworks.KOVAN]: 'kovan.'
 };
 
-export const COLLATERAL_LOGOS = {
-  link: 'chainlink',
-  yfi: 'yfi'
-};
-
 type CollateralInfo = {
   name: string;
   symbol: string;
@@ -41,4 +36,7 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
   }
 };
 
-export const COLLATERAL_ARRAY = Object.keys(COLLATERAL_MAP).map(currency => COLLATERAL_MAP[currency]);
+export const COLLATERAL_ARRAY = Object.keys(COLLATERAL_MAP).map(currency => ({
+  ...COLLATERAL_MAP[currency],
+  key: currency
+}));

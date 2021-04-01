@@ -1,16 +1,18 @@
 /** @jsx jsx */
 import { Flex, Text, Image, jsx } from 'theme-ui';
-import { Icon } from '@makerdao/dai-ui-icons';
+
+import { COLLATERAL_MAP } from 'lib/constants';
 
 type Props = {
   name: string;
-  icon: string;
 };
 
-const LogoBanner = ({ name, icon }: Props): JSX.Element => {
+const LogoBanner = ({ name }: Props): JSX.Element => {
+  const { bannerPng, iconSvg } = COLLATERAL_MAP[name.toLowerCase()];
+
   return (
     <Flex sx={{ position: 'relative', display: 'inline-block' }}>
-      <Image variant="bannerSmall" src={`/assets/${name}-banner-texture.png`} />
+      <Image variant="bannerSmall" src={bannerPng} />
       <Flex
         sx={{
           justifyContent: 'center',
@@ -21,10 +23,16 @@ const LogoBanner = ({ name, icon }: Props): JSX.Element => {
           transform: 'translate(-50%, -50%)'
         }}
       >
-        <Icon name={icon} size="auto" height="50" width="50" color="background" />
+        <Image
+          src={iconSvg}
+          sx={{
+            height: 44,
+            maxWidth: 'none'
+          }}
+        />
         <Text
           sx={{
-            pl: 2,
+            pl: 3,
             color: 'background',
             fontSize: 8
           }}

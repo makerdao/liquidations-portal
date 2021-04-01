@@ -1,15 +1,15 @@
 /** @jsx jsx */
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Flex, NavLink, Container, Close, Box, IconButton, Divider, jsx, Text } from 'theme-ui';
+import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button';
 import { Icon } from '@makerdao/dai-ui-icons';
 
-import { getNetwork } from '../lib/maker';
+import { COLLATERAL_ARRAY } from 'lib/constants';
+import { getNetwork } from 'lib/maker';
 import AccountSelect from './header/AccountSelect';
-import { useState, useEffect } from 'react';
-import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button';
-// name.charAt(0).toUpperCase() + name.slice(1)
-const COLLATERAL_TYPES = ['link', 'yfi'];
+
 const Header = (props: any): JSX.Element => {
   const network = getNetwork();
   const router = useRouter();
@@ -36,7 +36,6 @@ const Header = (props: any): JSX.Element => {
         </IconButton>
       </Link>
       <Flex sx={{ flexDirection: 'row', alignItems: 'center' }}>
-        {/* <Link href={{ pathname: '/auctions', query: { network } }} passHref> */}
         <Menu>
           <MenuButton
             style={{
@@ -62,17 +61,16 @@ const Header = (props: any): JSX.Element => {
                 paddingLeft: '16px'
               }}
             >
-              {COLLATERAL_TYPES.map((type, index) => {
+              {COLLATERAL_ARRAY.map((type, index) => {
                 return (
-                  <MenuItem key={index} onSelect={() => router.push(`/auctions/${type}`)}>
-                    <Text py={2}>{type.toUpperCase()}</Text>
+                  <MenuItem key={index} onSelect={() => router.push(`/auctions/${type.key}`)}>
+                    <Text py={2}>{type.key.toUpperCase()}</Text>
                   </MenuItem>
                 );
               })}
             </MenuList>
           </MenuButton>
         </Menu>
-        {/* </Link> */}
 
         <Link href={{ pathname: '/education', query: { network } }} passHref>
           <NavLink
@@ -133,12 +131,12 @@ const MobileMenu = ({ hide, network, router }) => {
         <Link href={{ pathname: '/auctions', query: { network } }}>
           <NavLink>Auctions</NavLink>
         </Link>
-        {COLLATERAL_TYPES.map((type, index) => {
+        {COLLATERAL_ARRAY.map(type => {
           return (
             <>
               <Divider sx={{ width: '100%' }} />
-              <Link href={{ pathname: `/auctions/${type}`, query: { network } }}>
-                <NavLink> - {type.toUpperCase()}</NavLink>
+              <Link href={{ pathname: `/auctions/${type.key}`, query: { network } }}>
+                <NavLink> - {type.key.toUpperCase()}</NavLink>
               </Link>
             </>
           );
