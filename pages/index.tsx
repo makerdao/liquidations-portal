@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import Head from 'next/head';
 import useSWR from 'swr';
-import { Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
+import { Button, Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 import { Global } from '@emotion/core';
 
@@ -12,6 +12,7 @@ import PrimaryLayout from '../components/layouts/Primary';
 import Stack from '../components/layouts/Stack';
 import SystemStats from '../components/index/SystemStats';
 import getMaker from '../lib/maker';
+import useAccountsStore from '../stores/accounts';
 
 const mockAuctions: Auction[] = [
   {
@@ -44,6 +45,8 @@ export async function fetchAuctions(): Promise<Auction[]> {
 
 export default function LandingPage(): JSX.Element {
   const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
+  const account = useAccountsStore(state => state.currentAccount);
+
   return (
     <div>
       <Head>
@@ -55,7 +58,7 @@ export default function LandingPage(): JSX.Element {
         sx={{
           top: 0,
           left: 0,
-          bottom: [300, 465],
+          bottom: [300, 460],
           width: '100vw',
           zIndex: -1,
           position: 'absolute',
@@ -87,44 +90,70 @@ export default function LandingPage(): JSX.Element {
               <Container pt={4} sx={{ maxWidth: 'title', textAlign: 'center' }}>
                 <Stack gap={3}>
                   <Heading as="h1" sx={{ color: 'text', fontSize: [7, 8] }}>
-                    Maker Liquidation Portal
+                    Liquidations 2.0
                   </Heading>
                   <Text
                     as="p"
-                    mb="3"
                     sx={{
-                      color: 'text',
-                      opacity: '0.7',
-                      fontWeight: 500,
-                      fontSize: [3, 5],
-                      px: [3, 'inherit']
+                      color: 'bannerText',
+                      fontSize: [3, '18px'],
+                      px: [3, 6],
+                      py: 3
                     }}
                   >
-                    ....lorem ipsum...Giving humans the ability to access large blocks of collateral without
-                    slippage....lorem ipsum...
+                    To participate in collateral auctions, first you need to deposit Dai in the VAT
                   </Text>
-                  <Flex sx={{ width: ['100%', '85%'], justifyContent: 'center', alignSelf: 'center' }}>
+                  <Flex
+                    sx={{ flexDirection: ['column', 'row'], justifyContent: 'center', alignItems: 'center' }}
+                  >
                     <NavLink
                       href={'/education'}
                       sx={{
-                        fontSize: 2,
-                        px: '3',
+                        px: 3,
                         borderRadius: 'round',
                         border: '1px solid',
                         borderColor: 'primary',
-                        color: 'surface',
-                        alignItems: 'center',
-                        backgroundColor: 'primary',
+                        color: account ? 'text' : 'surface',
+                        backgroundColor: account ? 'surface' : 'primary',
                         display: 'inline-flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        minWidth: [295, 'auto'],
                         '&:hover': {
-                          backgroundColor: 'primaryEmphasis',
-                          color: 'surface'
+                          borderColor: 'primaryEmphasis',
+                          color: account ? 'primaryEmphasis' : 'surface'
                         }
                       }}
                     >
-                      <Box pb="2px">Learn more about liquidations</Box>
-                      <Icon name="chevron_right" color="surface" size="3" ml="3" pb="1px" />
+                      <Text>Learn more about liquidations</Text>
+                      <Icon name="chevron_right" color={account ? 'primary' : 'surface'} size="3" ml="3" />
                     </NavLink>
+                    {account && (
+                      <Button
+                        onClick={() => console.log('open modal?')}
+                        sx={{
+                          px: 3,
+                          ml: [0, 3],
+                          mt: [3, 0],
+                          borderRadius: 'round',
+                          border: '1px solid',
+                          borderColor: 'primary',
+                          color: 'surface',
+                          backgroundColor: 'primary',
+                          display: 'inline-flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          minWidth: [295, 'auto'],
+                          '&:hover': {
+                            backgroundColor: 'primaryEmphasis',
+                            color: 'surface'
+                          }
+                        }}
+                      >
+                        <Text sx={{ fontSize: 3, fontWeight: 'normal' }}>Deposit DAI to start bidding</Text>
+                        <Icon name="chevron_right" color="surface" size="3" ml="3" />
+                      </Button>
+                    )}
                   </Flex>
                 </Stack>
               </Container>

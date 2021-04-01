@@ -20,11 +20,11 @@ async function getSystemStats(): Promise<string[]> {
   // for now return whatever data
   return Promise.all([
     Promise.resolve('15'),
-    Promise.resolve('3'),
+    Promise.resolve('03'),
     Promise.resolve('10'),
-    Promise.resolve('1478'),
+    Promise.resolve('1,478 DAI'),
     new Promise(resolve => {
-      setTimeout(resolve, 3000, '9999');
+      setTimeout(resolve, 3000, '9,999 DAI');
     })
   ]);
 }
@@ -66,7 +66,7 @@ export default function SystemStatsSidebar(): JSX.Element {
   return (
     <>
       <Box sx={{ display: ['none', 'block'] }}>
-        <Flex sx={{ justifyContent: 'space-between', mb: 1 }}>
+        <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
           <Flex sx={{ alignItems: 'center' }}>
             <Badge variant="circle" p="3px" mr="3" />
             <Text sx={{ fontSize: 5, fontWeight: 'semiBold' }}>System Status</Text>
@@ -75,14 +75,16 @@ export default function SystemStatsSidebar(): JSX.Element {
             <Flex sx={{ alignItems: 'center' }}>
               <Text
                 sx={{
-                  color: 'accentBlue',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: 'text',
                   fontSize: [2, 3],
                   fontWeight: 'semiBold',
                   ':hover': { color: 'blueLinkHover' }
                 }}
               >
                 See all
-                <Icon ml={2} name="arrowTopRight" size="2" />
+                <Icon ml={2} name="arrowTopRight" size="2" color="primary" />
               </Text>
             </Flex>
           </ExternalLink>

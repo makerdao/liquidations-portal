@@ -75,6 +75,8 @@ export default function SystemStats(): JSX.Element {
                 <Flex sx={{ alignItems: 'center' }}>
                   <Text
                     sx={{
+                      display: 'flex',
+                      alignItems: 'center',
                       color: 'text',
                       fontSize: [2, 3],
                       fontWeight: 'semiBold',
