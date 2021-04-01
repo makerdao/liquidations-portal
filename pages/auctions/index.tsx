@@ -11,6 +11,7 @@ import ResourceBox from '../../components/ResourceBox';
 import SidebarLayout from '../../components/layouts/Sidebar';
 import PrimaryLayout from '../../components/layouts/Primary';
 import AuctionOverviewCard from '../../components/auctions/AuctionOverviewCard';
+import AuctionOverviewSkeleton from '../../components/auctions/AuctionOverviewSkeleton';
 import Stack from '../../components/layouts/Stack';
 import getMaker from '../../lib/maker';
 import { fetchAuctions } from '../index'; //todo move to lib/api
@@ -40,9 +41,13 @@ export default function Auctions(): JSX.Element {
         </Stack>
         <SidebarLayout sx={{ mt: 4 }}>
           <Stack>
-            {auctions?.map(auction => (
-              <AuctionOverviewCard key={auction.id} auction={auction} vatBalance={vatBalance} />
-            ))}
+            {auctions ? (
+              auctions?.map(auction => (
+                <AuctionOverviewCard key={auction.id} auction={auction} vatBalance={vatBalance} />
+              ))
+            ) : (
+              <AuctionOverviewSkeleton />
+            )}
           </Stack>
           <Stack gap={3}>
             <SystemStatsSidebar />

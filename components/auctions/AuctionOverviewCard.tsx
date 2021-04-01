@@ -32,6 +32,8 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
     endDate
   } = auction;
 
+  const canBid = vatBalance?.gt(0);
+
   return (
     <>
       <BidModal
@@ -80,7 +82,9 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
             </Flex>
           </Stack>
           <Flex sx={{ flexDirection: 'column', justifyContent: 'space-between' }}>
-            <Button onClick={() => setShowDialog(true)}>Place a bid</Button>
+            <Button disabled={!canBid} onClick={() => setShowDialog(true)}>
+              Place a bid
+            </Button>
             <Flex sx={{ justifyContent: 'space-between' }}>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
