@@ -4,8 +4,10 @@ import { Badge, Box, Grid, Link as ExternalLink, Flex, Text, jsx } from 'theme-u
 import { Icon } from '@makerdao/dai-ui-icons';
 import Skeleton from 'react-loading-skeleton';
 
-import getMaker from '../../lib/maker';
-import { zeroPad } from '../../lib/utils';
+import getMaker from 'lib/maker';
+import { zeroPad } from 'lib/utils';
+import Tooltip from 'components/Tooltip';
+import SystemStat from 'types/systemStat';
 import Stack from '../layouts/Stack';
 
 async function getSystemStats(): Promise<string[]> {
@@ -40,15 +42,33 @@ export default function SystemStats(): JSX.Element {
   const { data, error } = useSWR<string[]>('/system-stats-landing', getSystemStats);
 
   // format property can be used to specify how to format data the particular value
-  const fieldMap = [
-    { title: 'Active Auctions', format: val => zeroPad(val) },
-    { title: 'Inactive Auctions', format: val => zeroPad(val) },
-    { title: 'Vaults requiring kick', format: val => zeroPad(val) },
-    { title: 'Dai required for Auctions', format: val => `${zeroPad(val)} DAI`, minWidth: 185 },
+  const fieldMap: SystemStat[] = [
+    {
+      title: 'Active Auctions',
+      format: val => zeroPad(val),
+      tooltip: 'This is placeholder text explaining what Active Auctions represents'
+    },
+    {
+      title: 'Inactive Auctions',
+      format: val => zeroPad(val),
+      tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
+    },
+    {
+      title: 'Vaults requiring kick',
+      format: val => zeroPad(val),
+      tooltip: 'This is placeholder text explaining what it means when vaults need to be kicked'
+    },
+    {
+      title: 'Dai required for Auctions',
+      format: val => `${zeroPad(val)} DAI`,
+      minWidth: 185,
+      tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
+    },
     {
       title: 'Global max available',
       format: val => `${zeroPad(val.toBigNumber().toFormat(0))} DAI`,
-      minWidth: 205
+      minWidth: 205,
+      tooltip: 'This is placeholder text explaining what Global max available represents'
     }
   ];
 
@@ -56,7 +76,8 @@ export default function SystemStats(): JSX.Element {
     return {
       title: stat.title,
       value: data ? stat.format(data[i]) : null,
-      minWidth: stat.minWidth ?? 115
+      minWidth: stat.minWidth ?? 115,
+      tooltip: stat.tooltip
     };
   });
 
@@ -102,18 +123,28 @@ export default function SystemStats(): JSX.Element {
           )}
         </Flex>
         <Flex sx={{ justifyContent: 'space-between', py: 5 }}>
-          {statData.map(stat => (
-            <Flex key={stat.title} sx={{ flexDirection: 'column', minWidth: stat.minWidth }}>
-              <Text sx={{ fontSize: 3, color: 'badgeGrey' }}>{stat.title}</Text>
-              {stat.value ? (
-                <Text sx={{ fontSize: 6, mt: 1 }}>{stat.value}</Text>
-              ) : (
-                <Box sx={{ mt: 3, width: 5 }}>
-                  {!error ? <Skeleton /> : <Icon name="warning" size="3" color="error" />}
-                </Box>
-              )}
-            </Flex>
-          ))}
+          {statData.map(stat => {
+            const statWrapper = (
+              <Flex key={stat.title} sx={{ flexDirection: 'column', minWidth: stat.minWidth }}>
+                <Text sx={{ fontSize: 3, color: 'badgeGrey' }}>{stat.title}</Text>
+                {stat.value ? (
+                  <Text sx={{ fontSize: 6, mt: 1 }}>{stat.value}</Text>
+                ) : (
+                  <Box sx={{ mt: 3, width: 5 }}>
+                    {!error ? <Skeleton /> : <Icon name="warning" size="3" color="error" />}
+                  </Box>
+                )}
+              </Flex>
+            );
+
+            return stat.tooltip ? (
+              <Tooltip sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }} label={stat.tooltip}>
+                {statWrapper}
+              </Tooltip>
+            ) : (
+              statWrapper
+            );
+          })}
         </Flex>
       </Box>
 
@@ -132,21 +163,30 @@ export default function SystemStats(): JSX.Element {
             </ExternalLink>
           </Flex>
           <Stack gap={3}>
-            {statData.map(stat => (
-              <Flex
-                key={stat.title}
-                sx={{ flexDirection: 'row', justifyContent: 'space-between', height: '3rem' }}
-              >
-                <Text sx={{ fontSize: [2, 3], color: 'badgeGrey' }}>{stat.title}</Text>
-                {stat.value ? (
-                  <Text sx={{ fontSize: [2, 3] }}>{stat.value}</Text>
-                ) : (
-                  <Box sx={{ width: 4 }}>
-                    <Skeleton />
-                  </Box>
-                )}
-              </Flex>
-            ))}
+            {statData.map(stat => {
+              const statWrapper = (
+                <Flex
+                  key={stat.title}
+                  sx={{ flexDirection: 'row', justifyContent: 'space-between', height: '3rem' }}
+                >
+                  <Text sx={{ fontSize: [2, 3], color: 'badgeGrey' }}>{stat.title}</Text>
+                  {stat.value ? (
+                    <Text sx={{ fontSize: [2, 3] }}>{stat.value}</Text>
+                  ) : (
+                    <Box sx={{ width: 4 }}>
+                      <Skeleton />
+                    </Box>
+                  )}
+                </Flex>
+              );
+              return stat.tooltip ? (
+                <Box>
+                  <Tooltip label={stat.tooltip}>{statWrapper}</Tooltip>
+                </Box>
+              ) : (
+                statWrapper
+              );
+            })}
           </Stack>
         </Grid>
       </Box>
