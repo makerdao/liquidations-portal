@@ -4,6 +4,8 @@ import { Icon } from '@makerdao/dai-ui-icons';
 import useSWR, { mutate } from 'swr';
 import Skeleton from 'react-loading-skeleton';
 
+import Tooltip from 'components/Tooltip';
+import SystemStat from 'types/systemStat';
 import Stack from './layouts/Stack';
 // import getMaker from '../lib/maker';
 // import CurrencyObject from '../types/currency';
@@ -39,16 +41,36 @@ if (typeof window !== 'undefined') {
 export default function SystemStatsSidebar(): JSX.Element {
   const { data, error } = useSWR<string[]>('/system-stats-sidebar', getSystemStats);
 
-  const fieldMap = [
-    { title: 'Undercollateralized Vaults', format: val => val },
-    { title: 'Active Auctions', format: val => val },
-    { title: 'Inactive Auctions', format: val => val },
-    { title: 'Dai required for Auctions', format: val => val },
-    { title: 'Limit per collateral available', format: val => val }
+  const fieldMap: SystemStat[] = [
+    {
+      title: 'Undercollateralized Vaults',
+      format: val => val,
+      tooltip: 'This is placeholder text explaining what Undercollateralized Vaults represents'
+    },
+    {
+      title: 'Active Auctions',
+      format: val => val,
+      tooltip: 'This is placeholder text explaining what Active Auctions represents'
+    },
+    {
+      title: 'Inactive Auctions',
+      format: val => val,
+      tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
+    },
+    {
+      title: 'Dai required for Auctions',
+      format: val => val,
+      tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
+    },
+    {
+      title: 'Limit per collateral available',
+      format: val => val,
+      tooltip: 'This is placeholder text explaining what Limit per collateral available represents'
+    }
   ];
 
   const statData = fieldMap.map((stat, i) => {
-    return { title: stat.title, value: data ? stat.format(data[i]) : null };
+    return { title: stat.title, value: data ? stat.format(data[i]) : null, tooltip: stat.tooltip };
   });
 
   if (error) {
@@ -93,7 +115,13 @@ export default function SystemStatsSidebar(): JSX.Element {
           <Stack gap={3}>
             {statData.map(stat => (
               <Flex key={stat.title} sx={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-                <Text sx={{ fontSize: 3, color: 'textSecondary' }}>{stat.title}</Text>
+                {stat.tooltip ? (
+                  <Tooltip label={stat.tooltip}>
+                    <Text sx={{ fontSize: 3, color: 'textSecondary' }}>{stat.title}</Text>
+                  </Tooltip>
+                ) : (
+                  <Text sx={{ fontSize: 3, color: 'textSecondary' }}>{stat.title}</Text>
+                )}
                 {stat.value ? (
                   <Text variant="h2" sx={{ fontSize: 3 }}>
                     {stat.value}
