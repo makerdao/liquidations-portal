@@ -58,7 +58,7 @@ export default function Auctions(): JSX.Element {
       <Global
         styles={theme => ({
           body: {
-            backgroundColor: theme.colors.surface
+            backgroundColor: theme.colors.backgroundC
           }
         })}
       />
