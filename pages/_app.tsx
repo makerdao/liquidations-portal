@@ -1,21 +1,22 @@
+import { useEffect } from 'react';
 import { AppProps } from 'next/app';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { SWRConfig } from 'swr';
 import { ThemeProvider, Flex } from 'theme-ui';
 import { Global } from '@emotion/core';
+import mixpanel from 'mixpanel-browser';
+import debug from 'debug';
 
 import '@reach/dialog/styles.css';
 import '@reach/tooltip/styles.css';
 
-import { fetchJson } from '../lib/utils';
-import theme from '../lib/theme';
-import Header from '../components/Header';
-import Head from 'next/head';
-import debug from 'debug';
+import { mixpanelInit } from 'lib/analytics';
+import { fetchJson } from 'lib/utils';
+import theme from 'lib/theme';
+import Header from 'components/Header';
+
 const vitalslog = debug('liqpo:vitals');
-import { mixpanelInit } from '../lib/analytics';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import mixpanel from 'mixpanel-browser';
 
 export const reportWebVitals = vitalslog;
 
@@ -67,6 +68,9 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
             '*': {
               WebkitFontSmoothing: 'antialiased',
               MozOsxFontSmoothing: 'grayscale'
+            },
+            body: {
+              backgroundColor: theme.colors.background
             }
           }}
         />

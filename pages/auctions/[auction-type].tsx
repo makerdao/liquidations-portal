@@ -2,7 +2,6 @@
 import Head from 'next/head';
 import useSWR from 'swr';
 import { Heading, Image, Text, Box, Flex, jsx } from 'theme-ui';
-import { Global } from '@emotion/core';
 import { useRouter } from 'next/router';
 import BigNumber from 'bignumber.js';
 import SystemStatsSidebar from 'components/SystemStatsSidebar';
@@ -136,13 +135,6 @@ export default function Auctions(): JSX.Element | null {
           </Stack>
         </SidebarLayout>
       </PrimaryLayout>
-      <Global
-        styles={theme => ({
-          body: {
-            backgroundColor: theme.colors.background
-          }
-        })}
-      />
     </div>
   );
 }

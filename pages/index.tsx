@@ -3,7 +3,6 @@ import Head from 'next/head';
 import useSWR from 'swr';
 import { Button, Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
-import { Global } from '@emotion/core';
 
 import Auction from '../types/auction';
 import AuctionPreviewCard from '../components/index/AuctionPreviewCard';
@@ -180,13 +179,6 @@ export default function LandingPage(): JSX.Element {
           </Stack>
         </section>
       </PrimaryLayout>
-      <Global
-        styles={theme => ({
-          body: {
-            backgroundColor: theme.colors.background
-          }
-        })}
-      />
     </div>
   );
 }
