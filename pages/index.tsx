@@ -55,16 +55,16 @@ export default function LandingPage(): JSX.Element {
       {/* full width banner image */}
       <Box
         sx={{
-          top: 0,
-          left: 0,
-          bottom: [300, 460],
           width: '100vw',
-          zIndex: -1,
           position: 'absolute',
           backgroundImage: 'url(/assets/hero-visual.svg)',
           backgroundSize: ['cover'],
           backgroundPosition: 'top center',
-          backgroundRepeat: 'no-repeat'
+          backgroundRepeat: 'no-repeat',
+          top: 0,
+          left: 0,
+          height: 525,
+          zIndex: -1
         }}
       />
 
@@ -75,9 +75,9 @@ export default function LandingPage(): JSX.Element {
           position: 'absolute',
           bg: 'surface',
           width: '100vw',
-          top: 525,
+          top: 530,
           left: 0,
-          bottom: 280,
+          height: 185,
           zIndex: -2
         }}
       />
