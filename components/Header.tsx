@@ -2,18 +2,23 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
 import { Flex, NavLink, Container, Close, Box, IconButton, Divider, jsx, Text } from 'theme-ui';
 import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button';
 import { Icon } from '@makerdao/dai-ui-icons';
 
 import { COLLATERAL_ARRAY } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
+import getMaker from 'lib/maker';
+import { zeroPad } from 'lib/utils';
 import AccountSelect from './header/AccountSelect';
 import DaiDepositRedeem from './header/DaiDepositRedeem';
+import { fetchAuctions } from 'pages/index'; //todo move to lib/api
 
 const Header = (props: any): JSX.Element => {
   const network = getNetwork();
   const router = useRouter();
+  const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
@@ -61,17 +66,17 @@ const Header = (props: any): JSX.Element => {
             >
               Auctions
             </Text>
-            <MenuList
-              style={{
-                padding: '32px',
-                paddingTop: '16px',
-                paddingLeft: '16px'
-              }}
-            >
+            <MenuList sx={{ variant: 'cards.compact', width: 6 }}>
               {COLLATERAL_ARRAY.map((type, index) => {
+                const numberOfAuctions = auctions
+                  ? zeroPad(auctions.filter(a => a.name === type.key).length.toString())
+                  : '00';
                 return (
                   <MenuItem key={index} onSelect={() => router.push(`/auctions/${type.key}`)}>
-                    <Text py={2}>{type.key.toUpperCase()}</Text>
+                    <Flex sx={{ justifyContent: 'space-between', py: 1, cursor: 'pointer', fontSize: 2 }}>
+                      <Text>{type.key.toUpperCase()}</Text>
+                      <Text sx={{ color: 'textSecondary' }}>{numberOfAuctions}</Text>
+                    </Flex>
                   </MenuItem>
                 );
               })}
@@ -141,12 +146,13 @@ const MobileMenu = ({ hide, network, router }) => {
         </Link>
         {COLLATERAL_ARRAY.map(type => {
           return (
-            <>
-              <Divider sx={{ width: '100%' }} />
-              <Link href={{ pathname: `/auctions/${type.key}`, query: { network } }}>
-                <NavLink> - {type.key.toUpperCase()}</NavLink>
-              </Link>
-            </>
+            <Link key={type.key} href={{ pathname: `/auctions/${type.key}`, query: { network } }}>
+              <NavLink>
+                <Text variant="links.nav" sx={{ fontSize: 5 }}>
+                  {type.key.toUpperCase()}
+                </Text>
+              </NavLink>
+            </Link>
           );
         })}
         <Divider sx={{ width: '100%' }} />

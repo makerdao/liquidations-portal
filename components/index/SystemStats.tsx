@@ -126,7 +126,7 @@ export default function SystemStats(): JSX.Element {
           {statData.map(stat => {
             const statWrapper = (
               <Flex key={stat.title} sx={{ flexDirection: 'column', minWidth: stat.minWidth }}>
-                <Text sx={{ fontSize: 3, color: 'badgeGrey' }}>{stat.title}</Text>
+                <Text sx={{ fontSize: 3, color: 'textSecondary' }}>{stat.title}</Text>
                 {stat.value ? (
                   <Text sx={{ fontSize: 6, mt: 1 }}>{stat.value}</Text>
                 ) : (
@@ -169,7 +169,7 @@ export default function SystemStats(): JSX.Element {
                   key={stat.title}
                   sx={{ flexDirection: 'row', justifyContent: 'space-between', height: '3rem' }}
                 >
-                  <Text sx={{ fontSize: [2, 3], color: 'badgeGrey' }}>{stat.title}</Text>
+                  <Text sx={{ fontSize: [2, 3], color: 'textSecondary' }}>{stat.title}</Text>
                   {stat.value ? (
                     <Text sx={{ fontSize: [2, 3] }}>{stat.value}</Text>
                   ) : (
