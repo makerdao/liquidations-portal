@@ -9,6 +9,7 @@ import { Icon } from '@makerdao/dai-ui-icons';
 import { COLLATERAL_ARRAY } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
 import AccountSelect from './header/AccountSelect';
+import DaiDepositRedeem from './header/DaiDepositRedeem';
 
 const Header = (props: any): JSX.Element => {
   const network = getNetwork();
@@ -35,12 +36,19 @@ const Header = (props: any): JSX.Element => {
           <Icon name="maker" size="40px" sx={{ cursor: 'pointer' }} />
         </IconButton>
       </Link>
-      <Flex sx={{ flexDirection: 'row', alignItems: 'center' }}>
+      <Flex sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <Menu>
           <MenuButton
             style={{
               borderWidth: 0,
-              backgroundColor: 'inherit'
+              backgroundColor: 'inherit',
+              padding: 0,
+              // override CSS from @reach
+              fontFamily: '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu',
+              lineHeight: '24px',
+              letterSpacing: '0.4px',
+              color: '#222223',
+              fontSize: '16px'
             }}
           >
             <Text
@@ -48,7 +56,6 @@ const Header = (props: any): JSX.Element => {
               sx={{
                 fontSize: 3,
                 display: ['none', 'block'],
-                ml: [0, 4, 'auto'],
                 color: router?.asPath?.startsWith('/auctions') ? 'primary' : undefined
               }}
             >
@@ -77,8 +84,7 @@ const Header = (props: any): JSX.Element => {
             p={0}
             sx={{
               display: ['none', 'block'],
-              ml: [0, 4, 4, 5],
-              mr: [0, 'auto', 4, 5],
+              ml: [0, 2, 4],
               color: router?.asPath?.startsWith('/education') ? 'primary' : undefined
             }}
           >
@@ -86,7 +92,9 @@ const Header = (props: any): JSX.Element => {
           </NavLink>
         </Link>
 
-        <AccountSelect sx={{ ml: ['auto', 3, 0] }} />
+        <DaiDepositRedeem sx={{ display: ['none', 'block'], ml: [0, 2, 4] }} />
+
+        <AccountSelect sx={{ ml: [0, 2, 4] }} />
 
         <IconButton
           aria-label="Show menu"
