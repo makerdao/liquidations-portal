@@ -1,14 +1,16 @@
 /** @jsx jsx */
 import { useState } from 'react';
-import { Button, Text, Flex, Grid, jsx, Badge } from 'theme-ui';
+import { Button, Text, Flex, Grid, Link as ExternalLink, jsx, Badge } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
+import { Icon } from '@makerdao/dai-ui-icons';
 
-import Stack from '../layouts/Stack';
-import { getNetwork } from '../../lib/maker';
-import CountdownTimer from '../CountdownTimer';
-import Auction from '../../types/auction';
-import BigNumber from 'bignumber.js';
+import { getNetwork } from 'lib/maker';
+import Auction from 'types/auction';
+import Tooltip from 'components/Tooltip';
+import Stack from 'components/layouts/Stack';
+import CountdownTimer from 'components/CountdownTimer';
 import BidModal from './BidModal';
+import BigNumber from 'bignumber.js';
 
 type Props = {
   auction: Auction;
@@ -63,9 +65,22 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
                 {initialCollateral} {name.toUpperCase()}
               </Text>
             </Flex>
-            <Flex sx={{ flexDirection: 'column' }}>
-              <Text sx={{ color: 'textSecondary' }}>Urn Handler</Text>
-              <Text>{urn}</Text>
+            <Flex>
+              <Flex sx={{ flexDirection: 'column' }}>
+                <Flex
+                  sx={{
+                    alignItems: 'center'
+                  }}
+                >
+                  <Tooltip label="Placeholder text explaining what a Urn Handler is">
+                    <Text sx={{ color: 'textSecondary' }}>Urn Handler</Text>
+                  </Tooltip>
+                  <ExternalLink href={`https://etherscan.io/address/${urn}`} target="_blank">
+                    <Icon ml={2} name="arrowTopRight" size="2" color="primary" />
+                  </ExternalLink>
+                </Flex>
+                <Text>{urn}</Text>
+              </Flex>
             </Flex>
           </Stack>
 
