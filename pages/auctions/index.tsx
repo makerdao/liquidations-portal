@@ -4,8 +4,8 @@ import useSWR from 'swr';
 import { Heading, Text, Box, Flex, jsx } from 'theme-ui';
 import BigNumber from 'bignumber.js';
 
-import SystemStatsSidebar from 'components/SystemStatsSidebar';
-import ResourceBox from 'components/ResourceBox';
+import SystemStatsSidebar from 'components/shared/SystemStatsSidebar';
+import ResourceBox from 'components/shared/ResourceBox';
 import SidebarLayout from 'components/layouts/Sidebar';
 import PrimaryLayout from 'components/layouts/Primary';
 import AuctionOverviewCard from 'components/auctions/AuctionOverviewCard';

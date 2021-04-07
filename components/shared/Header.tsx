@@ -11,8 +11,8 @@ import { COLLATERAL_ARRAY } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
 import getMaker from 'lib/maker';
 import { zeroPad } from 'lib/utils';
-import AccountSelect from './header/AccountSelect';
-import DaiDepositRedeem from './header/DaiDepositRedeem';
+import AccountSelect from 'components/header/AccountSelect';
+import DaiDepositRedeem from 'components/header/DaiDepositRedeem';
 import { fetchAuctions } from 'pages/index'; //todo move to lib/api
 
 const Header = (props: any): JSX.Element => {

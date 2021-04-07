@@ -4,9 +4,9 @@ import { Icon } from '@makerdao/dai-ui-icons';
 import useSWR, { mutate } from 'swr';
 import Skeleton from 'react-loading-skeleton';
 
-import Tooltip from 'components/Tooltip';
+import Stack from 'components/layouts/Stack';
+import Tooltip from 'components/shared/Tooltip';
 import SystemStat from 'types/systemStat';
-import Stack from './layouts/Stack';
 // import getMaker from '../lib/maker';
 // import CurrencyObject from '../types/currency';
 

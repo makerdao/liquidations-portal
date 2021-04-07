@@ -14,7 +14,7 @@ import '@reach/tooltip/styles.css';
 import { mixpanelInit } from 'lib/analytics';
 import { fetchJson } from 'lib/utils';
 import theme from 'lib/theme';
-import Header from 'components/Header';
+import Header from 'components/shared/Header';
 
 const vitalslog = debug('liqpo:vitals');
 

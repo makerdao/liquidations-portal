@@ -6,9 +6,9 @@ import { Icon } from '@makerdao/dai-ui-icons';
 
 import { getNetwork } from 'lib/maker';
 import Auction from 'types/auction';
-import Tooltip from 'components/Tooltip';
+import Tooltip from 'components/shared/Tooltip';
 import Stack from 'components/layouts/Stack';
-import CountdownTimer from 'components/CountdownTimer';
+import CountdownTimer from 'components/shared/CountdownTimer';
 import BidModal from './BidModal';
 import BigNumber from 'bignumber.js';
 

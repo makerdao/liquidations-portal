@@ -6,7 +6,7 @@ import Skeleton from 'react-loading-skeleton';
 
 import getMaker from 'lib/maker';
 import { zeroPad } from 'lib/utils';
-import Tooltip from 'components/Tooltip';
+import Tooltip from 'components/shared/Tooltip';
 import SystemStat from 'types/systemStat';
 import Stack from '../layouts/Stack';
 
