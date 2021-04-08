@@ -2,7 +2,7 @@ import { Button, Flex, Text } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons-branding';
 import useAccountsStore from 'stores/accounts';
 
-const DaiDepositRedeem = (props: any): JSX.Element | null => {
+const DepositRedeemButton = (props: any): JSX.Element | null => {
   const account = useAccountsStore(state => state.currentAccount);
   const address = account?.address;
 
@@ -23,7 +23,7 @@ const DaiDepositRedeem = (props: any): JSX.Element | null => {
         }
       }}
       {...props}
-      onClick={() => console.log('open modal')}
+      onClick={props.onClick}
     >
       <Flex sx={{ alignItems: 'center' }}>
         {/* TODO: add dynamic DAI balance */}
@@ -35,4 +35,4 @@ const DaiDepositRedeem = (props: any): JSX.Element | null => {
   ) : null;
 };
 
-export default DaiDepositRedeem;
+export default DepositRedeemButton;

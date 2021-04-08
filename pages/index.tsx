@@ -4,14 +4,15 @@ import useSWR from 'swr';
 import { Button, Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 
-import Auction from '../types/auction';
-import AuctionPreviewCard from '../components/index/AuctionPreviewCard';
-import AuctionPreviewSkeleton from '../components/index/AuctionPreviewSkeleton';
-import PrimaryLayout from '../components/layouts/Primary';
-import Stack from '../components/layouts/Stack';
-import SystemStats from '../components/index/SystemStats';
-import getMaker from '../lib/maker';
-import useAccountsStore from '../stores/accounts';
+import getMaker from 'lib/maker';
+import Auction from 'types/auction';
+import AuctionPreviewCard from 'components/index/AuctionPreviewCard';
+import AuctionPreviewSkeleton from 'components/index/AuctionPreviewSkeleton';
+import PrimaryLayout from 'components/layouts/Primary';
+import Stack from 'components/layouts/Stack';
+import SystemStats from 'components/index/SystemStats';
+import useAccountsStore from 'stores/accounts';
+import { useModalsStore } from 'stores/modals';
 
 const mockAuctions: Auction[] = [
   {
@@ -45,6 +46,7 @@ export async function fetchAuctions(): Promise<Auction[]> {
 export default function LandingPage(): JSX.Element {
   const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
   const account = useAccountsStore(state => state.currentAccount);
+  const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
 
   return (
     <div>
@@ -129,7 +131,7 @@ export default function LandingPage(): JSX.Element {
                     </NavLink>
                     {account && (
                       <Button
-                        onClick={() => console.log('open modal?')}
+                        onClick={toggleDepositRedeem}
                         sx={{
                           px: 3,
                           ml: [0, 3],
