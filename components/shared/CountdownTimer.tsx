@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { Text, Flex, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 
-import useInterval from '../lib/useInterval';
+import useInterval from 'lib/useInterval';
 
 type Props = {
-  endDate: string;
+  endDate: number;
   endText: string;
 };
 
@@ -33,6 +33,10 @@ const CountdownTimer = ({ endDate, endText, ...props }: Props): JSX.Element => {
   let [text, setText] = useState(''); // eslint-disable-line prefer-const
 
   if (!text) {
+    /* 
+      Note: the / 1000 thing below is because some of the contracts return unix time in milliseconds, but
+      since we're getting ours from a graphql query, we might not have to do this.
+    */
     endTime = Math.floor(new Date(endDate).getTime() / 1000);
     setEndTime(endTime);
     text = generateText(endTime, endText);
@@ -51,7 +55,7 @@ const CountdownTimer = ({ endDate, endText, ...props }: Props): JSX.Element => {
       {...props}
     >
       <Icon mr="1" name="clock" size="3" sx={{ color: text !== endText ? 'primary' : 'secondary' }} />
-      <Text variant="caps" color={text !== endText ? 'textSecondary' : 'secondary'}>
+      <Text variant="caps" color={text !== endText ? 'textMuted' : 'secondary'}>
         {text}
       </Text>
     </Flex>

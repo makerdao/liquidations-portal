@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { Box, Flex, jsx } from 'theme-ui';
 
-import { fadeIn } from '../../lib/keyframes';
-import Footer from '../Footer';
+import { fadeIn } from 'lib/keyframes';
+import Footer from 'components/shared/Footer';
 
 type Props = {
   shortenFooter?: boolean;
@@ -17,7 +17,7 @@ const PrimaryLayout = ({
   shortenFooter = false,
   fade = true,
   ...props
-}: React.PropsWithChildren<Props>) => {
+}: React.PropsWithChildren<Props>): JSX.Element => {
   return (
     <Flex
       sx={{

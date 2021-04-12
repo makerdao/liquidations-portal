@@ -1,8 +1,7 @@
 import { useState, forwardRef } from 'react';
-import { Input, Text, Box } from 'theme-ui';
+import { Input, Text, Box, ThemeUIStyleObject } from 'theme-ui';
 
 import Bignumber from 'bignumber.js';
-import CurrencyObject from '../types/currency';
 
 type Props = {
   placeholder?: string;
@@ -10,7 +9,7 @@ type Props = {
   min?: Bignumber;
   max?: Bignumber;
   error?: string | false;
-  style?: {};
+  style?: ThemeUIStyleObject;
 };
 
 const MKRInput = forwardRef<HTMLInputElement, Props>(

@@ -301,7 +301,7 @@ const ConnectWalletButton = ({ open, address, pending, ...props }) => (
     sx={{
       variant: 'buttons.card',
       borderRadius: 'round',
-      color: 'textSecondary',
+      color: 'textMuted',
       px: [2, 3],
       py: 2,
       alignSelf: 'flex-end',

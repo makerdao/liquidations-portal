@@ -16,7 +16,7 @@ const NetworkAlertModal = ({
 }: {
   chainIdError: ChainIdError;
   walletChainName: SupportedNetworks | null;
-}) => {
+}): JSX.Element | null => {
   const [showDialog, setShowDialog] = useState(true);
   const bpi = useBreakpointIndex();
 

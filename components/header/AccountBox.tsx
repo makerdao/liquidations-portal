@@ -29,7 +29,7 @@ const AccountBox = ({ address, accountName, change }: Props): JSX.Element => {
     >
       <Flex sx={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
         <Flex sx={{ flexDirection: 'column', ml: 3, py: 3 }}>
-          <Text color="textSecondary" variant="smallText">
+          <Text color="textMuted" variant="smallText">
             {accountName}
           </Text>
           <Flex sx={{ alignItems: 'center', flexDirection: 'row', mt: 1 }}>
@@ -38,7 +38,7 @@ const AccountBox = ({ address, accountName, change }: Props): JSX.Element => {
           </Flex>
         </Flex>
         <Button variant="smallOutline" sx={{ mr: 3, borderRadius: 'small' }} onClick={change}>
-          <Text variant="text.caps" sx={{ color: 'textSecondary', fontSize: 1, px: 1, pt: '1px' }}>
+          <Text variant="text.caps" sx={{ color: 'textMuted', fontSize: 1, px: 1, pt: '1px' }}>
             change
             {bpi > 0 && ' wallet'}
           </Text>
@@ -51,7 +51,7 @@ const AccountBox = ({ address, accountName, change }: Props): JSX.Element => {
           borderTop: '1px solid',
           borderTopColor: 'secondaryMuted',
           variant: 'text.smallText',
-          color: 'textSecondary'
+          color: 'textMuted'
         }}
       >
         <Flex

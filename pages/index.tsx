@@ -1,21 +1,88 @@
 /** @jsx jsx */
 import Head from 'next/head';
-import { Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
+import useSWR from 'swr';
+import { Button, Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
-import { Global } from '@emotion/core';
 
-import AuctionPreviewCard from '../components/index/AuctionPreviewCard';
-import PrimaryLayout from '../components/layouts/Primary';
-import Stack from '../components/layouts/Stack';
+import getMaker from 'lib/maker';
+import Auction from 'types/auction';
+import AuctionPreviewCard from 'components/index/AuctionPreviewCard';
+import AuctionPreviewSkeleton from 'components/index/AuctionPreviewSkeleton';
+import PrimaryLayout from 'components/layouts/Primary';
+import Stack from 'components/layouts/Stack';
+import SystemStats from 'components/index/SystemStats';
+import useAccountsStore from 'stores/accounts';
+import { useModalsStore } from 'stores/modals';
 
-type Props = {};
+const mockAuctions: Auction[] = [
+  {
+    id: 123,
+    name: 'link',
+    initialCollateral: '8000',
+    urn: '0x123',
+    collateralAvailable: '3000',
+    daiNeeded: '4000',
+    dustLimit: '111',
+    maxBid: '999',
+    endDate: 1619894140000
+  },
+  {
+    id: 234,
+    name: 'yfi',
+    initialCollateral: '4000',
+    urn: '0x345',
+    collateralAvailable: '1000',
+    daiNeeded: '6000',
+    dustLimit: '222',
+    maxBid: '888',
+    endDate: 1619894140000
+  }
+];
 
-export default function LandingPage({}: Props) {
+export async function fetchAuctions(): Promise<Auction[]> {
+  return Promise.resolve(mockAuctions);
+}
+
+export default function LandingPage(): JSX.Element {
+  const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
+  const account = useAccountsStore(state => state.currentAccount);
+  const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
+
   return (
     <div>
       <Head>
-        <title>Maker liquidations Portal</title>
+        <title>Maker Liquidation Portal</title>
       </Head>
+
+      {/* full width banner image */}
+      <Box
+        sx={{
+          width: '100vw',
+          position: 'absolute',
+          backgroundImage: 'url(/assets/hero-visual.svg)',
+          backgroundSize: ['cover'],
+          backgroundPosition: 'top center',
+          backgroundRepeat: 'no-repeat',
+          top: 0,
+          left: 0,
+          height: 525,
+          zIndex: -1
+        }}
+      />
+
+      {/* full width white background */}
+      <Box
+        sx={{
+          display: ['none', 'none', 'block'],
+          position: 'absolute',
+          bg: 'surface',
+          width: '100vw',
+          top: 530,
+          left: 0,
+          height: 185,
+          zIndex: -2
+        }}
+      />
 
       <PrimaryLayout sx={{ maxWidth: 'page' }}>
         <Stack gap={[5, 6]}>
@@ -24,44 +91,70 @@ export default function LandingPage({}: Props) {
               <Container pt={4} sx={{ maxWidth: 'title', textAlign: 'center' }}>
                 <Stack gap={3}>
                   <Heading as="h1" sx={{ color: 'text', fontSize: [7, 8] }}>
-                    Maker Liquidation Portal
+                    Liquidations 2.0
                   </Heading>
                   <Text
                     as="p"
-                    mb="3"
                     sx={{
-                      color: 'text',
-                      opacity: '0.7',
-                      fontWeight: 500,
-                      fontSize: [3, 5],
-                      px: [3, 'inherit']
+                      color: 'bannerText',
+                      fontSize: [3, '18px'],
+                      px: [3, 6],
+                      py: 3
                     }}
                   >
-                    ....lorem ipsum...Giving humans the ability to access large blocks of collateral without
-                    slippage....lorem ipsum...
+                    To participate in collateral auctions, first you need to deposit Dai in the VAT
                   </Text>
-                  <Flex sx={{ width: ['100%', '85%'], justifyContent: 'center', alignSelf: 'center' }}>
+                  <Flex
+                    sx={{ flexDirection: ['column', 'row'], justifyContent: 'center', alignItems: 'center' }}
+                  >
                     <NavLink
-                      href={`/education`}
+                      href={'/education'}
                       sx={{
-                        fontSize: 2,
-                        px: '3',
+                        px: 3,
                         borderRadius: 'round',
                         border: '1px solid',
                         borderColor: 'primary',
-                        color: 'surface',
-                        alignItems: 'center',
-                        backgroundColor: 'primary',
+                        color: account ? 'text' : 'surface',
+                        backgroundColor: account ? 'surface' : 'primary',
                         display: 'inline-flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        minWidth: [295, 'auto'],
                         '&:hover': {
-                          backgroundColor: 'primaryEmphasis',
-                          color: 'surface'
+                          borderColor: 'primaryEmphasis',
+                          color: account ? 'primaryEmphasis' : 'surface'
                         }
                       }}
                     >
-                      <Box pb="2px">Learn more about liquidations</Box>
-                      <Icon name="chevron_right" color="surface" size="3" ml="3" pb="1px" />
+                      <Text>Learn more about liquidations</Text>
+                      <Icon name="chevron_right" color={account ? 'primary' : 'surface'} size="3" ml="3" />
                     </NavLink>
+                    {account && (
+                      <Button
+                        onClick={toggleDepositRedeem}
+                        sx={{
+                          px: 3,
+                          ml: [0, 3],
+                          mt: [3, 0],
+                          borderRadius: 'round',
+                          border: '1px solid',
+                          borderColor: 'primary',
+                          color: 'surface',
+                          backgroundColor: 'primary',
+                          display: 'inline-flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          minWidth: [295, 'auto'],
+                          '&:hover': {
+                            backgroundColor: 'primaryEmphasis',
+                            color: 'surface'
+                          }
+                        }}
+                      >
+                        <Text sx={{ fontSize: 3, fontWeight: 'normal' }}>Deposit DAI to start bidding</Text>
+                        <Icon name="chevron_right" color="surface" size="3" ml="3" />
+                      </Button>
+                    )}
                   </Flex>
                 </Stack>
               </Container>
@@ -69,23 +162,25 @@ export default function LandingPage({}: Props) {
           </section>
 
           <section>
-            <Stack>
-              <Heading as="h2">Active Auctions</Heading>
-              <Grid gap={4} columns={[1, 3]}>
-                <AuctionPreviewCard />
-                <AuctionPreviewCard />
-              </Grid>
-            </Stack>
+            <SystemStats />
           </section>
         </Stack>
+
+        <section sx={{ py: 4 }}>
+          <Stack>
+            <Heading as="h3" sx={{ fontWeight: 'heading' }}>
+              Active Auctions
+            </Heading>
+            <Grid gap={4} columns={[1, 3]}>
+              {auctions ? (
+                auctions.map(auction => <AuctionPreviewCard key={auction.id} auction={auction} />)
+              ) : (
+                <AuctionPreviewSkeleton />
+              )}
+            </Grid>
+          </Stack>
+        </section>
       </PrimaryLayout>
-      <Global
-        styles={theme => ({
-          body: {
-            backgroundColor: theme.colors.surface
-          }
-        })}
-      />
     </div>
   );
 }
