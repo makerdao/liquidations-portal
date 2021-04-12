@@ -5,7 +5,6 @@ import { Icon } from '@makerdao/dai-ui-icons';
 import Skeleton from 'react-loading-skeleton';
 
 import getMaker from 'lib/maker';
-import { zeroPad } from 'lib/utils';
 import Tooltip from 'components/shared/Tooltip';
 import SystemStat from 'types/systemStat';
 import Stack from '../layouts/Stack';
@@ -45,28 +44,28 @@ export default function SystemStats(): JSX.Element {
   const fieldMap: SystemStat[] = [
     {
       title: 'Active Auctions',
-      format: val => zeroPad(val),
+      format: val => val,
       tooltip: 'This is placeholder text explaining what Active Auctions represents'
     },
     {
       title: 'Inactive Auctions',
-      format: val => zeroPad(val),
+      format: val => val,
       tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
     },
     {
       title: 'Vaults requiring kick',
-      format: val => zeroPad(val),
+      format: val => val,
       tooltip: 'This is placeholder text explaining what it means when vaults need to be kicked'
     },
     {
       title: 'Dai required for Auctions',
-      format: val => `${zeroPad(val)} DAI`,
+      format: val => `${val} DAI`,
       minWidth: 185,
       tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
     },
     {
       title: 'Global max available',
-      format: val => `${zeroPad(val.toBigNumber().toFormat(0))} DAI`,
+      format: val => `${val.toBigNumber().toFormat(0)} DAI`,
       minWidth: 205,
       tooltip: 'This is placeholder text explaining what Global max available represents'
     }
@@ -138,9 +137,11 @@ export default function SystemStats(): JSX.Element {
             );
 
             return stat.tooltip ? (
-              <Tooltip sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }} label={stat.tooltip}>
-                {statWrapper}
-              </Tooltip>
+              <Box key={stat.title}>
+                <Tooltip sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }} label={stat.tooltip}>
+                  {statWrapper}
+                </Tooltip>
+              </Box>
             ) : (
               statWrapper
             );
@@ -180,7 +181,7 @@ export default function SystemStats(): JSX.Element {
                 </Flex>
               );
               return stat.tooltip ? (
-                <Box>
+                <Box key={stat.title}>
                   <Tooltip label={stat.tooltip}>{statWrapper}</Tooltip>
                 </Box>
               ) : (

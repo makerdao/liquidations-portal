@@ -11,7 +11,6 @@ import { Icon } from '@makerdao/dai-ui-icons';
 import { COLLATERAL_ARRAY } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
 import getMaker from 'lib/maker';
-import { zeroPad } from 'lib/utils';
 import { useModalsStore } from 'stores/modals';
 import AccountSelect from 'components/header/AccountSelect';
 import DepositRedeemButton from 'components/header/DepositRedeemButton';
@@ -83,7 +82,7 @@ const Header = (props: any): JSX.Element => {
               <MenuList sx={{ variant: 'cards.compact', width: 6 }}>
                 {COLLATERAL_ARRAY.map((type, index) => {
                   const numberOfAuctions = auctions
-                    ? zeroPad(auctions.filter(a => a.name === type.key).length.toString())
+                    ? auctions.filter(a => a.name === type.key).length.toString()
                     : '00';
                   return (
                     <MenuItem key={index} onSelect={() => router.push(`/auctions/${type.key}`)}>
