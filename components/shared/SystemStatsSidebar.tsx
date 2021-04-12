@@ -22,7 +22,7 @@ async function getSystemStats(): Promise<string[]> {
   // for now return whatever data
   return Promise.all([
     Promise.resolve('15'),
-    Promise.resolve('03'),
+    Promise.resolve('3'),
     Promise.resolve('10'),
     Promise.resolve('1,478 DAI'),
     new Promise(resolve => {
