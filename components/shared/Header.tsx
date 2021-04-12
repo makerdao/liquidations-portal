@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import { Flex, NavLink, Container, Close, Box, IconButton, Divider, jsx, Text } from 'theme-ui';
+import { Button, Flex, NavLink, Container, Close, Box, IconButton, Divider, jsx, Text } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button';
 import { Icon } from '@makerdao/dai-ui-icons';
@@ -12,8 +12,8 @@ import { COLLATERAL_ARRAY } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
 import getMaker from 'lib/maker';
 import { useModalsStore } from 'stores/modals';
+import useAccountsStore from 'stores/accounts';
 import AccountSelect from 'components/header/AccountSelect';
-import DepositRedeemButton from 'components/header/DepositRedeemButton';
 import { fetchAuctions } from 'pages/index'; //todo move to lib/api
 import DepositRedeemModal from './DepositRedeemModal';
 
@@ -25,6 +25,8 @@ const Header = (props: any): JSX.Element => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const isDepositRedeemOpen = useModalsStore(state => state.isDepositRedeemOpen);
   const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
+  const account = useAccountsStore(state => state.currentAccount);
+  const address = account?.address;
 
   return (
     <>
@@ -110,10 +112,33 @@ const Header = (props: any): JSX.Element => {
             </NavLink>
           </Link>
 
-          <DepositRedeemButton
-            sx={{ display: ['none', 'block'], ml: [0, 2, 4] }}
-            onClick={toggleDepositRedeem}
-          />
+          {address && (
+            <Button
+              aria-label="Deposit or Redeem Dai"
+              sx={{
+                variant: 'buttons.card',
+                borderRadius: 'round',
+                color: 'textMuted',
+                px: [2, 3],
+                py: 2,
+                alignSelf: 'flex-end',
+                '&:hover': {
+                  color: 'text',
+                  borderColor: 'onSecondary',
+                  backgroundColor: 'white'
+                }
+              }}
+              {...props}
+              onClick={props.onClick}
+            >
+              <Flex sx={{ alignItems: 'center' }}>
+                {/* TODO: add dynamic DAI balance */}
+                <Text>0,00</Text>
+                <Icon name="dai" size="16px" sx={{ mx: 2 }} />
+                <Text>Deposit/Redeem</Text>
+              </Flex>
+            </Button>
+          )}
 
           <AccountSelect sx={{ ml: [0, 2, 4] }} />
 
