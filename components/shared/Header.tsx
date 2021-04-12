@@ -116,6 +116,7 @@ const Header = (props: any): JSX.Element => {
             <Button
               aria-label="Deposit or Redeem Dai"
               sx={{
+                ml: [0, 2, 4],
                 variant: 'buttons.card',
                 borderRadius: 'round',
                 color: 'textMuted',
