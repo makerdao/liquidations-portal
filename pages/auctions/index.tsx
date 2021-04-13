@@ -38,11 +38,6 @@ export default function Auctions(): JSX.Element {
                   3 AUCTIONS - POSTED MAY 18 2021 16:01 UTC{' '}
                 </Text>
               </Flex>
-              {/* TODO: implement refresh when network calls integrated */}
-              {/* <Flex sx={{ alignItems: 'center' }} onClick={console.log}>
-                <Icon name="edit" size={3} mr={1} sx={{ color: 'primary' }} />
-                <Text>Refresh Data</Text>
-              </Flex> */}
             </Stack>
             <Stack>
               {auctions ? (

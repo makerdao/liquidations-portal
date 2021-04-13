@@ -2,11 +2,10 @@
 import { useState } from 'react';
 import { Button, Text, Flex, Grid, Link as ExternalLink, jsx, Badge } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import { Icon } from '@makerdao/dai-ui-icons';
 
-import { getNetwork } from 'lib/maker';
+// import { getNetwork } from 'lib/maker';
 import Auction from 'types/auction';
-import Tooltip from 'components/shared/Tooltip';
+// import Tooltip from 'components/shared/Tooltip';
 import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
 import BidModal from './BidModal';
@@ -20,7 +19,7 @@ type Props = {
 const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Element => {
   const [showDialog, setShowDialog] = useState(false);
 
-  const network = getNetwork();
+  // const network = getNetwork();
   const bpi = useBreakpointIndex();
 
   const {
@@ -67,19 +66,15 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
             </Flex>
             <Flex>
               <Flex sx={{ flexDirection: 'column' }}>
-                <Flex
-                  sx={{
-                    alignItems: 'center'
-                  }}
-                >
-                  <Tooltip label="Placeholder text explaining what a Urn Handler is">
-                    <Text sx={{ color: 'textSecondary' }}>Urn Handler</Text>
-                  </Tooltip>
-                  <ExternalLink href={`https://etherscan.io/address/${urn}`} target="_blank">
-                    <Icon ml={2} name="arrowTopRight" size="2" color="primary" />
-                  </ExternalLink>
-                </Flex>
-                <Text>{urn}</Text>
+                {/* TODO do we want a tooltip here? */}
+                {/* <Tooltip label="Placeholder text explaining what Urn handler/Vault owner is"> */}
+                <Text sx={{ color: 'textSecondary' }}>Vault Owner</Text>
+                {/* </Tooltip> */}
+                <ExternalLink href={`https://etherscan.io/address/${urn}`} target="_blank">
+                  <Text variant="text" sx={{ ':hover': { color: 'primary' } }}>
+                    {urn}
+                  </Text>
+                </ExternalLink>
               </Flex>
             </Flex>
           </Stack>
