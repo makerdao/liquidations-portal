@@ -2,8 +2,9 @@ import { cloneElement } from 'react';
 import BigNumber from 'bignumber.js';
 import { jsx, SxStyleProp } from 'theme-ui';
 import { css } from '@theme-ui/css';
-import { SupportedNetworks, ETHERSCAN_PREFIXES } from './constants';
 import round from 'lodash/round';
+import Auction from 'types/auction';
+import { SupportedNetworks, ETHERSCAN_PREFIXES } from './constants';
 
 export async function fetchJson(url: RequestInfo, init?: RequestInit): Promise<any> {
   const response = await fetch(url, init);
@@ -140,3 +141,17 @@ export const calculateCollateralAmt = (colAmt: BigNumber, colPrice: BigNumber): 
 
 export const calculateColValue = (colAmt: BigNumber, colPrice: BigNumber): BigNumber =>
   colAmt.times(colPrice);
+
+export function transformAuctions(response: any): Auction[] {
+  return response.map(resp => ({
+    id: resp.saleId,
+    name: 'link',
+    initialCollateral: '1000', // can look up by `sales()`
+    urn: resp.usr,
+    collateralAvailable: resp.lot.toString(),
+    daiNeeded: resp.tab.toString(),
+    dustLimit: '100', //get from chain on init?
+    maxBid: '100',
+    endDate: resp.tic // need to get ttl (tic + ttl) (tic = start date)
+  }));
+}
