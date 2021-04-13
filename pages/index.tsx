@@ -39,8 +39,42 @@ const mockAuctions: Auction[] = [
   }
 ];
 
-export async function fetchAuctions(): Promise<Auction[]> {
-  return Promise.resolve(mockAuctions);
+// export async function fetchAuctions(): Promise<Auction[]> {
+//   return Promise.resolve(mockAuctions);
+// }
+
+/*
+"saleId": "4990",
+"pos": "5",
+"tab": "48150187464057295135313238110939183779274217273",
+"lot": "196969000000000000",
+"usr": "0xdaaFAe93C0e2A0226043E88a70aCF5be9b671124",
+"tic": "1595930405",
+"top": "6120186359841348405000000000000000000000000000",
+"active": true,
+"created": "2020-07-28T04:00:05",
+"updated": "2020-07-28T04:00:05"
+}
+*/
+const transformAuctions = (response): Auction[] =>
+  response.map(resp => ({
+    id: resp.saleId,
+    name: 'link',
+    initialCollateral: '1000', // can look up by `sales()`
+    urn: resp.usr,
+    collateralAvailable: resp.lot.toString(),
+    daiNeeded: resp.tab.toString(),
+    dustLimit: '100', //get from chain on init?
+    maxBid: '100',
+    endDate: resp.tic // need to get ttl (tic + ttl) (tic = start date)
+  }));
+
+export async function fetchAuctions(maker): Promise<Auction[]> {
+  const response = await maker.service('liquidation').getAllClips('LINK-A');
+  console.log('Response', response);
+  const ta = transformAuctions(response);
+  console.log('Transformed Auctions', ta);
+  return ta;
 }
 
 export default function LandingPage(): JSX.Element {

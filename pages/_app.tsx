@@ -39,7 +39,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <ThemeProvider theme={theme}>
       <Head>
-        <meta
+        {/* <meta
           httpEquiv="Content-Security-Policy"
           content={
             "default-src 'none';" +
@@ -50,7 +50,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
             `script-src 'self' ${dev ? "'unsafe-eval'" : ''};` +
             "img-src 'self' https: data:"
           }
-        />
+        /> */}
         <meta
           name="description"
           content="Allowing ecosystem actors to view and participate in MakerDAO collateral liquidation auctions."
