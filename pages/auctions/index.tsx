@@ -50,7 +50,7 @@ export default function Auctions(): JSX.Element {
             </Stack>
           </Box>
           <Stack gap={3}>
-            <SystemStatsSidebar />
+            {/* <SystemStatsSidebar /> */}
             <ResourceBox />
           </Stack>
         </SidebarLayout>
