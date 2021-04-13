@@ -142,16 +142,38 @@ export const calculateCollateralAmt = (colAmt: BigNumber, colPrice: BigNumber): 
 export const calculateColValue = (colAmt: BigNumber, colPrice: BigNumber): BigNumber =>
   colAmt.times(colPrice);
 
+// Auction response for reference
+// {
+//  "saleId": "4990",
+//  "pos": "5",
+//  "tab": "48150187464057295135313238110939183779274217273",
+//  "lot": "196969000000000000",
+//  "usr": "0xdaaFAe93C0e2A0226043E88a70aCF5be9b671124",
+//  "tic": "1595930405",
+//  "top": "6120186359841348405000000000000000000000000000",
+//  "active": true,
+//  "created": "2020-07-28T04:00:05",
+//  "updated": "2020-07-28T04:00:05"
+// }
 export function transformAuctions(response: any): Auction[] {
   return response.map(resp => ({
     id: resp.saleId,
     name: 'link',
     initialCollateral: '1000', // can look up by `sales()`
     urn: resp.usr,
-    collateralAvailable: resp.lot.toString(),
-    daiNeeded: resp.tab.toString(),
+    collateralAvailable: resp.lot.toFixed(2),
+    daiNeeded: resp.tab.toFixed(2),
     dustLimit: '100', //get from chain on init?
     maxBid: '100',
     endDate: resp.tic // need to get ttl (tic + ttl) (tic = start date)
   }));
+}
+
+export function getAuctionCountByStatus(allClips: any[], filterActive: boolean): number {
+  return allClips.filter(clip => Boolean(clip.active) === filterActive).length;
+}
+
+export function getDaiRequiredForAuctions(allClips: any[]): number {
+  const daiNeeded = allClips.reduce((acc, cur) => acc.plus(cur.tab), new BigNumber(0));
+  return daiNeeded.toFixed(2);
 }

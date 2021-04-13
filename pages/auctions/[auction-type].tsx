@@ -120,7 +120,7 @@ export default function Auctions(): JSX.Element | null {
             </Box>
           </Stack>
           <Stack gap={3}>
-            <SystemStatsSidebar />
+            <SystemStatsSidebar ilk={symbol} />
             <ResourceBox />
           </Stack>
         </SidebarLayout>

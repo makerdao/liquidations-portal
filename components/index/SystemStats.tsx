@@ -4,32 +4,19 @@ import { Badge, Box, Grid, Link as ExternalLink, Flex, Text, jsx } from 'theme-u
 import { Icon } from '@makerdao/dai-ui-icons';
 import Skeleton from 'react-loading-skeleton';
 
-import getMaker from 'lib/maker';
-import { getTotalDai, getUnsafeVaults } from 'lib/api';
+import { getAllClips, getTotalDai, getUnsafeVaults } from 'lib/api';
+import { getAuctionCountByStatus, getDaiRequiredForAuctions } from 'lib/utils';
 import Tooltip from 'components/shared/Tooltip';
 import SystemStat from 'types/systemStat';
 import Stack from '../layouts/Stack';
 
 async function getSystemStats(): Promise<string[]> {
-  // update this section once dai.js plugin is updated
+  // make all calls needed
+  const data = await Promise.all([getAllClips('LINK-A'), getUnsafeVaults('LINK-A'), getTotalDai()]);
 
-  // const maker = await getMaker();
-  // return Promise.all([
-  //   maker.service('mcd:savings').getYearlyRate(),
-  //   maker.service('mcd:systemData').getTotalDai()
-  // ]);
-
-  // for now return whatever data
-  return Promise.all([
-    Promise.resolve('5'),
-    Promise.resolve('10'),
-    // needs update when more than one collateral
-    getUnsafeVaults('LINK-A'),
-    new Promise(resolve => {
-      setTimeout(resolve, 3000, '159,478');
-    }),
-    getTotalDai()
-  ]);
+  // return data needed for each field in fieldMap and let format function do the rest
+  // ['Active Auctions', 'Inactive Auctions', 'Vaults requiring kick', 'Dai required for Auctions', 'Global max available']
+  return [data[0], data[0], data[1], data[0], data[2]];
 }
 
 // if we are on the browser, trigger a prefetch as soon as possible
@@ -46,12 +33,12 @@ export default function SystemStats(): JSX.Element {
   const fieldMap: SystemStat[] = [
     {
       title: 'Active Auctions',
-      format: val => val,
+      format: val => getAuctionCountByStatus(val, true),
       tooltip: 'This is placeholder text explaining what Active Auctions represents'
     },
     {
       title: 'Inactive Auctions',
-      format: val => val,
+      format: val => getAuctionCountByStatus(val, false),
       tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
     },
     {
@@ -61,7 +48,7 @@ export default function SystemStats(): JSX.Element {
     },
     {
       title: 'Dai required for Auctions',
-      format: val => `${val} DAI`,
+      format: val => `${getDaiRequiredForAuctions(val)} DAI`,
       minWidth: 185,
       tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
     },

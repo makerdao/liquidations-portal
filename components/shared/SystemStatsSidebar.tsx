@@ -7,44 +7,32 @@ import Skeleton from 'react-loading-skeleton';
 import Stack from 'components/layouts/Stack';
 import Tooltip from 'components/shared/Tooltip';
 import SystemStat from 'types/systemStat';
-// import getMaker from '../lib/maker';
+import { getUnsafeVaults } from 'lib/api';
 // import CurrencyObject from '../types/currency';
 
-async function getSystemStats(): Promise<string[]> {
-  // update this section once dai.js plugin is updated
-
-  // const maker = await getMaker();
-  // return Promise.all([
-  //   maker.service('mcd:savings').getYearlyRate(),
-  //   maker.service('mcd:systemData').getTotalDai()
-  // ]);
-
-  // for now return whatever data
+async function getSystemStats(ilk: string): Promise<string[]> {
   return Promise.all([
-    Promise.resolve('15'),
-    Promise.resolve('3'),
-    Promise.resolve('10'),
-    Promise.resolve('1,478 DAI'),
+    getUnsafeVaults(ilk),
+    Promise.resolve('todo'),
+    Promise.resolve('todo'),
+    Promise.resolve('todo'),
     new Promise(resolve => {
-      setTimeout(resolve, 3000, '9,999 DAI');
+      setTimeout(resolve, 3000, 'todo');
     })
   ]);
 }
 
-// if we are on the browser, trigger a prefetch as soon as possible
-if (typeof window !== 'undefined') {
-  getSystemStats().then(stats => {
-    mutate('/system-stats-sidebar', stats, false);
-  });
-}
+type Props = {
+  ilk: string;
+};
 
-export default function SystemStatsSidebar(): JSX.Element {
-  const { data, error } = useSWR<string[]>('/system-stats-sidebar', getSystemStats);
+export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
+  const { data, error } = useSWR<string[]>('/system-stats-sidebar', () => getSystemStats(ilk));
 
   const fieldMap: SystemStat[] = [
     {
       title: 'Undercollateralized Vaults',
-      format: val => val,
+      format: val => val.length,
       tooltip: 'This is placeholder text explaining what Undercollateralized Vaults represents'
     },
     {
@@ -122,7 +110,7 @@ export default function SystemStatsSidebar(): JSX.Element {
                 ) : (
                   <Text sx={{ fontSize: 3, color: 'textSecondary' }}>{stat.title}</Text>
                 )}
-                {stat.value ? (
+                {stat.value !== null ? (
                   <Text variant="h2" sx={{ fontSize: 3 }}>
                     {stat.value}
                   </Text>
