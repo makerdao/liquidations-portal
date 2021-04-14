@@ -22,7 +22,6 @@ export default function Auctions(): JSX.Element | null {
   const router = useRouter();
   const type = router.query['auction-type']?.toString().toLowerCase();
 
-  // TODO: return loading indicator instead?
   if (!type) return null;
 
   const ilkData = COLLATERAL_MAP[type];
@@ -32,8 +31,7 @@ export default function Auctions(): JSX.Element | null {
 
   const { bannerPng, iconSvg, symbol } = ilkData;
 
-  // TODO: update to pull the right auctions based on ilk
-  const { data: auctions } = useAuctions();
+  const { data: auctions } = useAuctions(type);
   const { data: vatBalance } = useSWR<BigNumber>('/balances/vat', () =>
     getMaker().then(maker =>
       maker.service('smartContract').getContract('MCD_VAT').dai(maker.currentAddress())
@@ -110,7 +108,6 @@ export default function Auctions(): JSX.Element | null {
             </Box>
             <Box>
               <Stack gap={2}>
-                {/* TODO: replace with inactive auction data */}
                 <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <Heading as="h2">{`Inactive ${type?.toUpperCase()} Auctions`}</Heading>
                   {/* TODO: replace with dynamic auction data */}

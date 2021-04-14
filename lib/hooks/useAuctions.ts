@@ -3,14 +3,21 @@ import { getAllClips } from 'lib/api';
 import Auction from 'types/auction';
 import { transformAuctions } from 'lib/utils';
 
-async function fetchAuctions(): Promise<Auction[]> {
-  const response = await getAllClips('LINK-A');
+async function fetchAuctions(ilk: string): Promise<Auction[]> {
+  const type = ilk ?? 'all';
+
+  const response = await getAllClips(type);
 
   return transformAuctions(response);
 }
 
-export function useAuctions(): any {
-  const { data, error } = useSWR('/auctions/fetch-all}', fetchAuctions);
+export function useAuctions(ilk?: string): any {
+  const type = ilk ?? 'all';
+
+  const { data, error } = useSWR(`/auctions/fetch-${type}`, () => fetchAuctions(type), {
+    // set interval to 60 seconds for "all ilk" queries, 10 seconds for ilk-specific
+    refreshInterval: type === 'all' ? 60000 : 10000
+  });
 
   return {
     data,
