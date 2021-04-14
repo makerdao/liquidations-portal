@@ -158,7 +158,8 @@ export const calculateColValue = (colAmt: BigNumber, colPrice: BigNumber): BigNu
 export function transformAuctions(response: any): Auction[] {
   return response.map(resp => ({
     id: resp.saleId,
-    name: 'link',
+    active: resp.active,
+    name: 'link-a', // this won't come from response, will need to be specified based on req param
     initialCollateral: '1000', // can look up by `sales()`
     urn: resp.usr,
     collateralAvailable: resp.lot.toFixed(2),
@@ -173,7 +174,19 @@ export function getAuctionCountByStatus(allClips: any[], filterActive: boolean):
   return allClips.filter(clip => Boolean(clip.active) === filterActive).length;
 }
 
+export function getAuctionsByStatus(auctions: any[], filterActive: boolean): any[] {
+  return auctions.filter(auction => Boolean(auction.active) === filterActive);
+}
+
 export function getDaiRequiredForAuctions(allClips: any[]): number {
   const daiNeeded = allClips.reduce((acc, cur) => acc.plus(cur.tab), new BigNumber(0));
   return daiNeeded.toFixed(2);
+}
+
+export function getTotalCollateralAvailable(auctions: any[]): number {
+  const total = auctions.reduce((acc, cur) => {
+    const num = new BigNumber(cur.collateralAvailable);
+    return acc.plus(num);
+  }, new BigNumber(0));
+  return total.toFixed(2);
 }

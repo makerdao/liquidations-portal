@@ -3,8 +3,10 @@ import Head from 'next/head';
 import useSWR from 'swr';
 import { Button, Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
+
 import { transformAuctions } from 'lib/utils';
 import { getAllClips } from 'lib/api';
+import { COLLATERAL_ARRAY } from 'lib/constants';
 import Auction from 'types/auction';
 import AuctionPreviewCard from 'components/index/AuctionPreviewCard';
 import AuctionPreviewSkeleton from 'components/index/AuctionPreviewSkeleton';
@@ -149,11 +151,15 @@ export default function LandingPage(): JSX.Element {
               Active Auctions
             </Heading>
             <Grid gap={4} columns={[1, 3]}>
-              {auctions ? (
-                auctions.map(auction => <AuctionPreviewCard key={auction.id} auction={auction} />)
-              ) : (
-                <AuctionPreviewSkeleton />
-              )}
+              {COLLATERAL_ARRAY.map(type => (
+                <>
+                  {auctions ? (
+                    <AuctionPreviewCard key={type.name} type={type} auctions={auctions} />
+                  ) : (
+                    <AuctionPreviewSkeleton />
+                  )}
+                </>
+              ))}
             </Grid>
           </Stack>
         </section>
