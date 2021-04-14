@@ -4,9 +4,9 @@ import useSWR from 'swr';
 import { Button, Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 
-import getMaker from 'lib/maker';
 import { transformAuctions } from 'lib/utils';
 import { getAllClips } from 'lib/api';
+import { COLLATERAL_ARRAY } from 'lib/constants';
 import Auction from 'types/auction';
 import AuctionPreviewCard from 'components/index/AuctionPreviewCard';
 import AuctionPreviewSkeleton from 'components/index/AuctionPreviewSkeleton';
@@ -15,49 +15,6 @@ import Stack from 'components/layouts/Stack';
 import SystemStats from 'components/index/SystemStats';
 import useAccountsStore from 'stores/accounts';
 import { useModalsStore } from 'stores/modals';
-
-// const mockAuctions: Auction[] = [
-//   {
-//     id: 123,
-//     name: 'link',
-//     initialCollateral: '8000',
-//     urn: '0x123',
-//     collateralAvailable: '3000',
-//     daiNeeded: '4000',
-//     dustLimit: '111',
-//     maxBid: '999',
-//     endDate: 1619894140000
-//   },
-//   {
-//     id: 234,
-//     name: 'yfi',
-//     initialCollateral: '4000',
-//     urn: '0x345',
-//     collateralAvailable: '1000',
-//     daiNeeded: '6000',
-//     dustLimit: '222',
-//     maxBid: '888',
-//     endDate: 1619894140000
-//   }
-// ];
-
-// export async function fetchAuctions(): Promise<Auction[]> {
-//   return Promise.resolve(mockAuctions);
-// }
-
-/*
-"saleId": "4990",
-"pos": "5",
-"tab": "48150187464057295135313238110939183779274217273",
-"lot": "196969000000000000",
-"usr": "0xdaaFAe93C0e2A0226043E88a70aCF5be9b671124",
-"tic": "1595930405",
-"top": "6120186359841348405000000000000000000000000000",
-"active": true,
-"created": "2020-07-28T04:00:05",
-"updated": "2020-07-28T04:00:05"
-}
-*/
 
 export async function fetchAuctions(): Promise<Auction[]> {
   const response = await getAllClips('LINK-A');
@@ -194,11 +151,15 @@ export default function LandingPage(): JSX.Element {
               Active Auctions
             </Heading>
             <Grid gap={4} columns={[1, 3]}>
-              {auctions ? (
-                auctions.map(auction => <AuctionPreviewCard key={auction.id} auction={auction} />)
-              ) : (
-                <AuctionPreviewSkeleton />
-              )}
+              {COLLATERAL_ARRAY.map(type => (
+                <>
+                  {auctions ? (
+                    <AuctionPreviewCard key={type.name} type={type} auctions={auctions} />
+                  ) : (
+                    <AuctionPreviewSkeleton />
+                  )}
+                </>
+              ))}
             </Grid>
           </Stack>
         </section>
