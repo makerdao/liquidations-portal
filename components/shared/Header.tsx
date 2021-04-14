@@ -10,7 +10,7 @@ import shallow from 'zustand/shallow';
 
 import { COLLATERAL_ARRAY } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
-import { useAuctions } from 'lib/hooks';
+import { useAuctions, useAccountTokenBalance } from 'lib/hooks';
 import { useModalsStore } from 'stores/modals';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
@@ -27,6 +27,7 @@ const Header = (props: any): JSX.Element => {
   const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
   const account = useAccountsStore(state => state.currentAccount);
   const address = account?.address;
+  const { data: daiBalance } = useAccountTokenBalance('DAI', address);
 
   const [setHasJoinDaiApproval, setHasJoinDaiHope] = useApprovalsStore(
     state => [state.setHasJoinDaiApproval, state.setHasJoinDaiHope],
@@ -96,7 +97,7 @@ const Header = (props: any): JSX.Element => {
                 {COLLATERAL_ARRAY.map((type, index) => {
                   const numberOfAuctions = auctions
                     ? auctions.filter(a => a.name === type.key).length.toString()
-                    : '00';
+                    : '0';
                   return (
                     <MenuItem key={index} onSelect={() => router.push(`/auctions/${type.key}`)}>
                       <Flex sx={{ justifyContent: 'space-between', py: 1, cursor: 'pointer', fontSize: 2 }}>
@@ -145,7 +146,7 @@ const Header = (props: any): JSX.Element => {
             >
               <Flex sx={{ alignItems: 'center' }}>
                 {/* TODO: add dynamic DAI balance */}
-                <Text>0,00</Text>
+                <Text>{daiBalance}</Text>
                 <Icon name="dai" size="16px" sx={{ mx: 2 }} />
                 <Text>Deposit/Redeem</Text>
               </Flex>

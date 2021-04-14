@@ -53,3 +53,9 @@ export async function getVatGemBalance(ilk: string, address: string): Promise<an
   const maker = await getMaker();
   return maker.service('smartContract').getContract('MCD_VAT').gem(stringToBytes(ilk), address);
 }
+
+export async function getAccountTokenBalance(token: string, address?: string): Promise<any> {
+  const maker = await getMaker();
+
+  return maker.getToken(token).balanceOf(address);
+}
