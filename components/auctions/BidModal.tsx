@@ -65,9 +65,9 @@ const BidModal = ({
   const submitBid = useAuctionStore(state => state.submitBid);
 
   // Hardcoding data to match current active kovan auction
-  const bidId = 21;
+  const bidId = 30;
   const bidAmt = '1';
-  const bidMax = '15';
+  const bidMax = '50';
   const bidAddress = '0x16fb96a5fa0427af0c8f7cf1eb4870231c8154b6';
 
   return (
