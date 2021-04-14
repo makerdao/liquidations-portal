@@ -10,6 +10,8 @@ import { fadeIn, slideUp } from '../../lib/keyframes';
 import getMaker from '../../lib/maker';
 import { fromRad, calculateCollateralAmt, calculateColValue } from '../../lib/utils';
 import LogoBanner from './LogoBanner';
+import useAuctionStore from 'stores/auctions';
+import { getVatGemBalance } from 'lib/api';
 
 // TODO where do we get collateral price info?
 const colPrice = new BigNumber(28.19);
@@ -38,6 +40,10 @@ const BidModal = ({
     getMaker().then(maker => maker.getToken('DAI').balance())
   );
 
+  getVatGemBalance('LINK-A', '0x16Fb96a5fa0427Af0C8F7cF1eB4870231c8154B6').then(x =>
+    console.log('vat gem balance', x.toString())
+  );
+
   const updateValue = (e: { currentTarget: { value: string } }) => {
     const newValueStr = e.currentTarget.value;
     if (!/^((0|[1-9]\d*)(\.\d+)?)?$/.test(newValueStr)) return; // only non-negative valid numbers
@@ -55,6 +61,14 @@ const BidModal = ({
     const max = fromRad(vatBalance).gt(colAvailableValue) ? colAvailableValue : fromRad(vatBalance);
     setValue(max.toFormat());
   };
+
+  const submitBid = useAuctionStore(state => state.submitBid);
+
+  // Hardcoding data to match current active kovan auction
+  const bidId = 21;
+  const bidAmt = '1';
+  const bidMax = '15';
+  const bidAddress = '0x16fb96a5fa0427af0c8f7cf1eb4870231c8154b6';
 
   return (
     <DialogOverlay isOpen={showDialog} onDismiss={onDismiss}>
@@ -148,7 +162,9 @@ const BidModal = ({
               </Text>
             </Flex>
           </Flex>
-          <Button sx={{ mt: 3 }}>Place a bid</Button>
+          <Button sx={{ mt: 3 }} onClick={() => submitBid(bidId, bidAmt, bidMax, bidAddress)}>
+            Place a bid
+          </Button>
         </Flex>
       </DialogContent>
     </DialogOverlay>
