@@ -5,6 +5,8 @@ import { Button, Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 
 import { Icon } from '@makerdao/dai-ui-icons';
 
 import getMaker from 'lib/maker';
+import { transformAuctions } from 'lib/utils';
+import { getAllClips } from 'lib/api';
 import Auction from 'types/auction';
 import AuctionPreviewCard from 'components/index/AuctionPreviewCard';
 import AuctionPreviewSkeleton from 'components/index/AuctionPreviewSkeleton';
@@ -14,30 +16,30 @@ import SystemStats from 'components/index/SystemStats';
 import useAccountsStore from 'stores/accounts';
 import { useModalsStore } from 'stores/modals';
 
-const mockAuctions: Auction[] = [
-  {
-    id: 123,
-    name: 'link',
-    initialCollateral: '8000',
-    urn: '0x123',
-    collateralAvailable: '3000',
-    daiNeeded: '4000',
-    dustLimit: '111',
-    maxBid: '999',
-    endDate: 1619894140000
-  },
-  {
-    id: 234,
-    name: 'yfi',
-    initialCollateral: '4000',
-    urn: '0x345',
-    collateralAvailable: '1000',
-    daiNeeded: '6000',
-    dustLimit: '222',
-    maxBid: '888',
-    endDate: 1619894140000
-  }
-];
+// const mockAuctions: Auction[] = [
+//   {
+//     id: 123,
+//     name: 'link',
+//     initialCollateral: '8000',
+//     urn: '0x123',
+//     collateralAvailable: '3000',
+//     daiNeeded: '4000',
+//     dustLimit: '111',
+//     maxBid: '999',
+//     endDate: 1619894140000
+//   },
+//   {
+//     id: 234,
+//     name: 'yfi',
+//     initialCollateral: '4000',
+//     urn: '0x345',
+//     collateralAvailable: '1000',
+//     daiNeeded: '6000',
+//     dustLimit: '222',
+//     maxBid: '888',
+//     endDate: 1619894140000
+//   }
+// ];
 
 // export async function fetchAuctions(): Promise<Auction[]> {
 //   return Promise.resolve(mockAuctions);
@@ -56,29 +58,15 @@ const mockAuctions: Auction[] = [
 "updated": "2020-07-28T04:00:05"
 }
 */
-const transformAuctions = (response): Auction[] =>
-  response.map(resp => ({
-    id: resp.saleId,
-    name: 'link',
-    initialCollateral: '1000', // can look up by `sales()`
-    urn: resp.usr,
-    collateralAvailable: resp.lot.toString(),
-    daiNeeded: resp.tab.toString(),
-    dustLimit: '100', //get from chain on init?
-    maxBid: '100',
-    endDate: resp.tic // need to get ttl (tic + ttl) (tic = start date)
-  }));
 
-export async function fetchAuctions(maker): Promise<Auction[]> {
-  const response = await maker.service('liquidation').getAllClips('LINK-A');
-  console.log('Response', response);
-  const ta = transformAuctions(response);
-  console.log('Transformed Auctions', ta);
-  return ta;
+export async function fetchAuctions(): Promise<Auction[]> {
+  const response = await getAllClips('LINK-A');
+
+  return transformAuctions(response);
 }
 
 export default function LandingPage(): JSX.Element {
-  const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
+  const { data: auctions } = useSWR('/auctions/fetch-all', fetchAuctions);
   const account = useAccountsStore(state => state.currentAccount);
   const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
 

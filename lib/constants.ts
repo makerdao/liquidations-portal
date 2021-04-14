@@ -22,7 +22,7 @@ type CollateralInfo = {
 export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
   link: {
     name: 'chainlink',
-    symbol: 'LINK',
+    symbol: 'LINK-A',
     cardTexturePng: '/assets/link-card-texture.png',
     bannerPng: '/assets/link-banner-texture.png',
     iconSvg: '/assets/link-icon.svg'

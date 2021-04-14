@@ -71,7 +71,15 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
                 <Text sx={{ color: 'textSecondary' }}>Vault Owner</Text>
                 {/* </Tooltip> */}
                 <ExternalLink href={`https://etherscan.io/address/${urn}`} target="_blank">
-                  <Text variant="text" sx={{ ':hover': { color: 'primary' } }}>
+                  <Text
+                    variant="text"
+                    sx={{
+                      ':hover': { color: 'primary' },
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
                     {urn}
                   </Text>
                 </ExternalLink>
