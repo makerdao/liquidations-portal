@@ -170,7 +170,7 @@ export function transformAuctions(response: any): Auction[] {
   }));
 }
 
-export function getAuctionCountByStatus(allClips: any[], filterActive: boolean): number {
+export function getAuctionCountByStatus(allClips: any[] = [], filterActive: boolean): number {
   return allClips.filter(clip => Boolean(clip.active) === filterActive).length;
 }
 
@@ -178,8 +178,11 @@ export function getAuctionsByStatus(auctions: any[], filterActive: boolean): any
   return auctions.filter(auction => Boolean(auction.active) === filterActive);
 }
 
-export function getDaiRequiredForAuctions(allClips: any[]): number {
-  const daiNeeded = allClips.reduce((acc, cur) => acc.plus(cur.tab), new BigNumber(0));
+export function getDaiRequiredForAuctions(auctions: any[]): number {
+  const daiNeeded = auctions.reduce((acc, cur) => {
+    const num = new BigNumber(cur.daiNeeded);
+    return acc.plus(num);
+  }, new BigNumber(0));
   return daiNeeded.toFixed(2);
 }
 

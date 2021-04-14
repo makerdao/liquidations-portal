@@ -1,33 +1,16 @@
 /** @jsx jsx */
-import useSWR, { mutate } from 'swr';
 import { Badge, Box, Grid, Link as ExternalLink, Flex, Text, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 import Skeleton from 'react-loading-skeleton';
 
-import { getAllClips, getTotalDai, getUnsafeVaults } from 'lib/api';
 import { getAuctionCountByStatus, getDaiRequiredForAuctions } from 'lib/utils';
+import { useSystemStats } from 'lib/hooks';
 import Tooltip from 'components/shared/Tooltip';
 import SystemStat from 'types/systemStat';
 import Stack from '../layouts/Stack';
 
-async function getSystemStats(): Promise<string[]> {
-  // make all calls needed
-  const data = await Promise.all([getAllClips('LINK-A'), getUnsafeVaults('LINK-A'), getTotalDai()]);
-
-  // return data needed for each field in fieldMap and let format function do the rest
-  // ['Active Auctions', 'Inactive Auctions', 'Vaults requiring kick', 'Dai required for Auctions', 'Global max available']
-  return [data[0], data[0], data[1], data[0], data[2]];
-}
-
-// if we are on the browser, trigger a prefetch as soon as possible
-if (typeof window !== 'undefined') {
-  getSystemStats().then(stats => {
-    mutate('/system-stats-landing', stats, false);
-  });
-}
-
 export default function SystemStats(): JSX.Element {
-  const { data, error } = useSWR<string[]>('/system-stats-landing', getSystemStats);
+  const { data, error } = useSystemStats();
 
   // format property can be used to specify how to format data the particular value
   const fieldMap: SystemStat[] = [

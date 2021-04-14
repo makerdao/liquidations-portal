@@ -1,13 +1,10 @@
 /** @jsx jsx */
 import Head from 'next/head';
-import useSWR from 'swr';
 import { Button, Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 
-import { transformAuctions } from 'lib/utils';
-import { getAllClips } from 'lib/api';
 import { COLLATERAL_ARRAY } from 'lib/constants';
-import Auction from 'types/auction';
+import { useAuctions } from 'lib/hooks';
 import AuctionPreviewCard from 'components/index/AuctionPreviewCard';
 import AuctionPreviewSkeleton from 'components/index/AuctionPreviewSkeleton';
 import PrimaryLayout from 'components/layouts/Primary';
@@ -16,14 +13,8 @@ import SystemStats from 'components/index/SystemStats';
 import useAccountsStore from 'stores/accounts';
 import { useModalsStore } from 'stores/modals';
 
-export async function fetchAuctions(): Promise<Auction[]> {
-  const response = await getAllClips('LINK-A');
-
-  return transformAuctions(response);
-}
-
 export default function LandingPage(): JSX.Element {
-  const { data: auctions } = useSWR('/auctions/fetch-all', fetchAuctions);
+  const { data: auctions } = useAuctions();
   const account = useAccountsStore(state => state.currentAccount);
   const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
 

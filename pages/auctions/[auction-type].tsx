@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { Heading, Image, Text, Box, Flex, jsx } from 'theme-ui';
 import { useRouter } from 'next/router';
 import BigNumber from 'bignumber.js';
+import Skeleton from 'react-loading-skeleton';
 
 import SystemStatsSidebar from 'components/shared/SystemStatsSidebar';
 import ResourceBox from 'components/shared/ResourceBox';
@@ -12,18 +13,10 @@ import PrimaryLayout from 'components/layouts/Primary';
 import AuctionOverviewCard from 'components/auctions/AuctionOverviewCard';
 import AuctionOverviewSkeleton from 'components/auctions/AuctionOverviewSkeleton';
 import Stack from 'components/layouts/Stack';
-import { getAllClips } from 'lib/api';
 import getMaker from 'lib/maker';
 import { COLLATERAL_MAP } from 'lib/constants';
-import { transformAuctions, getAuctionsByStatus } from 'lib/utils';
-import Auction from 'types/auction';
-import Skeleton from 'react-loading-skeleton';
-
-export async function fetchIlkAuctions(): Promise<Auction[]> {
-  const response = await getAllClips('LINK-A');
-
-  return transformAuctions(response);
-}
+import { getAuctionsByStatus } from 'lib/utils';
+import { useAuctions } from 'lib/hooks';
 
 export default function Auctions(): JSX.Element | null {
   const router = useRouter();
@@ -39,14 +32,8 @@ export default function Auctions(): JSX.Element | null {
 
   const { bannerPng, iconSvg, symbol } = ilkData;
 
-  const fetchIlkAuctions = async (ilk: string): Promise<Auction[]> => {
-    const response = await getAllClips(ilk);
-
-    return transformAuctions(response);
-  };
-
-  // TODO: update to pull the right auctions
-  const { data: auctions } = useSWR<Auction[]>(`/auctions/fetch-${type}`, () => fetchIlkAuctions(type));
+  // TODO: update to pull the right auctions based on ilk
+  const { data: auctions } = useAuctions();
   const { data: vatBalance } = useSWR<BigNumber>('/balances/vat', () =>
     getMaker().then(maker =>
       maker.service('smartContract').getContract('MCD_VAT').dai(maker.currentAddress())

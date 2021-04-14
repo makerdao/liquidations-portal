@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
 import { Button, Flex, NavLink, Container, Close, Box, IconButton, Divider, jsx, Text } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button';
@@ -10,18 +9,17 @@ import { Icon } from '@makerdao/dai-ui-icons';
 
 import { COLLATERAL_ARRAY } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
-import getMaker from 'lib/maker';
+import { useAuctions } from 'lib/hooks';
 import { useModalsStore } from 'stores/modals';
 import useAccountsStore from 'stores/accounts';
 import AccountSelect from 'components/header/AccountSelect';
-import { fetchAuctions } from 'pages/index'; //todo move to lib/api
 import DepositRedeemModal from './DepositRedeemModal';
 
 const Header = (props: any): JSX.Element => {
   const network = getNetwork();
   const router = useRouter();
   const bpi = useBreakpointIndex();
-  const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
+  const { data: auctions } = useAuctions();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const isDepositRedeemOpen = useModalsStore(state => state.isDepositRedeemOpen);
   const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
@@ -130,7 +128,7 @@ const Header = (props: any): JSX.Element => {
                 }
               }}
               {...props}
-              onClick={props.onClick}
+              onClick={toggleDepositRedeem}
             >
               <Flex sx={{ alignItems: 'center' }}>
                 {/* TODO: add dynamic DAI balance */}

@@ -1,33 +1,20 @@
 /** @jsx jsx */
 import { Badge, Card, Flex, Link as ExternalLink, Text, Box, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
-import useSWR, { mutate } from 'swr';
 import Skeleton from 'react-loading-skeleton';
 
 import Stack from 'components/layouts/Stack';
 import Tooltip from 'components/shared/Tooltip';
 import SystemStat from 'types/systemStat';
-import { getUnsafeVaults } from 'lib/api';
-// import CurrencyObject from '../types/currency';
-
-async function getSystemStats(ilk: string): Promise<string[]> {
-  return Promise.all([
-    getUnsafeVaults(ilk),
-    Promise.resolve('todo'),
-    Promise.resolve('todo'),
-    Promise.resolve('todo'),
-    new Promise(resolve => {
-      setTimeout(resolve, 3000, 'todo');
-    })
-  ]);
-}
+import { getAuctionCountByStatus, getDaiRequiredForAuctions } from 'lib/utils';
+import { useSystemStatsSidebar } from 'lib/hooks';
 
 type Props = {
   ilk: string;
 };
 
 export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
-  const { data, error } = useSWR<string[]>('/system-stats-sidebar', () => getSystemStats(ilk));
+  const { data, error } = useSystemStatsSidebar(ilk);
 
   const fieldMap: SystemStat[] = [
     {
@@ -37,17 +24,17 @@ export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
     },
     {
       title: 'Active Auctions',
-      format: val => val,
+      format: val => getAuctionCountByStatus(val, true),
       tooltip: 'This is placeholder text explaining what Active Auctions represents'
     },
     {
       title: 'Inactive Auctions',
-      format: val => val,
+      format: val => getAuctionCountByStatus(val, false),
       tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
     },
     {
       title: 'Dai required for Auctions',
-      format: val => val,
+      format: val => `${getDaiRequiredForAuctions(val)} DAI`,
       tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
     },
     {

@@ -39,6 +39,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <ThemeProvider theme={theme}>
       <Head>
+        {/* TODO: come back to this/ */}
         {/* <meta
           httpEquiv="Content-Security-Policy"
           content={
@@ -59,7 +60,8 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
 
       <SWRConfig
         value={{
-          refreshInterval: 5000,
+          // TODO: change back to 5 seconds
+          refreshInterval: 10000,
           fetcher: url => fetchJson(url)
         }}
       >
