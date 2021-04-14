@@ -11,6 +11,7 @@ import getMaker from '../../lib/maker';
 import { fromRad, calculateCollateralAmt, calculateColValue } from '../../lib/utils';
 import LogoBanner from './LogoBanner';
 import useAuctionStore from 'stores/auctions';
+import useAccountsStore from 'stores/accounts';
 import { getVatGemBalance } from 'lib/api';
 
 // TODO where do we get collateral price info?
@@ -31,6 +32,7 @@ const BidModal = ({
   auction,
   vatBalance = new BigNumber(0)
 }: Props): JSX.Element => {
+  const account = useAccountsStore(state => state.currentAccount);
   const [value, setValue] = useState<string>('');
   const [colAmtStr, setColAmtStr] = useState<string>('0.00');
 
@@ -60,15 +62,18 @@ const BidModal = ({
     const colAvailableValue = calculateColValue(new BigNumber(collateralAvailable), colPrice);
     const max = fromRad(vatBalance).gt(colAvailableValue) ? colAvailableValue : fromRad(vatBalance);
     setValue(max.toFormat());
+
+    const colAmount = calculateCollateralAmt(max, colPrice);
+    setColAmtStr(colAmount.toFormat(2));
   };
 
   const submitBid = useAuctionStore(state => state.submitBid);
 
   // Hardcoding data to match current active kovan auction
-  const bidId = 30;
   const bidAmt = '1';
   const bidMax = '50';
-  const bidAddress = '0x16fb96a5fa0427af0c8f7cf1eb4870231c8154b6';
+
+  const disabled = !account;
 
   return (
     <DialogOverlay isOpen={showDialog} onDismiss={onDismiss}>
@@ -162,7 +167,11 @@ const BidModal = ({
               </Text>
             </Flex>
           </Flex>
-          <Button sx={{ mt: 3 }} onClick={() => submitBid(bidId, bidAmt, bidMax, bidAddress)}>
+          <Button
+            disabled={disabled}
+            sx={{ mt: 3 }}
+            onClick={() => submitBid(auction.id, bidAmt, bidMax, account?.address)}
+          >
             Place a bid
           </Button>
         </Flex>
