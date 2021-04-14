@@ -5,17 +5,42 @@ import { transactionsApi } from './transactions';
 type Store = {
   hasJoinDaiApproval: boolean;
   hasJoinDaiHope: boolean;
-  setJoinDaiApproval: () => Promise<void>;
-  setJoinDaiHope: () => Promise<void>;
+
+  setHasJoinDaiApproval: (address: string | undefined) => Promise<void>;
+  setHasJoinDaiHope: (address: string | undefined) => Promise<void>;
+
+  enableJoinDaiApproval: () => Promise<void>;
+  enableJoinDaiHope: () => Promise<void>;
 };
 
 const [useApprovalsStore] = create<Store>((set, get) => ({
   hasJoinDaiApproval: false,
   hasJoinDaiHope: false,
 
-  setJoinDaiApproval: async () => {
+  setHasJoinDaiApproval: async address => {
     const maker = await getMaker();
-    const address = maker.getContract('MCD_JOIN_DAI').address;
+    const allowance = await maker
+      .getToken('DAI')
+      .allowance(address, maker.service('smartContract').getContract('MCD_JOIN_DAI').address);
+    set({
+      hasJoinDaiApproval: allowance.toBigNumber().gt(0)
+    });
+  },
+  setHasJoinDaiHope: async address => {
+    const maker = await getMaker();
+    const can = await maker
+      .service('smartContract')
+      .getContract('MCD_VAT')
+      .can(address, maker.service('smartContract').getContract('MCD_JOIN_DAI').address);
+
+    set({
+      hasJoinDaiHope: can.toNumber() === 1
+    });
+  },
+
+  enableJoinDaiApproval: async () => {
+    const maker = await getMaker();
+    const address = maker.service('smartContract').getContract('MCD_JOIN_DAI').address;
     const txCreator = () => maker.getToken('DAI').approveUnlimited(address);
 
     await transactionsApi.getState().track(txCreator, 'Join DAI approval sent', {
@@ -28,9 +53,9 @@ const [useApprovalsStore] = create<Store>((set, get) => ({
       hasJoinDaiApproval: true
     });
   },
-  setJoinDaiHope: async () => {
+  enableJoinDaiHope: async () => {
     const maker = await getMaker();
-    const address = maker.getContract('MCD_JOIN_DAI').address;
+    const address = maker.service('smartContract').getContract('MCD_JOIN_DAI').address;
     const txCreator = () => maker.service('smartContract').getContract('MCD_VAT').hope(address);
 
     await transactionsApi.getState().track(txCreator, 'Join DAI hope sent', {

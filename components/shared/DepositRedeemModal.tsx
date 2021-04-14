@@ -6,6 +6,7 @@ import { DialogOverlay, DialogContent } from '@reach/dialog';
 import BigNumber from 'bignumber.js';
 
 import { fadeIn, slideUp } from 'lib/keyframes';
+import useApprovalsStore from 'stores/approvals';
 // import getMaker from 'lib/maker';
 
 type Props = {
@@ -19,6 +20,10 @@ const DepositRedeemModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Eleme
   // const { data: daiBalance } = useSWR('/balances/dai', () =>
   //   getMaker().then(maker => maker.getToken('DAI').balance())
   // );
+  const [enableJoinDaiApproval, enableJoinDaiHope] = useApprovalsStore(state => [
+    state.enableJoinDaiApproval,
+    state.enableJoinDaiHope
+  ]);
   const [isDeposit, setIsDeposit] = useState(true);
 
   return (
@@ -104,7 +109,9 @@ const DepositRedeemModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Eleme
                   type="number"
                   value={0.0}
                 />
-                <Button sx={{ width: 160 }}>Unlock Dai</Button>
+                <Button sx={{ width: 160 }} onClick={enableJoinDaiApproval}>
+                  Unlock Dai
+                </Button>
               </Flex>
               <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
                 <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
@@ -118,7 +125,9 @@ const DepositRedeemModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Eleme
                   type="number"
                   value={0.0}
                 />
-                <Button sx={{ width: 160 }}>Unlock Dai</Button>
+                <Button sx={{ width: 160 }} onClick={enableJoinDaiHope}>
+                  Unlock Dai
+                </Button>
               </Flex>
             </>
           ) : (
