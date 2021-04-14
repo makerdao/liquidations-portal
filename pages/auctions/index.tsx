@@ -12,10 +12,10 @@ import AuctionOverviewCard from 'components/auctions/AuctionOverviewCard';
 import AuctionOverviewSkeleton from 'components/auctions/AuctionOverviewSkeleton';
 import Stack from 'components/layouts/Stack';
 import getMaker from 'lib/maker';
-import { fetchAuctions } from '../index'; //todo move to lib/api
+import { useAuctions } from 'lib/hooks';
 
 export default function Auctions(): JSX.Element {
-  const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
+  const { data: auctions } = useAuctions();
   const { data: vatBalance } = useSWR<BigNumber>('/balances/vat', () =>
     getMaker().then(maker =>
       maker.service('smartContract').getContract('MCD_VAT').dai(maker.currentAddress())
