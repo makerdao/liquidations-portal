@@ -174,11 +174,15 @@ export function getAuctionCountByStatus(allClips: any[] = [], filterActive: bool
   return allClips.filter(clip => Boolean(clip.active) === filterActive).length;
 }
 
-export function getAuctionsByStatus(auctions: any[], filterActive: boolean): any[] {
+export function getAuctionsByStatus(auctions: any[] = [], filterActive: boolean): any[] {
   return auctions.filter(auction => Boolean(auction.active) === filterActive);
 }
 
-export function getDaiRequiredForAuctions(auctions: any[]): number {
+export function getAuctionsByIlk(auctions: any[] = [], ilk: string): any[] {
+  return auctions.filter(auction => auction.name === ilk);
+}
+
+export function getDaiRequiredForAuctions(auctions: any[] = []): number {
   const daiNeeded = auctions.reduce((acc, cur) => {
     const num = new BigNumber(cur.daiNeeded);
     return acc.plus(num);
@@ -186,7 +190,7 @@ export function getDaiRequiredForAuctions(auctions: any[]): number {
   return daiNeeded.toFixed(2);
 }
 
-export function getTotalCollateralAvailable(auctions: any[]): number {
+export function getTotalCollateralAvailable(auctions: any[] = []): number {
   const total = auctions.reduce((acc, cur) => {
     const num = new BigNumber(cur.collateralAvailable);
     return acc.plus(num);

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Text, Button, Box, Image, Flex, jsx } from 'theme-ui';
 
 import Auction from 'types/auction';
-import { getTotalCollateralAvailable } from 'lib/utils';
+import { getAuctionsByIlk, getTotalCollateralAvailable } from 'lib/utils';
 
 type Props = {
   type?: any;
@@ -14,9 +14,9 @@ export default function AuctionPreviewCard({ type, auctions }: Props): JSX.Eleme
   if (!type || !auctions) return null;
 
   const { cardTexturePng, iconSvg, symbol } = type;
-
-  const numberOfAuctions = auctions.length;
-  const totalCollateral = getTotalCollateralAvailable(auctions);
+  const filteredAuctions = getAuctionsByIlk(auctions, type.symbol.toLowerCase());
+  const numberOfAuctions = filteredAuctions.length;
+  const totalCollateral = getTotalCollateralAvailable(filteredAuctions);
 
   return (
     <Link href={`/auctions/${type.symbol.toLowerCase()}`}>

@@ -143,7 +143,6 @@ const Header = (props: any): JSX.Element => {
               onClick={toggleDepositRedeem}
             >
               <Flex sx={{ alignItems: 'center' }}>
-                {/* TODO: add dynamic DAI balance */}
                 <Text>{daiBalance}</Text>
                 <Icon name="dai" size="16px" sx={{ mx: 2 }} />
                 <Text>Deposit/Redeem</Text>
