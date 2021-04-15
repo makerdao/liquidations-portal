@@ -19,7 +19,7 @@ export default function LandingPage(): JSX.Element {
   const activeAuctions = getAuctionsByStatus(auctions, true);
   const inactiveAuctions = getAuctionsByStatus(auctions, false);
   const account = useAccountsStore(state => state.currentAccount);
-  const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
+  const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
 
   return (
     <div>
@@ -104,7 +104,7 @@ export default function LandingPage(): JSX.Element {
                     </NavLink>
                     {account && (
                       <Button
-                        onClick={toggleDepositRedeem}
+                        onClick={toggleDepositWithdraw}
                         sx={{
                           px: 3,
                           ml: [0, 3],

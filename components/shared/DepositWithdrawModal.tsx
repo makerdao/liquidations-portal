@@ -16,7 +16,7 @@ type Props = {
   vatBalance: BigNumber | undefined;
 };
 
-const DepositRedeemModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Element => {
+const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Element => {
   // const { data: daiBalance } = useSWR('/balances/dai', () =>
   //   getMaker().then(maker => maker.getToken('DAI').balance())
   // );
@@ -156,4 +156,4 @@ const DepositRedeemModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Eleme
   );
 };
 
-export default DepositRedeemModal;
+export default DepositWithdrawModal;

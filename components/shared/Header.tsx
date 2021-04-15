@@ -14,7 +14,7 @@ import { useModalsStore } from 'stores/modals';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
 import AccountSelect from 'components/header/AccountSelect';
-import DepositRedeemModal from './DepositRedeemModal';
+import DepositWithdrawModal from './DepositWithdrawModal';
 import { COLLATERAL_MAP } from '../../lib/constants';
 
 const Header = (props: any): JSX.Element => {
@@ -23,8 +23,8 @@ const Header = (props: any): JSX.Element => {
   const bpi = useBreakpointIndex();
   const { data: auctions } = useAuctions();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const isDepositRedeemOpen = useModalsStore(state => state.isDepositRedeemOpen);
-  const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
+  const isDepositWithdrawOpen = useModalsStore(state => state.isDepositWithdrawOpen);
+  const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
   const account = useAccountsStore(state => state.currentAccount);
   const address = account?.address;
   const initApprovals = useApprovalsStore(state => state.initApprovals);
@@ -40,9 +40,9 @@ const Header = (props: any): JSX.Element => {
 
   return (
     <>
-      <DepositRedeemModal
-        showDialog={isDepositRedeemOpen}
-        onDismiss={toggleDepositRedeem}
+      <DepositWithdrawModal
+        showDialog={isDepositWithdrawOpen}
+        onDismiss={toggleDepositWithdraw}
         mobile={bpi === 0}
         vatBalance={undefined}
       />
@@ -126,12 +126,12 @@ const Header = (props: any): JSX.Element => {
             <Button
               aria-label="Deposit or Redeem Dai"
               sx={{
-                ml: [0, 2, 4],
                 variant: 'buttons.card',
                 borderRadius: 'round',
                 color: 'textMuted',
-                px: [2, 3],
+                px: [2, 2, 3],
                 py: 2,
+                ml: [2, 2, 4],
                 alignSelf: 'flex-end',
                 '&:hover': {
                   color: 'text',
@@ -140,17 +140,17 @@ const Header = (props: any): JSX.Element => {
                 }
               }}
               {...props}
-              onClick={toggleDepositRedeem}
+              onClick={toggleDepositWithdraw}
             >
               <Flex sx={{ alignItems: 'center' }}>
                 <Text>{daiBalance}</Text>
-                <Icon name="dai" size="16px" sx={{ mx: 2 }} />
-                <Text>Deposit/Redeem</Text>
+                <Icon name="dai" size="16px" sx={{ mx: [0, 2] }} />
+                <Text sx={{ display: ['none', 'block'] }}>Deposit/Withdraw</Text>
               </Flex>
             </Button>
           )}
 
-          <AccountSelect sx={{ ml: [0, 2, 4] }} />
+          <AccountSelect sx={{ ml: [1, 2, 4] }} />
 
           <IconButton
             aria-label="Show menu"

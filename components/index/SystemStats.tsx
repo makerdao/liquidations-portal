@@ -61,7 +61,7 @@ export default function SystemStats(): JSX.Element {
             <>
               <Flex sx={{ alignItems: 'center' }}>
                 <Badge variant="circle" p="3px" mr="3" />
-                <Text sx={{ fontSize: 5, fontWeight: 'semiBold' }}>System Status</Text>
+                <Text sx={{ fontSize: 5, fontWeight: 'semiBold' }}>System Stats</Text>
               </Flex>
               <ExternalLink href="https://daistats.com/" target="_blank">
                 <Flex sx={{ alignItems: 'center' }}>
