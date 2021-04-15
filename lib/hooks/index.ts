@@ -1,5 +1,6 @@
+export { useAccountTokenBalance } from './useAccountTokenBalance';
 export { useAuctions } from './useAuctions';
-export { useUnsafeVaults } from './useUnsafeVaults';
-export { useTotalDai } from './useTotalDai';
 export { useSystemStats } from './useSystemStats';
 export { useSystemStatsSidebar } from './useSystemStats';
+export { useTotalDai } from './useTotalDai';
+export { useUnsafeVaults } from './useUnsafeVaults';
