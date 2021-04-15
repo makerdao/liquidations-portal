@@ -31,29 +31,32 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
 
   const ApprovalsContent = () => {
     return (
-      <Stack gap={4}>
-        <Stack gap={2}>
-          <Text sx={{ fontWeight: 'bold' }}>Unlock</Text>
-          <Text variant="secondary">This transaction will allow you to deposit into the VAT</Text>
-          <Flex>
-            <Button sx={{ width: '100%' }} onClick={enableJoinDaiApproval} disabled={hasJoinDaiApproval}>
-              Unlock Dai in the VAT
-            </Button>
-          </Flex>
+      <>
+        <Divider sx={{ width: '100%', mb: 3 }} />
+        <Stack gap={4}>
+          <Stack gap={2}>
+            <Text sx={{ fontWeight: 'bold' }}>Unlock</Text>
+            <Text variant="secondary">This transaction will allow you to deposit into the VAT</Text>
+            <Flex>
+              <Button sx={{ width: '100%' }} onClick={enableJoinDaiApproval} disabled={hasJoinDaiApproval}>
+                Unlock Dai in the VAT
+              </Button>
+            </Flex>
+          </Stack>
+          <Stack gap={2}>
+            <Text sx={{ fontWeight: 'bold' }}>Authorize</Text>
+            <Text variant="secondary">
+              This transaction will allow the VAT to use the DAI balance you have deposited, (which
+              subsequently allows you to bid on an auction)
+            </Text>
+            <Flex>
+              <Button sx={{ width: '100%' }} onClick={enableJoinDaiHope} disabled={hasJoinDaiHope}>
+                Authorize the VAT
+              </Button>
+            </Flex>
+          </Stack>
         </Stack>
-        <Stack gap={2}>
-          <Text sx={{ fontWeight: 'bold' }}>Authorize</Text>
-          <Text variant="secondary">
-            This transaction will allow the VAT to use the DAI balance you have deposited, (which subsequently
-            allows you to bid on an auction)
-          </Text>
-          <Flex>
-            <Button sx={{ width: '100%' }} onClick={enableJoinDaiHope} disabled={hasJoinDaiHope}>
-              Authorize the VAT
-            </Button>
-          </Flex>
-        </Stack>
-      </Stack>
+      </>
     );
   };
 
@@ -187,7 +190,6 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
             To participate in auctions you need to sign the approval transactions below and move Dai that will
             be used for bidding to the Vat
           </Text>
-          <Divider sx={{ width: '100%', mb: 3 }} />
           {hasJoinDaiApproval && hasJoinDaiHope ? <DepositWithdrawContent /> : <ApprovalsContent />}
         </Flex>
       </DialogContent>
