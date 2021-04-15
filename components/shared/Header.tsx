@@ -6,7 +6,6 @@ import { Button, Flex, NavLink, Container, Close, Box, IconButton, Divider, jsx,
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button';
 import { Icon } from '@makerdao/dai-ui-icons';
-import shallow from 'zustand/shallow';
 
 import { COLLATERAL_ARRAY } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
@@ -16,6 +15,7 @@ import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
 import AccountSelect from 'components/header/AccountSelect';
 import DepositRedeemModal from './DepositRedeemModal';
+import { COLLATERAL_MAP } from '../../lib/constants';
 
 const Header = (props: any): JSX.Element => {
   const network = getNetwork();
@@ -27,16 +27,14 @@ const Header = (props: any): JSX.Element => {
   const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
   const account = useAccountsStore(state => state.currentAccount);
   const address = account?.address;
-
-  const [setHasJoinDaiApproval, setHasJoinDaiHope] = useApprovalsStore(
-    state => [state.setHasJoinDaiApproval, state.setHasJoinDaiHope],
-    shallow
-  );
+  const initApprovals = useApprovalsStore(state => state.initApprovals);
 
   useEffect(() => {
     if (!address) return;
-    setHasJoinDaiApproval(address);
-    setHasJoinDaiHope(address);
+    initApprovals(
+      address,
+      Object.keys(COLLATERAL_MAP).map(ilk => COLLATERAL_MAP[ilk].symbol)
+    );
   }, [address]);
 
   return (
