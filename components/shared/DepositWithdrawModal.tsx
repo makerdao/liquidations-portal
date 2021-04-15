@@ -1,13 +1,12 @@
 /** @jsx jsx */
 import { useState } from 'react';
-// import useSWR from 'swr';
-import { Button, Flex, jsx, Heading, Close, Text, Input } from 'theme-ui';
+import { Button, Flex, jsx, Heading, Close, Text, Input, Divider } from 'theme-ui';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import BigNumber from 'bignumber.js';
 
 import { fadeIn, slideUp } from 'lib/keyframes';
 import useApprovalsStore from 'stores/approvals';
-// import getMaker from 'lib/maker';
+import Stack from 'components/layouts/Stack';
 
 type Props = {
   showDialog: boolean;
@@ -17,14 +16,145 @@ type Props = {
 };
 
 const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Element => {
-  // const { data: daiBalance } = useSWR('/balances/dai', () =>
-  //   getMaker().then(maker => maker.getToken('DAI').balance())
-  // );
-  const [enableJoinDaiApproval, enableJoinDaiHope] = useApprovalsStore(state => [
+  const [
+    hasJoinDaiApproval,
+    hasJoinDaiHope,
+    enableJoinDaiApproval,
+    enableJoinDaiHope
+  ] = useApprovalsStore(state => [
+    state.hasJoinDaiApproval,
+    state.hasJoinDaiHope,
     state.enableJoinDaiApproval,
     state.enableJoinDaiHope
   ]);
   const [isDeposit, setIsDeposit] = useState(true);
+
+  const ApprovalsContent = () => {
+    return (
+      <Stack gap={4}>
+        <Stack gap={2}>
+          <Text sx={{ fontWeight: 'bold' }}>Unlock</Text>
+          <Text variant="secondary">This transaction will allow you to deposit into the VAT</Text>
+          <Flex>
+            <Button sx={{ width: '100%' }} onClick={enableJoinDaiApproval} disabled={hasJoinDaiApproval}>
+              Unlock Dai in the VAT
+            </Button>
+          </Flex>
+        </Stack>
+        <Stack gap={2}>
+          <Text sx={{ fontWeight: 'bold' }}>Authorize</Text>
+          <Text variant="secondary">
+            This transaction will allow the VAT to use the DAI balance you have deposited, (which subsequently
+            allows you to bid on an auction)
+          </Text>
+          <Flex>
+            <Button sx={{ width: '100%' }} onClick={enableJoinDaiHope} disabled={hasJoinDaiHope}>
+              Authorize the VAT
+            </Button>
+          </Flex>
+        </Stack>
+      </Stack>
+    );
+  };
+
+  const DepositWithdrawContent = () => {
+    return (
+      <>
+        <Flex sx={{ mb: 4 }}>
+          <Button
+            sx={{
+              width: '100%',
+              backgroundColor: 'surface',
+              fontSize: 3,
+              fontWeight: 'semiBold',
+              color: isDeposit ? 'text' : 'coolGrey',
+              borderBottom: 'solid 1px',
+              borderBottomColor: isDeposit ? 'primary' : 'coolGrey',
+              borderRadius: 0,
+              ':hover': {
+                backgroundColor: 'surface'
+              }
+            }}
+            onClick={() => setIsDeposit(!isDeposit)}
+          >
+            Deposit Dai
+          </Button>
+          <Button
+            sx={{
+              width: '100%',
+              backgroundColor: 'surface',
+              fontSize: 3,
+              fontWeight: 'semiBold',
+              color: !isDeposit ? 'text' : 'coolGrey',
+              borderBottom: 'solid 1px',
+              borderBottomColor: !isDeposit ? 'primary' : 'coolGrey',
+              borderRadius: 0,
+              ':hover': {
+                backgroundColor: 'surface'
+              }
+            }}
+            onClick={() => setIsDeposit(!isDeposit)}
+          >
+            Redeem Dai
+          </Button>
+        </Flex>
+        {isDeposit ? (
+          <>
+            <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
+              <Text sx={{ fontWeight: 'semiBold' }}>Dai Wallet Balance</Text>
+              <Text>9,819.97</Text>
+            </Flex>
+            <Flex sx={{ mb: 4 }}>
+              <Input
+                sx={{ mr: 2 }}
+                placeholder="0.00"
+                onChange={() => console.log('update input')}
+                type="number"
+                value={0.0}
+              />
+              <Button sx={{ width: 160 }} onClick={enableJoinDaiApproval}>
+                Unlock Dai
+              </Button>
+            </Flex>
+            <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
+              <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
+              <Text>9,819.97</Text>
+            </Flex>
+            <Flex sx={{ mb: 4 }}>
+              <Input
+                sx={{ mr: 2 }}
+                placeholder="0.00"
+                onChange={() => console.log('update input')}
+                type="number"
+                value={0.0}
+              />
+              <Button sx={{ width: 160 }} onClick={enableJoinDaiHope}>
+                Unlock Dai
+              </Button>
+            </Flex>
+          </>
+        ) : (
+          <>
+            <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
+              <Text sx={{ fontWeight: 'semiBold' }}>Dai Wallet Balance</Text>
+              <Text>9,819.97</Text>
+            </Flex>
+            <Flex sx={{ mb: 4 }}>
+              <Input
+                sx={{ mr: 2 }}
+                placeholder="0.00"
+                onChange={() => console.log('update input')}
+                type="number"
+                value={0.0}
+              />
+              <Button sx={{ width: 160 }}>Redeem Dai</Button>
+            </Flex>
+          </>
+        )}
+        <Button sx={{ mt: 3 }}>Explore Auctions</Button>
+      </>
+    );
+  };
 
   return (
     <DialogOverlay isOpen={showDialog} onDismiss={onDismiss}>
@@ -57,99 +187,8 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
             To participate in auctions you need to sign the approval transactions below and move Dai that will
             be used for bidding to the Vat
           </Text>
-          <Flex sx={{ mb: 4 }}>
-            <Button
-              sx={{
-                width: '100%',
-                backgroundColor: 'surface',
-                fontSize: 3,
-                fontWeight: 'semiBold',
-                color: isDeposit ? 'text' : 'coolGrey',
-                borderBottom: 'solid 1px',
-                borderBottomColor: isDeposit ? 'primary' : 'coolGrey',
-                borderRadius: 0,
-                ':hover': {
-                  backgroundColor: 'surface'
-                }
-              }}
-              onClick={() => setIsDeposit(!isDeposit)}
-            >
-              Deposit Dai
-            </Button>
-            <Button
-              sx={{
-                width: '100%',
-                backgroundColor: 'surface',
-                fontSize: 3,
-                fontWeight: 'semiBold',
-                color: !isDeposit ? 'text' : 'coolGrey',
-                borderBottom: 'solid 1px',
-                borderBottomColor: !isDeposit ? 'primary' : 'coolGrey',
-                borderRadius: 0,
-                ':hover': {
-                  backgroundColor: 'surface'
-                }
-              }}
-              onClick={() => setIsDeposit(!isDeposit)}
-            >
-              Redeem Dai
-            </Button>
-          </Flex>
-          {isDeposit ? (
-            <>
-              <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
-                <Text sx={{ fontWeight: 'semiBold' }}>Dai Wallet Balance</Text>
-                <Text>9,819.97</Text>
-              </Flex>
-              <Flex sx={{ mb: 4 }}>
-                <Input
-                  sx={{ mr: 2 }}
-                  placeholder="0.00"
-                  onChange={() => console.log('update input')}
-                  type="number"
-                  value={0.0}
-                />
-                <Button sx={{ width: 160 }} onClick={enableJoinDaiApproval}>
-                  Unlock Dai
-                </Button>
-              </Flex>
-              <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
-                <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
-                <Text>9,819.97</Text>
-              </Flex>
-              <Flex sx={{ mb: 4 }}>
-                <Input
-                  sx={{ mr: 2 }}
-                  placeholder="0.00"
-                  onChange={() => console.log('update input')}
-                  type="number"
-                  value={0.0}
-                />
-                <Button sx={{ width: 160 }} onClick={enableJoinDaiHope}>
-                  Unlock Dai
-                </Button>
-              </Flex>
-            </>
-          ) : (
-            <>
-              <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
-                <Text sx={{ fontWeight: 'semiBold' }}>Dai Wallet Balance</Text>
-                <Text>9,819.97</Text>
-              </Flex>
-              <Flex sx={{ mb: 4 }}>
-                <Input
-                  sx={{ mr: 2 }}
-                  placeholder="0.00"
-                  onChange={() => console.log('update input')}
-                  type="number"
-                  value={0.0}
-                />
-                <Button sx={{ width: 160 }}>Redeem Dai</Button>
-              </Flex>
-            </>
-          )}
-          {/* TODO update button style below */}
-          <Button sx={{ mt: 3 }}>Explore Auctions</Button>
+          <Divider sx={{ width: '100%', mb: 3 }} />
+          {hasJoinDaiApproval && hasJoinDaiHope ? <DepositWithdrawContent /> : <ApprovalsContent />}
         </Flex>
       </DialogContent>
     </DialogOverlay>
