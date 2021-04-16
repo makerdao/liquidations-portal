@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import Head from 'next/head';
 import useSWR from 'swr';
-import { Heading, Image, Text, Box, Flex, jsx } from 'theme-ui';
+import { Button, Heading, Image, Text, Box, Flex, jsx } from 'theme-ui';
 import { useRouter } from 'next/router';
 import BigNumber from 'bignumber.js';
 import Skeleton from 'react-loading-skeleton';
@@ -29,7 +29,7 @@ export default function Auctions(): JSX.Element | null {
   // TODO: add error state here if true
   if (!ilkData) return null;
 
-  const { bannerPng, iconSvg, symbol } = ilkData;
+  const { bannerPng, iconSvg, ilk } = ilkData;
 
   const { data: auctions } = useAuctions(type);
   const { data: vatBalance } = useSWR<BigNumber>('/balances/vat', () =>
@@ -70,7 +70,7 @@ export default function Auctions(): JSX.Element | null {
           }}
         />
         <Text variant="largeHeading" sx={{ pl: 3, color: 'surface' }}>
-          {symbol}
+          {ilk}
         </Text>
       </Flex>
 
@@ -81,8 +81,8 @@ export default function Auctions(): JSX.Element | null {
               <Stack gap={2}>
                 <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <Heading as="h2">{`Active ${type?.toUpperCase()} Auctions`}</Heading>
-                  {/* TODO: replace with dynamic auction data */}
-                  <Text variant="smallText" sx={{ color: 'textSecondary' }}>
+                  {/* TODO: move to card replace with dynamic auction data */}
+                  {/* <Text variant="smallText" sx={{ color: 'textSecondary' }}>
                     {auctions ? (
                       `${(activeAuctions || []).length} AUCTIONS - POSTED MAY 18 2021 16:01 UTC`
                     ) : (
@@ -90,7 +90,22 @@ export default function Auctions(): JSX.Element | null {
                         <Skeleton />
                       </Box>
                     )}
-                  </Text>
+                  </Text> */}
+                  {/* TODO: wire this up, hide if no collateral to show */}
+                  <Button
+                    sx={{
+                      variant: 'buttons.card',
+                      borderRadius: 'round',
+                      '&:hover': {
+                        color: 'text',
+                        borderColor: 'onSecondary',
+                        backgroundColor: 'white'
+                      }
+                    }}
+                    onClick={() => console.log('redeem tx')}
+                  >
+                    <Text sx={{ fontSize: 2, color: 'textMuted', px: 2 }}>999,00 LINK to Redeem</Text>
+                  </Button>
                 </Flex>
               </Stack>
               <Stack gap={2}>
@@ -137,7 +152,7 @@ export default function Auctions(): JSX.Element | null {
             </Box>
           </Stack>
           <Stack gap={3}>
-            <SystemStatsSidebar ilk={symbol} />
+            <SystemStatsSidebar ilk={ilk} />
             <ResourceBox />
           </Stack>
         </SidebarLayout>

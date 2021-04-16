@@ -34,7 +34,7 @@ const Header = (props: any): JSX.Element => {
     if (!address) return;
     initApprovals(
       address,
-      Object.keys(COLLATERAL_MAP).map(ilk => COLLATERAL_MAP[ilk].symbol)
+      Object.keys(COLLATERAL_MAP).map(ilk => COLLATERAL_MAP[ilk].ilk)
     );
   }, [address]);
 

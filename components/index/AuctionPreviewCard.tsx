@@ -13,13 +13,13 @@ type Props = {
 export default function AuctionPreviewCard({ type, auctions }: Props): JSX.Element | null {
   if (!type || !auctions) return null;
 
-  const { cardTexturePng, iconSvg, symbol } = type;
-  const filteredAuctions = getAuctionsByIlk(auctions, type.symbol.toLowerCase());
+  const { cardTexturePng, iconSvg, ilk } = type;
+  const filteredAuctions = getAuctionsByIlk(auctions, ilk.toLowerCase());
   const numberOfAuctions = filteredAuctions.length;
   const totalCollateral = getTotalCollateralAvailable(filteredAuctions);
 
   return (
-    <Link href={`/auctions/${type.symbol.toLowerCase()}`}>
+    <Link href={`/auctions/${ilk.toLowerCase()}`}>
       <Box
         variant="cards.tight"
         sx={{
@@ -92,7 +92,7 @@ export default function AuctionPreviewCard({ type, auctions }: Props): JSX.Eleme
                 fontWeight: 'semiBold'
               }}
             >
-              {symbol}
+              {ilk}
             </Text>
           </Flex>
         </Box>
