@@ -6,6 +6,10 @@ import round from 'lodash/round';
 import Auction from 'types/auction';
 import { SupportedNetworks, ETHERSCAN_PREFIXES } from './constants';
 
+export const RAD = new BigNumber('1e45');
+export const WAD = new BigNumber('1e18');
+export const RAY = new BigNumber('1e27');
+
 export async function fetchJson(url: RequestInfo, init?: RequestInit): Promise<any> {
   const response = await fetch(url, init);
   const json = await response.json();
