@@ -55,7 +55,7 @@ const CountdownTimer = ({ endDate, endText, ...props }: Props): JSX.Element => {
       {...props}
     >
       <Icon mr="1" name="clock" size="3" sx={{ color: text !== endText ? 'primary' : 'secondary' }} />
-      <Text variant="caps" color={text !== endText ? 'textMuted' : 'secondary'}>
+      <Text variant="caps" color="secondary">
         {text}
       </Text>
     </Flex>

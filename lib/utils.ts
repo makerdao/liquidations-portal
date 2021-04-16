@@ -163,14 +163,15 @@ export function transformAuctions(response: any): Auction[] {
   return response.map(resp => ({
     id: resp.saleId,
     active: resp.active,
-    name: 'link-a', // this won't come from response, will need to be specified based on req param
+    ilk: 'link-a', // this won't come from response, will need to be specified based on req param
     initialCollateral: '1000', // can look up by `sales()`
     urn: resp.usr,
     collateralAvailable: resp.lot.toFixed(2),
     daiNeeded: resp.tab.toFixed(2),
     dustLimit: '100', //get from chain on init?
-    maxBid: '100',
-    endDate: resp.tic // need to get ttl (tic + ttl) (tic = start date)
+    auctionPrice: '100', // TODO: calc max bid aka auction price
+    startDate: resp.tic,
+    endDate: resp.tic // TODO: need to get ttl (tic + ttl) (tic = start date)
   }));
 }
 
@@ -183,7 +184,7 @@ export function getAuctionsByStatus(auctions: any[] = [], filterActive: boolean)
 }
 
 export function getAuctionsByIlk(auctions: any[] = [], ilk: string): any[] {
-  return auctions.filter(auction => auction.name === ilk);
+  return auctions.filter(auction => auction.ilk === ilk);
 }
 
 export function getDaiRequiredForAuctions(auctions: any[] = []): number {

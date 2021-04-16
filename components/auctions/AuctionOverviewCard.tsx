@@ -2,14 +2,15 @@
 import { useState } from 'react';
 import { Button, Text, Flex, Grid, Link as ExternalLink, jsx, Badge } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
+import { Icon } from '@makerdao/dai-ui-icons';
 
-// import { getNetwork } from 'lib/maker';
 import Auction from 'types/auction';
 // import Tooltip from 'components/shared/Tooltip';
 import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
 import BidModal from './BidModal';
 import BigNumber from 'bignumber.js';
+import { COLLATERAL_MAP } from 'lib/constants';
 
 type Props = {
   auction: Auction;
@@ -23,15 +24,19 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
   const bpi = useBreakpointIndex();
 
   const {
-    name,
+    active,
+    ilk,
     initialCollateral,
     urn,
     collateralAvailable,
     daiNeeded,
     dustLimit,
-    maxBid,
+    auctionPrice,
+    startDate,
     endDate
   } = auction;
+
+  const { symbol } = COLLATERAL_MAP[ilk];
 
   const canBid = vatBalance?.gt(0);
 
@@ -55,13 +60,29 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
               </Flex>
               <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>Auction ID {auction.id}</Text>
             </Flex>
-            <CountdownTimer endText="Auction ended" endDate={endDate} />
+            <Stack gap={2}>
+              <Flex sx={{ alignItems: 'center', flexDirection: 'row', flexWrap: 'nowrap' }}>
+                <Icon mr={1} name="calendar" sx={{ color: active ? 'primary' : 'secondary' }} />
+                <Text variant="caps" color="secondary">
+                  {`${new Date(startDate).toLocaleString('default', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: false,
+                    timeZone: 'UTC'
+                  })} UTC`}
+                </Text>
+              </Flex>
+              <CountdownTimer endText="Auction ended" endDate={endDate} />
+            </Stack>
           </Stack>
           <Stack gap={4}>
             <Flex sx={{ flexDirection: 'column', color: 'textSecondary' }}>
               <Text sx={{ color: 'textSecondary' }}>Initial Collateral</Text>
               <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>
-                {initialCollateral} {name.toUpperCase()}
+                {initialCollateral} {symbol.toUpperCase()}
               </Text>
             </Flex>
             <Flex>
@@ -91,7 +112,7 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
             <Flex sx={{ flexDirection: 'column' }}>
               <Text sx={{ color: 'textSecondary' }}>Collateral Available</Text>
               <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>
-                {collateralAvailable} {name.toUpperCase()}
+                {collateralAvailable} {symbol.toUpperCase()}
               </Text>
             </Flex>
             <Flex sx={{ flexDirection: 'column' }}>
@@ -109,8 +130,8 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
                 <Text>{dustLimit} DAI</Text>
               </Flex>
               <Flex sx={{ flexDirection: 'column' }}>
-                <Text sx={{ color: 'textSecondary' }}>Max bid</Text>
-                <Text>{maxBid} DAI</Text>
+                <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
+                <Text>{auctionPrice} DAI</Text>
               </Flex>
             </Flex>
           </Flex>
