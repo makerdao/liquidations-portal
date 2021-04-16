@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { getAuctionStatus } from 'lib/api';
 import { RAY, WAD, RAD } from 'lib/utils';
 
-async function fetchAuctionStatus(id): Promise<any[]> {
+async function fetchAuctionStatus(id): Promise<any> {
   const response = await getAuctionStatus(id);
 
   return response;
