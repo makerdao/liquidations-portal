@@ -155,9 +155,9 @@ export default function LandingPage(): JSX.Element {
               </Flex>
               <Grid gap={4} columns={[1, 3]}>
                 {COLLATERAL_ARRAY.map(type => {
-                  const ilkAuctions = getAuctionsByIlk(activeAuctions, type.symbol.toLowerCase());
+                  const ilkAuctions = getAuctionsByIlk(activeAuctions, type.ilk.toLowerCase());
                   return (
-                    <Box key={type.symbol}>
+                    <Box key={type.ilk}>
                       {auctionsLoading && <AuctionPreviewSkeleton />}
                       {auctions && ilkAuctions.length > 0 && (
                         <AuctionPreviewCard key={type.name} type={type} auctions={ilkAuctions} />
@@ -204,9 +204,9 @@ export default function LandingPage(): JSX.Element {
               </Flex>
               <Grid gap={4} columns={[1, 3]}>
                 {COLLATERAL_ARRAY.map(type => {
-                  const ilkAuctions = getAuctionsByIlk(inactiveAuctions, type.symbol.toLowerCase());
+                  const ilkAuctions = getAuctionsByIlk(inactiveAuctions, type.ilk.toLowerCase());
                   return (
-                    <Box key={type.symbol}>
+                    <Box key={type.ilk}>
                       {auctionsLoading && <AuctionPreviewSkeleton />}
                       {auctions && ilkAuctions.length > 0 && (
                         <AuctionPreviewCard key={type.name} type={type} auctions={ilkAuctions} />

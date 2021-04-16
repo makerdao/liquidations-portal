@@ -13,6 +13,7 @@ export const ETHERSCAN_PREFIXES = {
 
 type CollateralInfo = {
   name: string;
+  ilk: string;
   symbol: string;
   cardTexturePng: string;
   bannerPng: string;
@@ -22,13 +23,15 @@ type CollateralInfo = {
 export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
   'link-a': {
     name: 'chainlink',
-    symbol: 'LINK-A',
+    ilk: 'LINK-A',
+    symbol: 'LINK',
     cardTexturePng: '/assets/link-card-texture.png',
     bannerPng: '/assets/link-banner-texture.png',
     iconSvg: '/assets/link-icon.svg'
   }
   // yfi: {
   //   name: 'yfi',
+  //   ilk: 'YFI-A',
   //   symbol: 'YFI',
   //   cardTexturePng: '/assets/yfi-card-texture.png',
   //   bannerPng: '/assets/yfi-banner-texture.png',
