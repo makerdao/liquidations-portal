@@ -72,3 +72,9 @@ export async function getAuctionPrice(id: string): Promise<any> {
   console.log(price);
   return maker.service('liquidation').getStatus(id);
 }
+
+export async function joinDaiToVat(amount: string): Promise<any> {
+  const maker = await getMaker();
+
+  return maker.service('liquidation').joinDaiToAdapter(amount, maker.currentAddress());
+}
