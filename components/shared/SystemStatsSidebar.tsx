@@ -44,10 +44,6 @@ export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
     }
   ];
 
-  const statData = fieldMap.map((stat, i) => {
-    return { title: stat.title, value: data ? stat.format(data[i]) : null, tooltip: stat.tooltip };
-  });
-
   if (error) {
     return (
       <Flex sx={{ flexDirection: 'column' }}>
@@ -59,6 +55,10 @@ export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
       </Flex>
     );
   }
+
+  const statData = fieldMap.map((stat, i) => {
+    return { title: stat.title, value: data ? stat.format(data[i]) : null, tooltip: stat.tooltip };
+  });
 
   return (
     <>

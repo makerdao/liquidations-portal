@@ -23,12 +23,12 @@ export function useSystemStatsSidebar(ilk: string): any {
 
   const { data: auctions, error: auctionsError } = useAuctions(type);
   const { data: unsafeVaults, error: unsafeVaultsError } = useUnsafeVaults(type);
-  const { data: holeAndDirt, error: holeAndDirtErrors } = useHoleAndDirt(type);
+  const { data: holeAndDirt, error: holeAndDirtError } = useHoleAndDirt(type);
 
   // return data needed for each field in fieldMap and let format function do the rest
   // ['Undercollateralized Vaults', 'Active Auctions', 'Inactive Auctions', 'Dai required for Auctions', 'Limit per collateral available']
   const data = auctions && unsafeVaults ? [unsafeVaults, auctions, auctions, auctions, holeAndDirt] : null;
-  const error = auctionsError || unsafeVaultsError || holeAndDirtErrors;
+  const error = auctionsError || unsafeVaultsError || holeAndDirtError;
 
   return {
     data,
