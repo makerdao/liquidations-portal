@@ -36,7 +36,7 @@ const BidModal = ({
   const [value, setValue] = useState<string>('');
   const [colAmtStr, setColAmtStr] = useState<string>('0.00');
 
-  const { name, collateralAvailable, dustLimit, maxBid } = auction;
+  const { ilk, collateralAvailable, dustLimit, auctionPrice } = auction;
 
   const { data: daiBalance } = useSWR('/balances/dai', () =>
     getMaker().then(maker => maker.getToken('DAI').balance())
@@ -99,11 +99,11 @@ const BidModal = ({
             onClick={onDismiss}
           />
           <Heading sx={{ fontWeight: 'bold' }}>Place a Bid</Heading>
-          <LogoBanner name={name.toUpperCase()} />
+          <LogoBanner ilk={ilk.toUpperCase()} />
           <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', my: 2 }}>
             <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Collateral Available</Text>
             <Heading variant="mediumHeading">
-              {collateralAvailable} {name.toUpperCase()}
+              {collateralAvailable} {ilk.toUpperCase()}
             </Heading>
           </Flex>
           <Divider />
@@ -150,11 +150,11 @@ const BidModal = ({
             <Flex sx={{ justifyContent: 'space-between', my: 2, px: 2 }}>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
-                <Text sx={{ color: 'textMuted' }}>{dustLimit} Dai</Text>
+                <Text sx={{ color: 'textMuted' }}>{dustLimit} DAI</Text>
               </Flex>
               <Flex sx={{ flexDirection: 'column' }}>
-                <Text sx={{ color: 'textSecondary' }}>Max bid</Text>
-                <Text sx={{ color: 'textMuted' }}>{maxBid} Dai</Text>
+                <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
+                <Text sx={{ color: 'textMuted' }}>{auctionPrice} DAI</Text>
               </Flex>
             </Flex>
           </Flex>

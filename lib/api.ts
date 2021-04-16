@@ -20,25 +20,29 @@ export async function getUnsafeVaults(ilk: string): Promise<any> {
 const mockAuctions: Auction[] = [
   {
     id: 123,
-    name: 'link',
+    active: true,
+    ilk: 'link-a',
     initialCollateral: '8000',
     urn: '0x123',
     collateralAvailable: '3000',
     daiNeeded: '4000',
     dustLimit: '111',
-    maxBid: '999',
-    endDate: 1619894140000
+    auctionPrice: '999',
+    startDate: 1619894140000,
+    endDate: 1619994140000
   },
   {
     id: 234,
-    name: 'yfi',
+    active: false,
+    ilk: 'yfi',
     initialCollateral: '4000',
     urn: '0x345',
     collateralAvailable: '1000',
     daiNeeded: '6000',
     dustLimit: '222',
-    maxBid: '888',
-    endDate: 1619894140000
+    auctionPrice: '888',
+    startDate: 1619894140000,
+    endDate: 1619994140000
   }
 ];
 

@@ -81,16 +81,6 @@ export default function Auctions(): JSX.Element | null {
               <Stack gap={2}>
                 <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <Heading as="h2">{`Active ${type?.toUpperCase()} Auctions`}</Heading>
-                  {/* TODO: move to card replace with dynamic auction data */}
-                  {/* <Text variant="smallText" sx={{ color: 'textSecondary' }}>
-                    {auctions ? (
-                      `${(activeAuctions || []).length} AUCTIONS - POSTED MAY 18 2021 16:01 UTC`
-                    ) : (
-                      <Box sx={{ width: 7 }}>
-                        <Skeleton />
-                      </Box>
-                    )}
-                  </Text> */}
                   {/* TODO: wire this up, hide if no collateral to show */}
                   <Button
                     sx={{
@@ -112,7 +102,7 @@ export default function Auctions(): JSX.Element | null {
                 {auctions ? (
                   (activeAuctions || []).map(
                     auction =>
-                      auction.name === type && (
+                      auction.ilk === type && (
                         <AuctionOverviewCard key={auction.id} auction={auction} vatBalance={vatBalance} />
                       )
                   )
@@ -141,7 +131,7 @@ export default function Auctions(): JSX.Element | null {
                 {auctions ? (
                   (inactiveAuctions || []).map(
                     auction =>
-                      auction.name === type && (
+                      auction.ilk === type && (
                         <AuctionOverviewCard key={auction.id} auction={auction} vatBalance={vatBalance} />
                       )
                   )
