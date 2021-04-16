@@ -5,7 +5,7 @@ import { DialogOverlay, DialogContent } from '@reach/dialog';
 import BigNumber from 'bignumber.js';
 
 import { fadeIn, slideUp } from 'lib/keyframes';
-import { joinDaiToVat } from 'lib/api';
+import getMaker from 'lib/maker';
 import useApprovalsStore from 'stores/approvals';
 import { transactionsApi } from 'stores/transactions';
 import Stack from 'components/layouts/Stack';
@@ -72,14 +72,20 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
       setValue(newValueStr);
     };
 
-    const join = async () => {
-      const txCreator = () => joinDaiToVat(value);
-      await transactionsApi.getState().track(txCreator, 'Joining DAI', {
+    const moveDai = async () => {
+      const maker = await getMaker();
+      const txCreator = isDeposit
+        ? () => maker.service('liquidation').joinDaiToAdapter(value)
+        : () => maker.service('liquidation').exitDaiFromAdapter(value);
+
+      await transactionsApi.getState().track(txCreator, `${isDeposit ? 'Depositing' : 'Withdrawing'} DAI`, {
         mined: txId => {
-          transactionsApi.getState().setMessage(txId, 'Joining DAI finished');
+          transactionsApi.getState().setMessage(txId, `${isDeposit ? 'Deposit' : 'Withdraw'} DAI finished`);
+          onDismiss();
         }
       });
     };
+
     return (
       <>
         <Flex sx={{ mb: 4 }}>
@@ -122,29 +128,13 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
         </Flex>
         {isDeposit ? (
           <>
-            {/* <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
-              <Text sx={{ fontWeight: 'semiBold' }}>Dai Wallet Balance</Text>
-              <Text>9,819.97</Text>
-            </Flex>
-            <Flex sx={{ mb: 4 }}>
-              <Input
-                sx={{ mr: 2 }}
-                placeholder="0.00"
-                onChange={() => console.log('update input')}
-                type="number"
-                value={0.0}
-              />
-              <Button sx={{ width: 160 }} onClick={enableJoinDaiApproval}>
-                Unlock Dai
-              </Button>
-            </Flex> */}
             <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
               <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
               <Text>9,819.97</Text>
             </Flex>
             <Flex sx={{ mb: 4 }}>
               <Input sx={{ mr: 2 }} placeholder="0.00" onChange={updateValue} type="number" value={value} />
-              <Button sx={{ width: 160 }} onClick={join}>
+              <Button sx={{ width: 160 }} onClick={moveDai}>
                 Deposit Dai
               </Button>
             </Flex>
@@ -156,14 +146,10 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
               <Text>9,819.97</Text>
             </Flex>
             <Flex sx={{ mb: 4 }}>
-              <Input
-                sx={{ mr: 2 }}
-                placeholder="0.00"
-                onChange={() => console.log('update input')}
-                type="number"
-                value={0.0}
-              />
-              <Button sx={{ width: 160 }}>Withdraw Dai</Button>
+              <Input sx={{ mr: 2 }} placeholder="0.00" onChange={updateValue} type="number" value={value} />
+              <Button sx={{ width: 160 }} onClick={moveDai}>
+                Withdraw Dai
+              </Button>
             </Flex>
           </>
         )}
