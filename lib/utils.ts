@@ -180,7 +180,7 @@ export function getAuctionsByStatus(auctions: any[] = [], filterActive: boolean)
 }
 
 export function getAuctionsByIlk(auctions: any[] = [], ilk: string): any[] {
-  return auctions.filter(auction => auction.name === ilk);
+  return auctions.filter(auction => auction.ilk === ilk);
 }
 
 export function getDaiRequiredForAuctions(auctions: any[] = []): number {
