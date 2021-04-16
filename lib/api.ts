@@ -59,3 +59,9 @@ export async function getAccountTokenBalance(token: string, address?: string): P
 
   return maker.getToken(token).balanceOf(address);
 }
+
+export async function getHoleAndDirtForIlk(ilk: string): Promise<any> {
+  const maker = await getMaker();
+
+  return maker.service('liquidation').getHoleAndDirtForIlk(ilk);
+}

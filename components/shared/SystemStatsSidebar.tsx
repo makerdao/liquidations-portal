@@ -39,7 +39,7 @@ export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
     },
     {
       title: 'Limit per collateral available',
-      format: val => val,
+      format: val => `${val.diff.toFormat(2)} DAI`,
       tooltip: 'This is placeholder text explaining what Limit per collateral available represents'
     }
   ];
