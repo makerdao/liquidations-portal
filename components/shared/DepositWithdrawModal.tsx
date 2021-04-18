@@ -22,13 +22,18 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
     hasJoinDaiApproval,
     hasJoinDaiHope,
     enableJoinDaiApproval,
-    enableJoinDaiHope
+    enableJoinDaiHope,
+    joinDaiApprovalPending,
+    enableJoinDaiHopePending
   ] = useApprovalsStore(state => [
     state.hasJoinDaiApproval,
     state.hasJoinDaiHope,
     state.enableJoinDaiApproval,
-    state.enableJoinDaiHope
+    state.enableJoinDaiHope,
+    state.joinDaiApprovalPending,
+    state.enableJoinDaiHopePending
   ]);
+  console.log('joinDaiApprovalPending', joinDaiApprovalPending);
   const [isDeposit, setIsDeposit] = useState(true);
 
   const ApprovalsContent = () => {
@@ -40,7 +45,11 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
             <Text sx={{ fontWeight: 'bold' }}>Unlock</Text>
             <Text variant="secondary">This transaction will allow you to deposit into the VAT</Text>
             <Flex>
-              <Button sx={{ width: '100%' }} onClick={enableJoinDaiApproval} disabled={hasJoinDaiApproval}>
+              <Button
+                sx={{ width: '100%' }}
+                onClick={enableJoinDaiApproval}
+                disabled={hasJoinDaiApproval || joinDaiApprovalPending}
+              >
                 Unlock Dai in the VAT
               </Button>
             </Flex>
@@ -52,7 +61,11 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
               subsequently allows you to bid on an auction)
             </Text>
             <Flex>
-              <Button sx={{ width: '100%' }} onClick={enableJoinDaiHope} disabled={hasJoinDaiHope}>
+              <Button
+                sx={{ width: '100%' }}
+                onClick={enableJoinDaiHope}
+                disabled={hasJoinDaiHope || enableJoinDaiHopePending}
+              >
                 Authorize the VAT
               </Button>
             </Flex>

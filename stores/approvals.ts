@@ -14,6 +14,9 @@ type Store = {
   enableJoinDaiApproval: () => Promise<void>;
   enableJoinDaiHope: () => Promise<void>;
 
+  joinDaiApprovalPending: boolean;
+  enableJoinDaiHopePending: boolean;
+
   initApprovals: (address: string, ilks?: string[]) => Promise<void>;
 };
 
@@ -21,6 +24,8 @@ const [useApprovalsStore] = create<Store>((set, get) => ({
   hasJoinDaiApproval: false,
   hasJoinDaiHope: false,
   hasIlkHope: {},
+  joinDaiApprovalPending: false,
+  enableJoinDaiHopePending: false,
 
   setHasJoinDaiApproval: async address => {
     const maker = await getMaker();
@@ -62,13 +67,23 @@ const [useApprovalsStore] = create<Store>((set, get) => ({
     const txCreator = () => maker.getToken('DAI').approveUnlimited(address);
 
     await transactionsApi.getState().track(txCreator, 'Join DAI approval sent', {
+      pending: () => {
+        set({
+          joinDaiApprovalPending: true
+        });
+      },
       mined: txId => {
         transactionsApi.getState().setMessage(txId, 'Join DAI approval finished');
+        set({
+          hasJoinDaiApproval: true,
+          joinDaiApprovalPending: false
+        });
+      },
+      error: () => {
+        set({
+          joinDaiApprovalPending: false
+        });
       }
-    });
-
-    set({
-      hasJoinDaiApproval: true
     });
   },
   enableJoinDaiHope: async () => {
@@ -77,13 +92,23 @@ const [useApprovalsStore] = create<Store>((set, get) => ({
     const txCreator = () => maker.service('smartContract').getContract('MCD_VAT').hope(address);
 
     await transactionsApi.getState().track(txCreator, 'Join DAI hope sent', {
+      pending: () => {
+        set({
+          enableJoinDaiHopePending: true
+        });
+      },
       mined: txId => {
         transactionsApi.getState().setMessage(txId, 'Join DAI hope finished');
+        set({
+          hasJoinDaiHope: true,
+          enableJoinDaiHopePending: false
+        });
+      },
+      error: () => {
+        set({
+          enableJoinDaiHopePending: false
+        });
       }
-    });
-
-    set({
-      hasJoinDaiHope: true
     });
   },
 
