@@ -15,7 +15,7 @@ type Store = {
   enableJoinDaiHope: () => Promise<void>;
 
   joinDaiApprovalPending: boolean;
-  enableJoinDaiHopePending: boolean;
+  joinDaiHopePending: boolean;
 
   initApprovals: (address: string, ilks?: string[]) => Promise<void>;
 };
@@ -25,7 +25,7 @@ const [useApprovalsStore] = create<Store>((set, get) => ({
   hasJoinDaiHope: false,
   hasIlkHope: {},
   joinDaiApprovalPending: false,
-  enableJoinDaiHopePending: false,
+  joinDaiHopePending: false,
 
   setHasJoinDaiApproval: async address => {
     const maker = await getMaker();
@@ -94,19 +94,19 @@ const [useApprovalsStore] = create<Store>((set, get) => ({
     await transactionsApi.getState().track(txCreator, 'Join DAI hope sent', {
       pending: () => {
         set({
-          enableJoinDaiHopePending: true
+          joinDaiHopePending: true
         });
       },
       mined: txId => {
         transactionsApi.getState().setMessage(txId, 'Join DAI hope finished');
         set({
           hasJoinDaiHope: true,
-          enableJoinDaiHopePending: false
+          joinDaiHopePending: false
         });
       },
       error: () => {
         set({
-          enableJoinDaiHopePending: false
+          joinDaiHopePending: false
         });
       }
     });

@@ -4,7 +4,7 @@ import { getAccountTokenBalance } from 'lib/api';
 async function fetchBalance(token: string, address?: string): Promise<any> {
   const response = await getAccountTokenBalance(token, address);
 
-  return response._amount.toFixed(2).replace('.', ',');
+  return response._amount.toFixed(2);
 }
 
 export function useAccountTokenBalance(token: string, address?: string): any {

@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { useState } from 'react';
-import { Box, Button, Flex, jsx, Heading, Close, Text, Input, Divider } from 'theme-ui';
+import { Box, Button, Flex, jsx, Heading, Close, Text, Input, Divider, Spinner } from 'theme-ui';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
-import BigNumber from 'bignumber.js';
+import { Icon } from '@makerdao/dai-ui-icons';
 
 import { fadeIn, slideUp } from 'lib/keyframes';
 import { useAccountTokenBalance, useAccountVatBalance } from 'lib/hooks';
@@ -11,12 +11,12 @@ import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
 import { transactionsApi } from 'stores/transactions';
 import Stack from 'components/layouts/Stack';
+import BigNumber from 'bignumber.js';
 
 type Props = {
   showDialog: boolean;
   onDismiss: () => void;
   mobile: boolean;
-  vatBalance: BigNumber | undefined;
 };
 
 const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Element => {
@@ -26,17 +26,18 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
     enableJoinDaiApproval,
     enableJoinDaiHope,
     joinDaiApprovalPending,
-    enableJoinDaiHopePending
+    joinDaiHopePending
   ] = useApprovalsStore(state => [
     state.hasJoinDaiApproval,
     state.hasJoinDaiHope,
     state.enableJoinDaiApproval,
     state.enableJoinDaiHope,
     state.joinDaiApprovalPending,
-    state.enableJoinDaiHopePending
+    state.joinDaiHopePending
   ]);
 
   const [isDeposit, setIsDeposit] = useState(true);
+  const [isTxProcessing, setIsTxProcessing] = useState(false);
   const account = useAccountsStore(state => state.currentAccount);
   const address = account?.address;
   const { data: daiBalance } = useAccountTokenBalance('DAI', address);
@@ -45,9 +46,13 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
   const ApprovalsContent = () => {
     return (
       <>
+        <Text sx={{ color: 'secondaryEmphasis', mb: 2 }}>
+          To participate in auctions you need to sign the approval transactions below and move Dai that will
+          be used for bidding to the VAT
+        </Text>
         <Divider sx={{ width: '100%' }} />
         <Flex sx={{ justifyContent: 'space-between', my: 2 }}>
-          <Text sx={{ fontWeight: 'bold' }}>Dai Wallet Balance</Text>
+          <Text sx={{ fontWeight: 'semiBold' }}>Dai Wallet Balance</Text>
           <Text>{daiBalance}</Text>
         </Flex>
         <Divider sx={{ width: '100%', mb: 3 }} />
@@ -55,7 +60,7 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
         <Stack gap={4} sx={{ mt: 4 }}>
           <Box>
             <Flex sx={{ justifyContent: 'space-between', my: 2 }}>
-              <Text sx={{ fontWeight: 'bold' }}>Dai in the VAT</Text>
+              <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
               <Text>{vatBalance}</Text>
             </Flex>
             <Button
@@ -64,10 +69,17 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
               disabled={hasJoinDaiApproval || joinDaiApprovalPending}
               variant={hasJoinDaiApproval || joinDaiApprovalPending ? 'outline' : 'primary'}
             >
-              {!(hasJoinDaiApproval || joinDaiApprovalPending) && 'Unlock Dai in the VAT'}
-              {/* TODO: all icons and loading spinner to states below */}
-              {joinDaiApprovalPending && 'Dai in the VAT Unlocked'}
-              {hasJoinDaiApproval && 'Dai in the VAT Unlocked'}
+              {!hasJoinDaiApproval && !joinDaiApprovalPending && 'Unlock Dai in the VAT'}
+              {joinDaiApprovalPending && (
+                <Flex sx={{ justifyContent: 'center', alignItems: 'center' }}>
+                  Unlocking DAI in the VAT <Spinner size={20} ml={2} />
+                </Flex>
+              )}
+              {hasJoinDaiApproval && (
+                <Flex sx={{ justifyContent: 'center', alignItems: 'center' }}>
+                  Dai in the VAT Unlocked <Icon name="checkmark" color="primary" ml={2} />
+                </Flex>
+              )}
             </Button>
             {!(hasJoinDaiApproval || joinDaiApprovalPending) && (
               <Text sx={{ color: 'textSecondary', textAlign: 'center', mt: 2 }}>
@@ -79,11 +91,16 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
             <Button
               sx={{ width: '100%' }}
               onClick={enableJoinDaiHope}
-              // TODO: hasJoinDaiHope and enableJoinDaiHopePending are not updating on tx
-              disabled={hasJoinDaiHope || enableJoinDaiHopePending}
-              variant={hasJoinDaiHope || enableJoinDaiHopePending ? 'outline' : 'primary'}
+              disabled={hasJoinDaiHope || joinDaiHopePending}
+              variant={hasJoinDaiHope || joinDaiHopePending ? 'outline' : 'primary'}
             >
-              Authorize the VAT
+              {!joinDaiHopePending ? (
+                'Authorize the VAT'
+              ) : (
+                <Flex sx={{ justifyContent: 'center', alignItems: 'center' }}>
+                  Authorizing the VAT <Spinner size={20} ml={2} />
+                </Flex>
+              )}
             </Button>
             <Text sx={{ color: 'textSecondary', textAlign: 'center', mt: 2 }}>
               This action allows the VAT to use the DAI you have deposited
@@ -96,6 +113,9 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
 
   const DepositWithdrawContent = () => {
     const [value, setValue] = useState<string>('');
+
+    const canDeposit = new BigNumber(value).lte(new BigNumber(daiBalance));
+    const canWithdraw = new BigNumber(value).lte(new BigNumber(vatBalance));
 
     const updateValue = (e: { currentTarget: { value: string } }) => {
       const newValueStr = e.currentTarget.value;
@@ -111,15 +131,32 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
         : () => maker.service('liquidation').exitDaiFromAdapter(value);
 
       await transactionsApi.getState().track(txCreator, `${isDeposit ? 'Depositing' : 'Withdrawing'} DAI`, {
+        pending: () => {
+          setIsTxProcessing(true);
+        },
         mined: txId => {
           transactionsApi.getState().setMessage(txId, `${isDeposit ? 'Deposit' : 'Withdraw'} DAI finished`);
+          setIsTxProcessing(false);
           onDismiss();
+        },
+        error: () => {
+          setIsTxProcessing(false);
         }
       });
     };
 
     return (
       <>
+        <Text sx={{ color: 'secondaryEmphasis', mb: 2 }}>
+          You can deposit Dai in the VAT here. This is the DAI that you will be able to use for bidding on
+          auctions.
+        </Text>
+        <Divider sx={{ width: '100%' }} />
+        <Flex sx={{ justifyContent: 'space-between', my: 2 }}>
+          <Text sx={{ fontWeight: 'semiBold' }}>Dai Wallet Balance</Text>
+          <Text>{daiBalance}</Text>
+        </Flex>
+        <Divider sx={{ width: '100%', mb: 3 }} />
         <Flex sx={{ mb: 4 }}>
           <Button
             sx={{
@@ -155,37 +192,38 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
             }}
             onClick={() => setIsDeposit(!isDeposit)}
           >
-            Redeem Dai
+            Withdraw Dai
           </Button>
         </Flex>
+        <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
+          <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
+          <Text>{vatBalance}</Text>
+        </Flex>
         {isDeposit ? (
-          <>
-            <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
-              <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
-              <Text>{vatBalance}</Text>
-            </Flex>
-            <Flex sx={{ mb: 4 }}>
-              <Input sx={{ mr: 2 }} placeholder="0.00" onChange={updateValue} type="number" value={value} />
-              <Button sx={{ width: 180 }} onClick={moveDai}>
-                Deposit Dai
-              </Button>
-            </Flex>
-          </>
+          <Flex sx={{ mb: 4 }}>
+            <Input sx={{ mr: 2 }} placeholder="0.00" onChange={updateValue} type="number" value={value} />
+            <Button sx={{ width: 180 }} onClick={moveDai} disabled={isTxProcessing || !canDeposit}>
+              {isTxProcessing ? <Spinner size={20} sx={{ color: 'primary' }} /> : 'Deposit Dai'}
+            </Button>
+          </Flex>
         ) : (
-          <>
-            <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
-              <Text sx={{ fontWeight: 'semiBold' }}>Dai Wallet Balance</Text>
-              <Text>{daiBalance}</Text>
-            </Flex>
-            <Flex sx={{ mb: 4 }}>
-              <Input sx={{ mr: 2 }} placeholder="0.00" onChange={updateValue} type="number" value={value} />
-              <Button sx={{ width: 180 }} onClick={moveDai}>
-                Withdraw Dai
-              </Button>
-            </Flex>
-          </>
+          <Flex sx={{ mb: 4 }}>
+            <Input
+              sx={{ mr: 2 }}
+              placeholder="0.00"
+              onChange={updateValue}
+              type="number"
+              value={value}
+              disabled={isTxProcessing}
+            />
+            <Button sx={{ width: 180 }} onClick={moveDai} disabled={isTxProcessing || !canWithdraw}>
+              {isTxProcessing ? <Spinner size={20} sx={{ color: 'primary' }} /> : 'Withdraw Dai'}
+            </Button>
+          </Flex>
         )}
-        <Button sx={{ mt: 3 }}>Explore Auctions</Button>
+        <Button onClick={onDismiss} sx={{ mt: 3 }}>
+          Explore Auctions
+        </Button>
       </>
     );
   };
@@ -216,11 +254,6 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
               onClick={onDismiss}
             />
           </Flex>
-          {/* // this text will probably be dynamic based on user's account */}
-          <Text sx={{ color: 'secondaryEmphasis', mb: 2 }}>
-            To participate in auctions you need to sign the approval transactions below and move Dai that will
-            be used for bidding to the VAT
-          </Text>
           {hasJoinDaiApproval && hasJoinDaiHope ? <DepositWithdrawContent /> : <ApprovalsContent />}
         </Flex>
       </DialogContent>

@@ -9,7 +9,7 @@ import { Icon } from '@makerdao/dai-ui-icons';
 
 import { COLLATERAL_ARRAY } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
-import { useAuctions, useAccountTokenBalance } from 'lib/hooks';
+import { useAuctions, useAccountVatBalance } from 'lib/hooks';
 import { useModalsStore } from 'stores/modals';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
@@ -28,7 +28,7 @@ const Header = (props: any): JSX.Element => {
   const account = useAccountsStore(state => state.currentAccount);
   const address = account?.address;
   const initApprovals = useApprovalsStore(state => state.initApprovals);
-  const { data: daiBalance } = useAccountTokenBalance('DAI', address);
+  const { data: vatBalance } = useAccountVatBalance(address);
 
   useEffect(() => {
     if (!address) return;
@@ -44,7 +44,6 @@ const Header = (props: any): JSX.Element => {
         showDialog={isDepositWithdrawOpen}
         onDismiss={toggleDepositWithdraw}
         mobile={bpi === 0}
-        vatBalance={undefined}
       />
 
       <Box
@@ -143,7 +142,7 @@ const Header = (props: any): JSX.Element => {
               onClick={toggleDepositWithdraw}
             >
               <Flex sx={{ alignItems: 'center' }}>
-                <Text>{daiBalance}</Text>
+                <Text>{vatBalance}</Text>
                 <Icon name="dai" size="16px" sx={{ mx: [0, 2] }} />
                 <Text sx={{ display: ['none', 'block'] }}>Deposit/Withdraw</Text>
               </Flex>
