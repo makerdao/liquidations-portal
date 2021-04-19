@@ -13,6 +13,7 @@ type Store = {
 
   enableJoinDaiApproval: () => Promise<void>;
   enableJoinDaiHope: () => Promise<void>;
+  enableIlkHope: (ilk: string) => Promise<void>;
 
   joinDaiApprovalPending: boolean;
   joinDaiHopePending: boolean;
@@ -108,6 +109,23 @@ const [useApprovalsStore] = create<Store>((set, get) => ({
         set({
           joinDaiHopePending: false
         });
+      }
+    });
+  },
+  enableIlkHope: async ilk => {
+    const maker = await getMaker();
+    const clipperAddress = maker.service('liquidation')._clipperContractByIlk(ilk).address;
+    const txCreator = () => maker.service('smartContract').getContract('MCD_VAT').hope(clipperAddress);
+
+    await transactionsApi.getState().track(txCreator, `${ilk} clipper hope sent`, {
+      mined: txId => {
+        transactionsApi.getState().setMessage(txId, `${ilk} clipper hope finished`);
+        set(state => ({
+          hasIlkHope: {
+            ...state.hasIlkHope,
+            [ilk]: true
+          }
+        }));
       }
     });
   },
