@@ -8,13 +8,13 @@ async function fetchBalance(token: string, address?: string): Promise<any> {
 }
 
 export function useAccountTokenBalance(token: string, address?: string): any {
-  const { data, error } = useSWR(address ? `/account-balance/${token}/${address}` : null, () =>
+  const { data, error } = useSWR(address ? `/balances/${token}/${address}` : null, () =>
     fetchBalance(token, address)
   );
 
   return {
     data,
     loading: !error && !data,
-    error: error
+    error
   };
 }
