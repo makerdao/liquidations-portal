@@ -94,7 +94,7 @@ const Header = (props: any): JSX.Element => {
               <MenuList sx={{ variant: 'cards.compact', width: 6 }}>
                 {COLLATERAL_ARRAY.map((type, index) => {
                   const numberOfAuctions = auctions
-                    ? auctions.filter(a => a.name === type.key).length.toString()
+                    ? auctions.filter(a => a.ilk === type.key).length.toString()
                     : '0';
                   return (
                     <MenuItem key={index} onSelect={() => router.push(`/auctions/${type.key}`)}>

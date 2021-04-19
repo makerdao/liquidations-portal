@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { getHoleAndDirtForIlk } from 'lib/api';
 
 async function fetchHoleAndDirt(ilk: string): Promise<any[]> {
-  const response = await getHoleAndDirtForIlk(ilk);
+  const response = await getHoleAndDirtForIlk(ilk.toUpperCase());
 
   return response;
 }
