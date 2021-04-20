@@ -21,7 +21,7 @@ type CollateralInfo = {
 };
 
 export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
-  'link-a': {
+  'LINK-A': {
     name: 'chainlink',
     ilk: 'LINK-A',
     symbol: 'LINK',
@@ -29,7 +29,7 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     bannerPng: '/assets/link-banner-texture.png',
     iconSvg: '/assets/link-icon.svg'
   }
-  // yfi: {
+  // YFI: {
   //   name: 'yfi',
   //   ilk: 'YFI-A',
   //   symbol: 'YFI',

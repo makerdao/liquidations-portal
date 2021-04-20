@@ -1,28 +1,24 @@
 /** @jsx jsx */
 import { useState } from 'react';
-import { Button, Text, Flex, Grid, Link as ExternalLink, jsx, Badge } from 'theme-ui';
+import { Box, Button, Text, Flex, Grid, Link as ExternalLink, jsx, Badge } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Icon } from '@makerdao/dai-ui-icons';
+import BigNumber from 'bignumber.js';
 
 import Auction from 'types/auction';
 // import Tooltip from 'components/shared/Tooltip';
 import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
 import BidModal from './BidModal';
-import BigNumber from 'bignumber.js';
 import { COLLATERAL_MAP } from 'lib/constants';
 
 type Props = {
   auction: Auction;
-  vatBalance: BigNumber | undefined;
+  vatBalance: string;
+  daiBalance: string;
 };
 
-const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Element => {
-  const [showDialog, setShowDialog] = useState(false);
-
-  // const network = getNetwork();
-  const bpi = useBreakpointIndex();
-
+const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.Element => {
   const {
     active,
     ilk,
@@ -36,9 +32,11 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
     endDate
   } = auction;
 
-  const { symbol } = COLLATERAL_MAP[ilk];
+  const [showDialog, setShowDialog] = useState(false);
+  const bpi = useBreakpointIndex();
 
-  const canBid = vatBalance?.gt(0);
+  const { symbol } = COLLATERAL_MAP[ilk];
+  const canBid = new BigNumber(vatBalance).gt(0);
 
   return (
     <>
@@ -48,9 +46,10 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
         mobile={bpi === 0}
         auction={auction}
         vatBalance={vatBalance}
+        daiBalance={daiBalance}
       />
 
-      <div {...props}>
+      <Box>
         <Grid sx={{ variant: 'cards.primary', p: 0 }} columns="1fr 1fr 1fr 1fr">
           <Stack gap={1} sx={{ justifyContent: 'space-between' }}>
             <Flex sx={{ flexDirection: 'column' }}>
@@ -136,7 +135,7 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
             </Flex>
           </Flex>
         </Grid>
-      </div>
+      </Box>
     </>
   );
 };
