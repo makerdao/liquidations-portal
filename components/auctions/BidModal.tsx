@@ -3,14 +3,15 @@ import { useState, useEffect } from 'react';
 import { Button, Flex, Text, jsx, Input, Heading, Divider, Close, Spinner } from 'theme-ui';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import BigNumber from 'bignumber.js';
-
+import { Icon } from '@makerdao/dai-ui-icons';
 import Auction from 'types/auction';
 import { fadeIn, slideUp } from 'lib/keyframes';
-import { fromRad, calculateCollateralAmt, calculateColValue } from 'lib/utils';
+import { calculateCollateralAmt, calculateColValue } from 'lib/utils';
 import useAuctionStore from 'stores/auctions';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
 import LogoBanner from './LogoBanner';
+import { COLLATERAL_MAP } from 'lib/constants';
 
 type Props = {
   showDialog: boolean;
@@ -44,6 +45,7 @@ const BidModal = ({
   const submitBid = useAuctionStore(state => state.submitBid);
   const hasIlkHopeApproval = hasIlkHope[ilk];
   const ilkHopePending = joinIlkHopePending[ilk];
+  const { symbol, colorIconName } = COLLATERAL_MAP[ilk];
 
   const updateValue = (e: { currentTarget: { value: string } }) => {
     const newValueStr = e.currentTarget.value;
@@ -134,8 +136,7 @@ const BidModal = ({
           <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', my: 2 }}>
             <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Collateral Available</Text>
             <Text>
-              {/* TODO change to symbol */}
-              {collateralAvailable} {ilk}
+              {collateralAvailable} {symbol}
             </Text>
           </Flex>
           <LogoBanner ilk={ilk} />
@@ -143,63 +144,85 @@ const BidModal = ({
             <ApprovalContent />
           ) : (
             <>
-              <Divider />
-              <Flex sx={{ justifyContent: 'space-between', my: 2 }}>
-                <Text>DAI in the VAT</Text>
-                <Flex sx={{ flexDirection: 'column', alignItems: 'flex-end' }}>
-                  <Text>{fromRad(vatBalance).toFormat(2)} DAI</Text>
-                  <Button variant="textual" sx={{ color: 'primary', fontSize: 3, p: 0 }}>
-                    Deposit
-                  </Button>
+              <Flex sx={{ flexDirection: 'column', mb: 2 }}>
+                <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', mb: 2 }}>
+                  <Text sx={{ fontWeight: 'semiBold', fontSize: 3 }}>DAI you pay</Text>
+                  <Flex sx={{ flexDirection: 'column', alignItems: 'flex-end' }}>
+                    <Button variant="textual" sx={{ color: 'primary', fontSize: 3, p: 0 }}>
+                      Deposit
+                    </Button>
+                    <Flex sx={{ alignItems: 'center' }}>
+                      <Text sx={{ fontSize: 2, color: 'textSecondary' }}>DAI in the VAT:</Text>
+                      <Text sx={{ ml: 2 }}>{daiBalance}</Text>
+                    </Flex>
+                  </Flex>
                 </Flex>
-              </Flex>
-              <Flex sx={{ flexDirection: 'column', my: 3 }}>
-                <Flex sx={{ justifyContent: 'space-between' }}>
-                  <Text sx={{ fontWeight: 'semiBold', fontSize: 3 }}>Amount of Dai</Text>
-                  <Text sx={{ fontSize: 3, color: 'textMuted' }}>Wallet balance: {daiBalance}</Text>
-                </Flex>
-                <Flex sx={{ width: '100%', position: 'relative', justifyContent: 'space-between' }}>
+                <Flex
+                  sx={{
+                    width: '100%',
+                    position: 'relative',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}
+                >
                   <Input
-                    sx={{ width: '100%' }}
+                    sx={{
+                      width: '100%',
+                      fontWeight: 'bold',
+                      fontSize: 6,
+                      // TODO why do we need this override?
+                      fontFamily: '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu'
+                    }}
                     placeholder="0.00"
                     onChange={updateValue}
-                    type="number"
+                    // TODO can we use type=number without the spinbox arrows being added to right side of input?
+                    // type="number"
                     value={value}
                   />
-                  <Button
-                    variant="textual"
-                    sx={{
-                      color: 'text',
-                      fontSize: 3,
-                      p: 0,
-                      position: 'absolute',
-                      right: '30px',
-                      top: '10px',
-                      cursor: 'pointer'
-                    }}
-                    onClick={setMax}
-                  >
-                    Set Max
-                  </Button>
+                  <Flex sx={{ position: 'absolute', right: '10px', top: '13px', alignItems: 'center' }}>
+                    <Button
+                      variant="textual"
+                      sx={{
+                        color: 'text',
+                        fontSize: 3,
+                        p: 0,
+                        cursor: 'pointer'
+                      }}
+                      // TODO fix max calc
+                      onClick={setMax}
+                    >
+                      Set Max
+                    </Button>
+                    <Flex sx={{ alignItems: 'center', ml: 1 }}>
+                      <Icon size={30} name="daiCircleColor" />
+                      <Text sx={{ fontSize: 3, fontWeight: 'semiBold', ml: 2 }}>DAI</Text>
+                    </Flex>
+                  </Flex>
                 </Flex>
-                <Flex sx={{ justifyContent: 'space-between', my: 2, px: 2 }}>
+                <Flex sx={{ justifyContent: 'space-between', mt: 2, px: 2 }}>
                   <Flex sx={{ flexDirection: 'column' }}>
-                    <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
-                    <Text sx={{ color: 'textMuted' }}>{dustLimit} DAI</Text>
+                    <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Dust limit</Text>
+                    <Text sx={{ color: 'textMuted', fontSize: 2 }}>{dustLimit} DAI</Text>
                   </Flex>
                   <Flex sx={{ flexDirection: 'column' }}>
-                    <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
-                    <Text sx={{ color: 'textMuted' }}>{auctionPrice.toFormat(2)} DAI</Text>
+                    <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Auction price</Text>
+                    <Text sx={{ color: 'textMuted', fontSize: 2, textAlign: 'right' }}>
+                      {auctionPrice.toFormat(2)} DAI
+                    </Text>
                   </Flex>
                 </Flex>
               </Flex>
-              <Divider />
-              <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', my: 2 }}>
-                <Flex sx={{ flexDirection: 'column' }}>
-                  <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Amount of Collateral</Text>
-                  <Text variant="caps" sx={{ fontWeight: 'body', fontSize: 5, color: 'textMuted', pl: 2 }}>
-                    {colAmount.toFormat(2)} {name}
+              <Divider sx={{ my: 3 }} />
+              <Flex sx={{ flexDirection: 'column' }}>
+                <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Collateral you receive</Text>
+                <Flex sx={{ justifyContent: 'space-between', width: '100%' }}>
+                  <Text sx={{ fontWeight: 'bold', fontSize: 6, color: 'textMuted', pl: 2 }}>
+                    {colAmount.toFormat(2)}
                   </Text>
+                  <Flex sx={{ alignItems: 'center' }}>
+                    <Icon size={30} name={colorIconName} />
+                    <Text sx={{ fontSize: 3, fontWeight: 'semiBold', ml: 2 }}>{symbol}</Text>
+                  </Flex>
                 </Flex>
                 <Text sx={{ color: 'textSecondary', pr: 2 }}>≈ $0.00</Text>
               </Flex>
