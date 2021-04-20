@@ -7,7 +7,6 @@ type Auction = {
   collateralAvailable: string;
   daiNeeded: string;
   dustLimit: string;
-  auctionPrice: string;
   startDate: number;
   endDate: number;
 };

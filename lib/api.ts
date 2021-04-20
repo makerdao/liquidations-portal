@@ -27,7 +27,7 @@ const mockAuctions: Auction[] = [
     collateralAvailable: '3000',
     daiNeeded: '4000',
     dustLimit: '111',
-    auctionPrice: '999',
+    // auctionPrice: '999',
     startDate: 1619894140000,
     endDate: 1619994140000
   },
@@ -40,7 +40,7 @@ const mockAuctions: Auction[] = [
     collateralAvailable: '1000',
     daiNeeded: '6000',
     dustLimit: '222',
-    auctionPrice: '888',
+    // auctionPrice: '888',
     startDate: 1619894140000,
     endDate: 1619994140000
   }

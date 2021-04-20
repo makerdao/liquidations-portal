@@ -6,6 +6,7 @@ import { Icon } from '@makerdao/dai-ui-icons';
 import BigNumber from 'bignumber.js';
 
 import Auction from 'types/auction';
+import { useAuctionStatus } from 'lib/hooks';
 // import Tooltip from 'components/shared/Tooltip';
 import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
@@ -20,6 +21,7 @@ type Props = {
 
 const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.Element => {
   const {
+    id,
     active,
     ilk,
     initialCollateral,
@@ -27,7 +29,6 @@ const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.El
     collateralAvailable,
     daiNeeded,
     dustLimit,
-    auctionPrice,
     startDate,
     endDate
   } = auction;
@@ -35,6 +36,7 @@ const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.El
   const [showDialog, setShowDialog] = useState(false);
   const bpi = useBreakpointIndex();
 
+  const { auctionPrice } = useAuctionStatus(id);
   const { symbol } = COLLATERAL_MAP[ilk];
   const canBid = new BigNumber(vatBalance).gt(0);
 
@@ -47,6 +49,7 @@ const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.El
         auction={auction}
         vatBalance={vatBalance}
         daiBalance={daiBalance}
+        auctionPrice={auctionPrice}
       />
 
       <Box>
@@ -130,7 +133,7 @@ const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.El
               </Flex>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
-                <Text>{auctionPrice} DAI</Text>
+                <Text>{auctionPrice.toFormat(2)} DAI</Text>
               </Flex>
             </Flex>
           </Flex>

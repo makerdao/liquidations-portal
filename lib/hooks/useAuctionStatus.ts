@@ -11,17 +11,20 @@ async function fetchAuctionStatus(id): Promise<any> {
 }
 
 export function useAuctionStatus(id: number): any {
-  const [auctionPrice, setAuctionPrice] = useState('0');
+  const [auctionPrice, setAuctionPrice] = useState(new BigNumber(0));
   const [daiNeeded, setDaiNeeded] = useState('0');
   const [collateralAmount, setCollateralAmount] = useState('0');
   const [needsRedo, setNeedsRedo] = useState(false);
 
-  const { data, error } = useSWR(`/auctions/getStatus-${id}`, () => fetchAuctionStatus(id));
+  const { data, error } = useSWR(`/auctions/getStatus-${id}`, () => fetchAuctionStatus(id), {
+    // arbitrary time, could be tuned to with the abaci if desired
+    refreshInterval: 30000
+  });
 
   useEffect(() => {
     if (data) {
       setCollateralAmount(new BigNumber(data.lot).div(WAD).toString());
-      setAuctionPrice(new BigNumber(data.price).div(RAY).toString());
+      setAuctionPrice(new BigNumber(data.price).div(RAY));
       setDaiNeeded(new BigNumber(data.tab).div(RAD).toString());
       setNeedsRedo(data.needsRedo);
     }

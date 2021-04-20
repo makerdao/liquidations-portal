@@ -22,9 +22,18 @@ type Props = {
   auction: Auction;
   vatBalance: string;
   daiBalance: string;
+  auctionPrice: BigNumber;
 };
 
-const BidModal = ({ showDialog, onDismiss, mobile, auction, vatBalance, daiBalance }: Props): JSX.Element => {
+const BidModal = ({
+  showDialog,
+  onDismiss,
+  mobile,
+  auction,
+  vatBalance,
+  daiBalance,
+  auctionPrice
+}: Props): JSX.Element => {
   const [value, setValue] = useState<string>('');
   const [colAmtStr, setColAmtStr] = useState<string>('0.00');
   const [hasIlkHope, enableIlkHope, joinIlkHopePending] = useApprovalsStore(state => [
@@ -33,7 +42,7 @@ const BidModal = ({ showDialog, onDismiss, mobile, auction, vatBalance, daiBalan
     state.joinIlkHopePending
   ]);
 
-  const { ilk, collateralAvailable, dustLimit, auctionPrice, id } = auction;
+  const { ilk, collateralAvailable, dustLimit, id } = auction;
   const account = useAccountsStore(state => state.currentAccount);
   const hasIlkHopeApproval = hasIlkHope[ilk];
   const ilkHopePending = joinIlkHopePending[ilk];
@@ -183,7 +192,7 @@ const BidModal = ({ showDialog, onDismiss, mobile, auction, vatBalance, daiBalan
                   </Flex>
                   <Flex sx={{ flexDirection: 'column' }}>
                     <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
-                    <Text sx={{ color: 'textMuted' }}>{auctionPrice} DAI</Text>
+                    <Text sx={{ color: 'textMuted' }}>{auctionPrice.toFormat(2)} DAI</Text>
                   </Flex>
                 </Flex>
               </Flex>

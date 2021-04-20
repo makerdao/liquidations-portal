@@ -11,7 +11,6 @@ const [useAuctionStore] = create<Store>((set, get) => ({
   submitBid: async (id, amount, maxPrice, address) => {
     console.log('submit bid called with', id, amount, maxPrice, address);
     const maker = await getMaker();
-    console.log('maker obj', maker);
 
     const txCreator = () => maker.service('liquidation').take(id, amount, maxPrice, address);
     await transactionsApi.getState().track(txCreator, `Submit bid on ID: ${id}`, {
