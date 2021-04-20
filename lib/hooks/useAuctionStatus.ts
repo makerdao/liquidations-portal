@@ -36,6 +36,6 @@ export function useAuctionStatus(id: number): any {
     daiNeeded,
     needsRedo,
     loading: !error && !data,
-    error: error
+    error
   };
 }

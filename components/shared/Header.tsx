@@ -17,11 +17,11 @@ import AccountSelect from 'components/header/AccountSelect';
 import DepositWithdrawModal from './DepositWithdrawModal';
 import { COLLATERAL_MAP } from '../../lib/constants';
 
-const Header = (props: any): JSX.Element => {
+const Header = (): JSX.Element => {
   const network = getNetwork();
   const router = useRouter();
   const bpi = useBreakpointIndex();
-  const { data: auctions } = useAuctions();
+  const { data: auctions } = useAuctions('all');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const isDepositWithdrawOpen = useModalsStore(state => state.isDepositWithdrawOpen);
   const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
@@ -58,7 +58,6 @@ const Header = (props: any): JSX.Element => {
           justifyContent: 'space-between',
           width: '100%'
         }}
-        {...props}
       >
         <Link href={{ pathname: '/', query: { network } }}>
           <IconButton aria-label="Maker home" sx={{ width: '40px', height: 4, p: 0 }}>
@@ -138,7 +137,6 @@ const Header = (props: any): JSX.Element => {
                   backgroundColor: 'white'
                 }
               }}
-              {...props}
               onClick={toggleDepositWithdraw}
             >
               <Flex sx={{ alignItems: 'center' }}>

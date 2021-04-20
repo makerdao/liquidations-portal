@@ -13,6 +13,6 @@ export function useTotalDai(): any {
   return {
     data,
     loading: !error && !data,
-    error: error
+    error
   };
 }

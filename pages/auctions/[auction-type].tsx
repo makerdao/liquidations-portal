@@ -20,21 +20,28 @@ import { transactionsApi } from 'stores/transactions';
 import useAccountsStore from 'stores/accounts';
 
 export default function Auctions(): JSX.Element | null {
+  // router params
   const router = useRouter();
   const type = router.query['auction-type']?.toString().toLowerCase();
-  const [isTxProcessing, setIsTxProcessing] = useState(false);
 
-  // TODO: fix this
-  const ilkData = type ? COLLATERAL_MAP[type.toUpperCase()] : null;
-  const account = useAccountsStore(state => state.currentAccount);
-  const address = account?.address;
-  //TODO: get ilk type from collateral map
-  const { data: vatGemBalance } = useVatGemBalance('LINK-A', account?.address);
-  const { data: auctions } = useAuctions(type ? type.toUpperCase() : undefined);
-  const { data: daiBalance } = useAccountTokenBalance('DAI', address);
-  const { data: vatBalance } = useAccountVatBalance(address);
+  const ilkData = type ? COLLATERAL_MAP[type.toUpperCase()] : undefined;
+
+  // auction data
+  const { data: auctions } = useAuctions(ilkData?.ilk);
   const activeAuctions = auctions && getAuctionsByStatus(auctions, true);
   const inactiveAuctions = auctions && getAuctionsByStatus(auctions, false);
+
+  // account data
+  const account = useAccountsStore(state => state.currentAccount);
+  const address = account?.address;
+
+  // balances
+  const { data: vatGemBalance } = useVatGemBalance(ilkData?.ilk, address);
+  const { data: daiBalance } = useAccountTokenBalance('DAI', address);
+  const { data: vatBalance } = useAccountVatBalance(address);
+
+  // tx processing state
+  const [isTxProcessing, setIsTxProcessing] = useState(false);
 
   // TODO: add error state here if true
   if (!ilkData) return null;

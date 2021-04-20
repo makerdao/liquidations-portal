@@ -1,7 +1,7 @@
 import { useAuctions, useUnsafeVaults, useTotalDai, useHoleAndDirt } from 'lib/hooks';
 
 export function useSystemStats(): any {
-  const { data: auctions, error: auctionsError } = useAuctions();
+  const { data: auctions, error: auctionsError } = useAuctions('all');
   const { data: unsafeVaults, error: unsafeVaultsError } = useUnsafeVaults();
   const { data: totalDai, error: totalDaiError } = useTotalDai();
 
@@ -14,7 +14,7 @@ export function useSystemStats(): any {
   return {
     data,
     loading: !error && !data,
-    error: error
+    error
   };
 }
 
@@ -31,6 +31,6 @@ export function useSystemStatsSidebar(ilk: string): any {
   return {
     data,
     loading: !error && !data,
-    error: error
+    error
   };
 }

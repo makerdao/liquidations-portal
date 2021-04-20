@@ -20,6 +20,6 @@ export function useUnsafeVaults(ilk?: string): any {
   return {
     data,
     loading: !error && !data,
-    error: error
+    error
   };
 }

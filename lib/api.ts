@@ -53,7 +53,9 @@ export async function getAllClips(ilk: string): Promise<any> {
   return maker.service('liquidation').getAllClips(ilk);
 }
 
-export async function getVatGemBalance(ilk: string, address?: string): Promise<any> {
+export async function getVatGemBalance(ilk?: string, address?: string): Promise<any> {
+  if (!ilk || !address) return;
+
   const maker = await getMaker();
 
   return maker.service('smartContract').getContract('MCD_VAT').gem(stringToBytes(ilk), address);

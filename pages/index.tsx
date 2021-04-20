@@ -15,7 +15,7 @@ import useAccountsStore from 'stores/accounts';
 import { useModalsStore } from 'stores/modals';
 
 export default function LandingPage(): JSX.Element {
-  const { data: auctions, loading: auctionsLoading } = useAuctions();
+  const { data: auctions, loading: auctionsLoading } = useAuctions('all');
   const activeAuctions = getAuctionsByStatus(auctions, true);
   const inactiveAuctions = getAuctionsByStatus(auctions, false);
   const account = useAccountsStore(state => state.currentAccount);
