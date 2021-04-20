@@ -12,7 +12,6 @@ import { fromRad, calculateCollateralAmt, calculateColValue } from '../../lib/ut
 import LogoBanner from './LogoBanner';
 import useAuctionStore from 'stores/auctions';
 import useAccountsStore from 'stores/accounts';
-import { getVatGemBalance } from 'lib/api';
 
 // TODO where do we get collateral price info?
 const colPrice = new BigNumber(28.19);
@@ -40,10 +39,6 @@ const BidModal = ({
 
   const { data: daiBalance } = useSWR('/balances/dai', () =>
     getMaker().then(maker => maker.getToken('DAI').balance())
-  );
-
-  getVatGemBalance('LINK-A', '0x16Fb96a5fa0427Af0C8F7cF1eB4870231c8154B6').then(x =>
-    console.log('vat gem balance', x.toString())
   );
 
   const updateValue = (e: { currentTarget: { value: string } }) => {

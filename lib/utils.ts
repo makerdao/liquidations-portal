@@ -140,6 +140,14 @@ export function fromRad(value): BigNumber {
   return new BigNumber(value).shiftedBy(-45);
 }
 
+export function fromWad(value): BigNumber {
+  return new BigNumber(value).shiftedBy(-18);
+}
+
+export function fromRay(value): BigNumber {
+  return new BigNumber(value).shiftedBy(-27);
+}
+
 export const calculateCollateralAmt = (colAmt: BigNumber, colPrice: BigNumber): BigNumber =>
   colAmt.div(colPrice);
 

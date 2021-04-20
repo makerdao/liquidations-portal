@@ -7,3 +7,4 @@ export { useSystemStats } from './useSystemStats';
 export { useSystemStatsSidebar } from './useSystemStats';
 export { useTotalDai } from './useTotalDai';
 export { useUnsafeVaults } from './useUnsafeVaults';
+export { useVatGemBalance } from './useVatGemBalance';
