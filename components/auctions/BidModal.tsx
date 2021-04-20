@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import { Icon } from '@makerdao/dai-ui-icons';
 import Auction from 'types/auction';
 import { fadeIn, slideUp } from 'lib/keyframes';
-import { calculateCollateralAmt, calculateColValue } from 'lib/utils';
+import { calculateCollateralAmt } from 'lib/utils';
 import useAuctionStore from 'stores/auctions';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
@@ -20,6 +20,7 @@ type Props = {
   auction: Auction;
   vatBalance: string;
   daiBalance: string;
+  unitPrice: BigNumber;
   auctionPrice: BigNumber;
 };
 
@@ -30,6 +31,7 @@ const BidModal = ({
   auction,
   vatBalance,
   daiBalance,
+  unitPrice,
   auctionPrice
 }: Props): JSX.Element => {
   const [value, setValue] = useState<string>('');
@@ -55,16 +57,13 @@ const BidModal = ({
   };
 
   useEffect(() => {
-    const colAmt = calculateCollateralAmt(new BigNumber(value), auctionPrice);
+    const colAmt = calculateCollateralAmt(new BigNumber(value), unitPrice);
     setColAmount(colAmt);
   }, [value]);
 
   const setMax = () => {
-    // if the user's vat balance is greater than the value of the available collateral, use the collateral value
-    const colAvailableValue = calculateColValue(new BigNumber(collateralAvailable), auctionPrice);
-    const max = new BigNumber(vatBalance).gt(colAvailableValue)
-      ? colAvailableValue
-      : new BigNumber(vatBalance);
+    // if the user's vat balance is greater than the value of the auction, use the auctionPrice
+    const max = new BigNumber(vatBalance).gt(auctionPrice) ? auctionPrice : new BigNumber(vatBalance);
     setValue(max.toFormat(18));
   };
 
@@ -229,7 +228,7 @@ const BidModal = ({
               <Button
                 disabled={disabled}
                 sx={{ mt: 3 }}
-                onClick={() => submitBid(id, colAmount, auctionPrice, account?.address)}
+                onClick={() => submitBid(id, colAmount, unitPrice, account?.address)}
               >
                 Place a bid
               </Button>

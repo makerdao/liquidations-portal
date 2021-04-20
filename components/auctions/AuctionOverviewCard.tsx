@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 
 import Auction from 'types/auction';
 import { useAuctionStatus } from 'lib/hooks';
+import { calculateColValue } from 'lib/utils';
 // import Tooltip from 'components/shared/Tooltip';
 import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
@@ -35,10 +36,12 @@ const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.El
 
   const [showDialog, setShowDialog] = useState(false);
   const bpi = useBreakpointIndex();
+  const { auctionPrice: unitPrice } = useAuctionStatus(id);
 
-  const { auctionPrice } = useAuctionStatus(id);
   const { symbol } = COLLATERAL_MAP[ilk];
   const canBid = new BigNumber(vatBalance).gt(0);
+
+  const auctionPrice = calculateColValue(new BigNumber(collateralAvailable), unitPrice);
 
   return (
     <>
@@ -49,6 +52,7 @@ const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.El
         auction={auction}
         vatBalance={vatBalance}
         daiBalance={daiBalance}
+        unitPrice={unitPrice}
         auctionPrice={auctionPrice}
       />
 
