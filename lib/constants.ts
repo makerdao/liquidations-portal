@@ -18,6 +18,7 @@ type CollateralInfo = {
   cardTexturePng: string;
   bannerPng: string;
   iconSvg: string;
+  colorIconName: string;
 };
 
 export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
@@ -27,7 +28,8 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     symbol: 'LINK',
     cardTexturePng: '/assets/link-card-texture.png',
     bannerPng: '/assets/link-banner-texture.png',
-    iconSvg: '/assets/link-icon.svg'
+    iconSvg: '/assets/link-icon.svg',
+    colorIconName: 'chainlinkCircleColor'
   }
   // YFI: {
   //   name: 'yfi',
