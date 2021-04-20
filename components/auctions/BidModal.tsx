@@ -223,7 +223,6 @@ const BidModal = ({
                     <Text sx={{ fontSize: 3, fontWeight: 'semiBold', ml: 2 }}>{symbol}</Text>
                   </Flex>
                 </Flex>
-                <Text sx={{ color: 'textSecondary', pr: 2 }}>≈ $0.00</Text>
               </Flex>
               <Button
                 disabled={disabled}
