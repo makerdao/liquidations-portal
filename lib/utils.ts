@@ -148,8 +148,8 @@ export function fromRay(value): BigNumber {
   return new BigNumber(value).shiftedBy(-27);
 }
 
-export const calculateCollateralAmt = (colAmt: BigNumber, colPrice: BigNumber): BigNumber =>
-  colAmt.div(colPrice);
+export const calculateCollateralAmt = (daiAmt: BigNumber, colPrice: BigNumber): BigNumber =>
+  daiAmt.isNaN() || colPrice.eq(0) ? new BigNumber(0) : daiAmt.div(colPrice);
 
 export const calculateColValue = (colAmt: BigNumber, colPrice: BigNumber): BigNumber =>
   colAmt.times(colPrice);

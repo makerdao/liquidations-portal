@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Flex, Text, jsx, Input, Heading, Divider, Close, Spinner } from 'theme-ui';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import BigNumber from 'bignumber.js';
@@ -11,9 +11,6 @@ import useAuctionStore from 'stores/auctions';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
 import LogoBanner from './LogoBanner';
-
-// TODO where do we get collateral price info?
-const colPrice = new BigNumber(28.19);
 
 type Props = {
   showDialog: boolean;
@@ -35,7 +32,7 @@ const BidModal = ({
   auctionPrice
 }: Props): JSX.Element => {
   const [value, setValue] = useState<string>('');
-  const [colAmtStr, setColAmtStr] = useState<string>('0.00');
+  const [colAmount, setColAmount] = useState<BigNumber>(new BigNumber(0));
   const [hasIlkHope, enableIlkHope, joinIlkHopePending] = useApprovalsStore(state => [
     state.hasIlkHope,
     state.enableIlkHope,
@@ -44,6 +41,7 @@ const BidModal = ({
 
   const { ilk, collateralAvailable, dustLimit, id } = auction;
   const account = useAccountsStore(state => state.currentAccount);
+  const submitBid = useAuctionStore(state => state.submitBid);
   const hasIlkHopeApproval = hasIlkHope[ilk];
   const ilkHopePending = joinIlkHopePending[ilk];
 
@@ -52,29 +50,28 @@ const BidModal = ({
     if (!/^((0|[1-9]\d*)(\.\d+)?)?$/.test(newValueStr)) return; // only non-negative valid numbers
 
     setValue(newValueStr);
-
-    const newDaiAmt = new BigNumber(newValueStr || '0');
-    const colAmount = calculateCollateralAmt(newDaiAmt, colPrice);
-    setColAmtStr(colAmount.toFormat(2));
   };
+
+  useEffect(() => {
+    const colAmt = calculateCollateralAmt(new BigNumber(value), auctionPrice);
+    setColAmount(colAmt);
+  }, [value]);
 
   const setMax = () => {
-    // if the user's vat balance is greater than the value of the available collateral, just use that
-    const colAvailableValue = calculateColValue(new BigNumber(collateralAvailable), colPrice);
-    const max = fromRad(vatBalance).gt(colAvailableValue) ? colAvailableValue : fromRad(vatBalance);
-    setValue(max.toFormat());
-
-    const colAmount = calculateCollateralAmt(max, colPrice);
-    setColAmtStr(colAmount.toFormat(2));
+    // if the user's vat balance is greater than the value of the available collateral, use the collateral value
+    const colAvailableValue = calculateColValue(new BigNumber(collateralAvailable), auctionPrice);
+    const max = new BigNumber(vatBalance).gt(colAvailableValue)
+      ? colAvailableValue
+      : new BigNumber(vatBalance);
+    setValue(max.toFormat(18));
   };
 
-  const submitBid = useAuctionStore(state => state.submitBid);
-
-  // Hardcoding data to match current active kovan auction
-  const bidAmt = '1';
-  const bidMax = '50';
-
   const disabled = !account;
+
+  const onClose = () => {
+    onDismiss();
+    setValue('');
+  };
 
   const ApprovalContent = () => {
     return (
@@ -109,7 +106,7 @@ const BidModal = ({
   };
 
   return (
-    <DialogOverlay isOpen={showDialog} onDismiss={onDismiss}>
+    <DialogOverlay isOpen={showDialog} onDismiss={onClose}>
       <DialogContent
         aria-label="Place a bid"
         sx={
@@ -131,7 +128,7 @@ const BidModal = ({
                 top: '-4px',
                 left: '8px'
               }}
-              onClick={onDismiss}
+              onClick={onClose}
             />
           </Flex>
           <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', my: 2 }}>
@@ -201,14 +198,15 @@ const BidModal = ({
                 <Flex sx={{ flexDirection: 'column' }}>
                   <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Amount of Collateral</Text>
                   <Text variant="caps" sx={{ fontWeight: 'body', fontSize: 5, color: 'textMuted', pl: 2 }}>
-                    {colAmtStr} {name}
+                    {colAmount.toFormat(2)} {name}
                   </Text>
                 </Flex>
+                <Text sx={{ color: 'textSecondary', pr: 2 }}>≈ $0.00</Text>
               </Flex>
               <Button
                 disabled={disabled}
                 sx={{ mt: 3 }}
-                onClick={() => submitBid(auction.id, bidAmt, bidMax, account?.address)}
+                onClick={() => submitBid(id, colAmount, auctionPrice, account?.address)}
               >
                 Place a bid
               </Button>

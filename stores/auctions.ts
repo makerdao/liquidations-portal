@@ -12,7 +12,9 @@ const [useAuctionStore] = create<Store>((set, get) => ({
     console.log('submit bid called with', id, amount, maxPrice, address);
     const maker = await getMaker();
 
-    const txCreator = () => maker.service('liquidation').take(id, amount, maxPrice, address);
+    // maxPrice is approximate, or else we get "Clipper/too-expensive" errors
+    const txCreator = () =>
+      maker.service('liquidation').take(id, amount.toFormat(18), maxPrice.toFormat(2), address);
     await transactionsApi.getState().track(txCreator, `Submit bid on ID: ${id}`, {
       pending: txId => {
         console.log('bid tx pending', txId);
@@ -26,3 +28,4 @@ const [useAuctionStore] = create<Store>((set, get) => ({
 }));
 
 export default useAuctionStore;
+//485.62
