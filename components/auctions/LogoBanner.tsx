@@ -8,7 +8,7 @@ type Props = {
 };
 
 const LogoBanner = ({ ilk }: Props): JSX.Element => {
-  const { bannerPng, iconSvg } = COLLATERAL_MAP[ilk.toLowerCase()];
+  const { bannerPng, iconSvg } = COLLATERAL_MAP[ilk];
 
   return (
     <Flex sx={{ position: 'relative', display: 'inline-block' }}>
@@ -34,10 +34,11 @@ const LogoBanner = ({ ilk }: Props): JSX.Element => {
           sx={{
             pl: 3,
             color: 'background',
-            fontSize: 8
+            fontSize: 8,
+            fontWeight: 'semiBold'
           }}
         >
-          {name}
+          {ilk}
         </Text>
       </Flex>
     </Flex>

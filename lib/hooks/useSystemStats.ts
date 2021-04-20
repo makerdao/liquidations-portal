@@ -19,11 +19,9 @@ export function useSystemStats(): any {
 }
 
 export function useSystemStatsSidebar(ilk: string): any {
-  const type = ilk.toLowerCase();
-
-  const { data: auctions, error: auctionsError } = useAuctions(type);
-  const { data: unsafeVaults, error: unsafeVaultsError } = useUnsafeVaults(type);
-  const { data: holeAndDirt, error: holeAndDirtError } = useHoleAndDirt(type);
+  const { data: auctions, error: auctionsError } = useAuctions(ilk);
+  const { data: unsafeVaults, error: unsafeVaultsError } = useUnsafeVaults(ilk);
+  const { data: holeAndDirt, error: holeAndDirtError } = useHoleAndDirt(ilk);
 
   // return data needed for each field in fieldMap and let format function do the rest
   // ['Undercollateralized Vaults', 'Active Auctions', 'Inactive Auctions', 'Dai required for Auctions', 'Limit per collateral available']

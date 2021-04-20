@@ -155,7 +155,7 @@ export default function LandingPage(): JSX.Element {
               </Flex>
               <Grid gap={4} columns={[1, 3]}>
                 {COLLATERAL_ARRAY.map(type => {
-                  const ilkAuctions = getAuctionsByIlk(activeAuctions, type.ilk.toLowerCase());
+                  const ilkAuctions = getAuctionsByIlk(activeAuctions, type.ilk);
                   return (
                     <Box key={type.ilk}>
                       {auctionsLoading && <AuctionPreviewSkeleton />}
@@ -204,7 +204,7 @@ export default function LandingPage(): JSX.Element {
               </Flex>
               <Grid gap={4} columns={[1, 3]}>
                 {COLLATERAL_ARRAY.map(type => {
-                  const ilkAuctions = getAuctionsByIlk(inactiveAuctions, type.ilk.toLowerCase());
+                  const ilkAuctions = getAuctionsByIlk(inactiveAuctions, type.ilk);
                   return (
                     <Box key={type.ilk}>
                       {auctionsLoading && <AuctionPreviewSkeleton />}

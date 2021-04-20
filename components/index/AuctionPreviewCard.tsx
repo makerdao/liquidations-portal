@@ -14,7 +14,7 @@ export default function AuctionPreviewCard({ type, auctions }: Props): JSX.Eleme
   if (!type || !auctions) return null;
 
   const { cardTexturePng, iconSvg, ilk } = type;
-  const filteredAuctions = getAuctionsByIlk(auctions, ilk.toLowerCase());
+  const filteredAuctions = getAuctionsByIlk(auctions, ilk);
   const numberOfAuctions = filteredAuctions.length;
   const totalCollateral = getTotalCollateralAvailable(filteredAuctions);
 

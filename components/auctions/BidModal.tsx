@@ -1,17 +1,16 @@
 /** @jsx jsx */
 import { useState } from 'react';
-import useSWR from 'swr';
-import { Button, Flex, Text, jsx, Input, Heading, Divider, Close } from 'theme-ui';
+import { Button, Flex, Text, jsx, Input, Heading, Divider, Close, Spinner } from 'theme-ui';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import BigNumber from 'bignumber.js';
 
-import Auction from '../../types/auction';
-import { fadeIn, slideUp } from '../../lib/keyframes';
-import getMaker from '../../lib/maker';
-import { fromRad, calculateCollateralAmt, calculateColValue } from '../../lib/utils';
-import LogoBanner from './LogoBanner';
+import Auction from 'types/auction';
+import { fadeIn, slideUp } from 'lib/keyframes';
+import { fromRad, calculateCollateralAmt, calculateColValue } from 'lib/utils';
 import useAuctionStore from 'stores/auctions';
 import useAccountsStore from 'stores/accounts';
+import useApprovalsStore from 'stores/approvals';
+import LogoBanner from './LogoBanner';
 
 // TODO where do we get collateral price info?
 const colPrice = new BigNumber(28.19);
@@ -21,25 +20,23 @@ type Props = {
   onDismiss: () => void;
   mobile: boolean;
   auction: Auction;
-  vatBalance: BigNumber | undefined;
+  vatBalance: string;
+  daiBalance: string;
 };
 
-const BidModal = ({
-  showDialog,
-  onDismiss,
-  mobile,
-  auction,
-  vatBalance = new BigNumber(0)
-}: Props): JSX.Element => {
-  const account = useAccountsStore(state => state.currentAccount);
+const BidModal = ({ showDialog, onDismiss, mobile, auction, vatBalance, daiBalance }: Props): JSX.Element => {
   const [value, setValue] = useState<string>('');
   const [colAmtStr, setColAmtStr] = useState<string>('0.00');
+  const [hasIlkHope, enableIlkHope, joinIlkHopePending] = useApprovalsStore(state => [
+    state.hasIlkHope,
+    state.enableIlkHope,
+    state.joinIlkHopePending
+  ]);
 
-  const { ilk, collateralAvailable, dustLimit, auctionPrice } = auction;
-
-  const { data: daiBalance } = useSWR('/balances/dai', () =>
-    getMaker().then(maker => maker.getToken('DAI').balance())
-  );
+  const { ilk, collateralAvailable, dustLimit, auctionPrice, id } = auction;
+  const account = useAccountsStore(state => state.currentAccount);
+  const hasIlkHopeApproval = hasIlkHope[ilk];
+  const ilkHopePending = joinIlkHopePending[ilk];
 
   const updateValue = (e: { currentTarget: { value: string } }) => {
     const newValueStr = e.currentTarget.value;
@@ -70,6 +67,38 @@ const BidModal = ({
 
   const disabled = !account;
 
+  const ApprovalContent = () => {
+    return (
+      <Flex sx={{ flexDirection: 'column' }}>
+        <Flex sx={{ justifyContent: 'space-between', my: 3 }}>
+          <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
+          <Text>{vatBalance}</Text>
+        </Flex>
+        {/* TODO: add button action */}
+        <Button variant="outline" onClick={() => console.log('go to deposit modal')} sx={{ mb: 4 }}>
+          Deposit more DAI in the VAT
+        </Button>
+        <Button
+          onClick={() => enableIlkHope(ilk)}
+          sx={{ mb: 3 }}
+          variant={ilkHopePending ? 'outline' : 'primary'}
+          disabled={ilkHopePending}
+        >
+          {!ilkHopePending ? (
+            `Authorize DAI in ${ilk} Auctions`
+          ) : (
+            <Flex sx={{ justifyContent: 'center', alignItems: 'center' }}>
+              Authorizing DAI in {ilk} Auctions <Spinner size={20} ml={2} />
+            </Flex>
+          )}
+        </Button>
+        <Text sx={{ color: 'textSecondary', textAlign: 'center' }}>
+          To start bidding you need to authorize Dai in {ilk} Auctions
+        </Text>
+      </Flex>
+    );
+  };
+
   return (
     <DialogOverlay isOpen={showDialog} onDismiss={onDismiss}>
       <DialogContent
@@ -81,94 +110,101 @@ const BidModal = ({
         }
       >
         <Flex sx={{ flexDirection: 'column', pb: 3 }}>
-          <Close
-            sx={{
-              alignSelf: 'flex-end',
-              height: 4,
-              width: 4,
-              p: 0,
-              position: 'relative',
-              top: '-4px',
-              left: '8px'
-            }}
-            onClick={onDismiss}
-          />
-          <Heading sx={{ fontWeight: 'bold' }}>Place a Bid</Heading>
-          <LogoBanner ilk={ilk.toUpperCase()} />
+          <Flex sx={{ justifyContent: 'space-between' }}>
+            <Heading sx={{ fontWeight: 'bold' }}>{`Auction ${id}`}</Heading>
+            <Close
+              sx={{
+                alignSelf: 'flex-end',
+                height: 4,
+                width: 4,
+                p: 0,
+                position: 'relative',
+                top: '-4px',
+                left: '8px'
+              }}
+              onClick={onDismiss}
+            />
+          </Flex>
           <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', my: 2 }}>
             <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Collateral Available</Text>
-            <Heading variant="mediumHeading">
-              {collateralAvailable} {ilk.toUpperCase()}
-            </Heading>
+            <Text>
+              {/* TODO change to symbol */}
+              {collateralAvailable} {ilk}
+            </Text>
           </Flex>
-          <Divider />
-          <Flex sx={{ justifyContent: 'space-between', my: 2 }}>
-            <Text>DAI in the VAT</Text>
-            <Flex sx={{ flexDirection: 'column', alignItems: 'flex-end' }}>
-              <Text>{fromRad(vatBalance).toFormat(2)} DAI</Text>
-              <Button variant="textual" sx={{ color: 'primary', fontSize: 3, p: 0 }}>
-                Deposit
-              </Button>
-            </Flex>
-          </Flex>
-          <Flex sx={{ flexDirection: 'column', my: 3 }}>
-            <Flex sx={{ justifyContent: 'space-between' }}>
-              <Text sx={{ fontWeight: 'semiBold', fontSize: 3 }}>Amount of Dai</Text>
-              <Text sx={{ fontSize: 3, color: 'textMuted' }}>
-                Wallet balance: {daiBalance && daiBalance.toBigNumber().toFormat(2)}
-              </Text>
-            </Flex>
-            <Flex sx={{ width: '100%', position: 'relative', justifyContent: 'space-between' }}>
-              <Input
-                sx={{ width: '100%' }}
-                placeholder="0.00"
-                onChange={updateValue}
-                type="number"
-                value={value}
-              />
+          <LogoBanner ilk={ilk} />
+          {!hasIlkHopeApproval ? (
+            <ApprovalContent />
+          ) : (
+            <>
+              <Divider />
+              <Flex sx={{ justifyContent: 'space-between', my: 2 }}>
+                <Text>DAI in the VAT</Text>
+                <Flex sx={{ flexDirection: 'column', alignItems: 'flex-end' }}>
+                  <Text>{fromRad(vatBalance).toFormat(2)} DAI</Text>
+                  <Button variant="textual" sx={{ color: 'primary', fontSize: 3, p: 0 }}>
+                    Deposit
+                  </Button>
+                </Flex>
+              </Flex>
+              <Flex sx={{ flexDirection: 'column', my: 3 }}>
+                <Flex sx={{ justifyContent: 'space-between' }}>
+                  <Text sx={{ fontWeight: 'semiBold', fontSize: 3 }}>Amount of Dai</Text>
+                  <Text sx={{ fontSize: 3, color: 'textMuted' }}>Wallet balance: {daiBalance}</Text>
+                </Flex>
+                <Flex sx={{ width: '100%', position: 'relative', justifyContent: 'space-between' }}>
+                  <Input
+                    sx={{ width: '100%' }}
+                    placeholder="0.00"
+                    onChange={updateValue}
+                    type="number"
+                    value={value}
+                  />
+                  <Button
+                    variant="textual"
+                    sx={{
+                      color: 'text',
+                      fontSize: 3,
+                      p: 0,
+                      position: 'absolute',
+                      right: '30px',
+                      top: '10px',
+                      cursor: 'pointer'
+                    }}
+                    onClick={setMax}
+                  >
+                    Set Max
+                  </Button>
+                </Flex>
+                <Flex sx={{ justifyContent: 'space-between', my: 2, px: 2 }}>
+                  <Flex sx={{ flexDirection: 'column' }}>
+                    <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
+                    <Text sx={{ color: 'textMuted' }}>{dustLimit} DAI</Text>
+                  </Flex>
+                  <Flex sx={{ flexDirection: 'column' }}>
+                    <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
+                    <Text sx={{ color: 'textMuted' }}>{auctionPrice} DAI</Text>
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Divider />
+              <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', my: 2 }}>
+                <Flex sx={{ flexDirection: 'column' }}>
+                  <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Amount of Collateral</Text>
+                  <Text variant="caps" sx={{ fontWeight: 'body', fontSize: 5, color: 'textMuted', pl: 2 }}>
+                    {colAmtStr} {name}
+                  </Text>
+                </Flex>
+              </Flex>
               <Button
-                variant="textual"
-                sx={{
-                  color: 'text',
-                  fontSize: 3,
-                  p: 0,
-                  position: 'absolute',
-                  right: '30px',
-                  top: '10px',
-                  cursor: 'pointer'
-                }}
-                onClick={setMax}
+                disabled={disabled}
+                sx={{ mt: 3 }}
+                onClick={() => submitBid(auction.id, bidAmt, bidMax, account?.address)}
               >
-                Set Max
+                Place a bid
               </Button>
-            </Flex>
-            <Flex sx={{ justifyContent: 'space-between', my: 2, px: 2 }}>
-              <Flex sx={{ flexDirection: 'column' }}>
-                <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
-                <Text sx={{ color: 'textMuted' }}>{dustLimit} DAI</Text>
-              </Flex>
-              <Flex sx={{ flexDirection: 'column' }}>
-                <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
-                <Text sx={{ color: 'textMuted' }}>{auctionPrice} DAI</Text>
-              </Flex>
-            </Flex>
-          </Flex>
-          <Divider />
-          <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', my: 2 }}>
-            <Flex sx={{ flexDirection: 'column' }}>
-              <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Amount of Collateral</Text>
-              <Text variant="caps" sx={{ fontWeight: 'body', fontSize: 5, color: 'textMuted', pl: 2 }}>
-                {colAmtStr} {name}
-              </Text>
-            </Flex>
-          </Flex>
-          <Button
-            disabled={disabled}
-            sx={{ mt: 3 }}
-            onClick={() => submitBid(auction.id, bidAmt, bidMax, account?.address)}
-          >
-            Place a bid
-          </Button>
+            </>
+          )}
         </Flex>
       </DialogContent>
     </DialogOverlay>

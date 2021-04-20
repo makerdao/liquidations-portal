@@ -5,7 +5,7 @@ import { transactionsApi } from './transactions';
 type Store = {
   hasJoinDaiApproval: boolean;
   hasJoinDaiHope: boolean;
-  hasIlkHope: Record<string, string>;
+  hasIlkHope: Record<string, boolean>;
 
   setHasJoinDaiApproval: (address: string | undefined) => Promise<void>;
   setHasJoinDaiHope: (address: string | undefined) => Promise<void>;
@@ -17,6 +17,7 @@ type Store = {
 
   joinDaiApprovalPending: boolean;
   joinDaiHopePending: boolean;
+  joinIlkHopePending: Record<string, boolean>;
 
   initApprovals: (address: string, ilks?: string[]) => Promise<void>;
 };
@@ -27,6 +28,7 @@ const [useApprovalsStore] = create<Store>((set, get) => ({
   hasIlkHope: {},
   joinDaiApprovalPending: false,
   joinDaiHopePending: false,
+  joinIlkHopePending: {},
 
   setHasJoinDaiApproval: async address => {
     const maker = await getMaker();
@@ -57,7 +59,7 @@ const [useApprovalsStore] = create<Store>((set, get) => ({
     set(state => ({
       hasIlkHope: {
         ...state.hasIlkHope,
-        [`MCD_CLIP_${ilk.replace('-', '_')}`]: can.toNumber() === 1
+        [ilk]: can.toNumber() === 1
       }
     }));
   },
@@ -118,12 +120,32 @@ const [useApprovalsStore] = create<Store>((set, get) => ({
     const txCreator = () => maker.service('smartContract').getContract('MCD_VAT').hope(clipperAddress);
 
     await transactionsApi.getState().track(txCreator, `${ilk} clipper hope sent`, {
+      pending: () => {
+        set(state => ({
+          joinIlkHopePending: {
+            ...state.joinIlkHopePending,
+            [ilk]: true
+          }
+        }));
+      },
       mined: txId => {
         transactionsApi.getState().setMessage(txId, `${ilk} clipper hope finished`);
         set(state => ({
           hasIlkHope: {
             ...state.hasIlkHope,
             [ilk]: true
+          },
+          joinIlkHopePending: {
+            ...state.joinIlkHopePending,
+            [ilk]: false
+          }
+        }));
+      },
+      error: () => {
+        set(state => ({
+          joinIlkHopePending: {
+            ...state.joinIlkHopePending,
+            [ilk]: false
           }
         }));
       }

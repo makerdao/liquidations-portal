@@ -12,8 +12,10 @@ async function fetchAuctions(ilk: string): Promise<Auction[]> {
 }
 
 export function useAuctions(ilk?: string): any {
+  // remove this
   const type = ilk ?? 'all';
 
+  // set null if type is null
   const { data, error } = useSWR(`/auctions/fetch-${type}`, () => fetchAuctions(type), {
     // set interval to 60 seconds for "all ilk" queries, 10 seconds for ilk-specific
     refreshInterval: type === 'all' ? 60000 : 10000
