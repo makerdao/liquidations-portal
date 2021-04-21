@@ -13,6 +13,7 @@ import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
 import BidModal from './BidModal';
 import { COLLATERAL_MAP } from 'lib/constants';
+import { useModalsStore } from 'stores/modals';
 
 type Props = {
   auction: Auction;
@@ -42,6 +43,8 @@ const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.El
   const canBid = new BigNumber(vatBalance).gt(0);
 
   const auctionPrice = calculateColValue(new BigNumber(collateralAvailable), unitPrice);
+
+  const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
 
   return (
     <>
@@ -130,6 +133,15 @@ const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.El
             <Button disabled={!canBid} onClick={() => setShowDialog(true)}>
               Place a bid
             </Button>
+            {!canBid && (
+              <Button
+                variant="textual"
+                sx={{ color: 'primary', fontSize: 1, p: 0 }}
+                onClick={toggleDepositWithdraw}
+              >
+                Deposit DAI to Bid
+              </Button>
+            )}
             <Flex sx={{ justifyContent: 'space-between' }}>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>

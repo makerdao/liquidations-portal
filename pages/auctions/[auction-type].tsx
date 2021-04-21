@@ -133,12 +133,14 @@ export default function Auctions(): JSX.Element | null {
                   (activeAuctions || []).map(
                     auction =>
                       auction.ilk === ilk && (
-                        <AuctionOverviewCard
-                          key={auction.id}
-                          auction={auction}
-                          vatBalance={vatBalance}
-                          daiBalance={daiBalance}
-                        />
+                        <Box>
+                          <AuctionOverviewCard
+                            key={auction.id}
+                            auction={auction}
+                            vatBalance={vatBalance}
+                            daiBalance={daiBalance}
+                          />
+                        </Box>
                       )
                   )
                 ) : (

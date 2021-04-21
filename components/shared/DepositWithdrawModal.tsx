@@ -231,7 +231,7 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
   return (
     <DialogOverlay isOpen={showDialog} onDismiss={onDismiss}>
       <DialogContent
-        aria-label="Place a bid"
+        aria-label="Deposit or withdraw Dai"
         sx={
           mobile
             ? { variant: 'dialog.mobile', animation: `${slideUp} 350ms ease` }
