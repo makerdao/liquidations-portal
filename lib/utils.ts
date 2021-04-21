@@ -179,7 +179,7 @@ export function transformAuctions(response: any): Auction[] {
     dustLimit: '100', //get from chain on init?
     auctionPrice: '100', // TODO: calc max bid aka auction price
     startDate: resp.tic,
-    endDate: resp.tic // TODO: need to get tail (tic + tail) (tic = start date)
+    endDate: resp.endDate
   }));
 }
 
