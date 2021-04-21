@@ -50,7 +50,7 @@ export async function getAllClips(ilk: string): Promise<any> {
   if (process.env.USE_MOCK_GRAPHQL) return Promise.resolve(mockAuctions);
   const maker = await getMaker();
 
-  return maker.service('liquidation').getAllClips(ilk);
+  return maker.service('liquidation').getAllClips(ilk, { vulcanize: false });
 }
 
 export async function getVatGemBalance(ilk?: string, address?: string): Promise<any> {
