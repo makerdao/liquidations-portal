@@ -152,7 +152,7 @@ const BidModal = ({
                     </Button>
                     <Flex sx={{ alignItems: 'center' }}>
                       <Text sx={{ fontSize: 2, color: 'textSecondary' }}>DAI in the VAT:</Text>
-                      <Text sx={{ ml: 2 }}>{daiBalance}</Text>
+                      <Text sx={{ ml: 2 }}>{vatBalance.toFormat(2)}</Text>
                     </Flex>
                   </Flex>
                 </Flex>
