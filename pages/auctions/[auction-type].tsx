@@ -150,21 +150,7 @@ export default function Auctions(): JSX.Element | null {
             </Box>
             <Box>
               <Stack gap={2}>
-                <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                  <Heading as="h2">{`Inactive ${type?.toUpperCase()} Auctions`}</Heading>
-                  {/* TODO: replace with dynamic auction data */}
-                  <Text variant="smallText" sx={{ color: 'textSecondary' }}>
-                    {auctions ? (
-                      `${(inactiveAuctions || []).length} AUCTIONS - POSTED MAY 18 2021 16:01 UTC`
-                    ) : (
-                      <Box sx={{ width: 7 }}>
-                        <Skeleton />
-                      </Box>
-                    )}
-                  </Text>
-                </Flex>
-              </Stack>
-              <Stack gap={2}>
+                <Heading as="h2" sx={{ mb: 3 }}>{`Inactive ${type?.toUpperCase()} Auctions`}</Heading>
                 {auctions ? (
                   (inactiveAuctions || []).map(
                     auction =>

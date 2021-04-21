@@ -85,7 +85,7 @@ export default function SystemStats(): JSX.Element {
             <Flex sx={{ alignItems: 'center' }}>
               <Flex sx={{ alignItems: 'center' }}>
                 <Badge variant="circle" p="3px" mr="3" bg="error" />
-                <Text sx={{ fontSize: 5, fontWeight: 'semiBold' }}>System Status</Text>
+                <Text sx={{ fontSize: 5, fontWeight: 'semiBold' }}>System Stats</Text>
               </Flex>
               <Text sx={{ fontSize: 3, color: 'textSecondary', ml: 3 }}>
                 {'Unable to fetch system data at this time'}

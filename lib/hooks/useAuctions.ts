@@ -4,11 +4,16 @@ import Auction from 'types/auction';
 import { transformAuctions } from 'lib/utils';
 
 async function fetchAuctions(ilk?: string): Promise<Auction[]> {
-  const type = ilk ?? 'all';
+  if (!ilk) return [];
 
-  const response = await getAllClips(type);
-
-  return transformAuctions(response);
+  if (ilk === 'all') {
+    // TODO loop over COLLATERAL_MAP here and call getAllClips for each ilk
+    const response = await getAllClips('LINK-A');
+    return transformAuctions(response);
+  } else {
+    const response = await getAllClips(ilk);
+    return transformAuctions(response);
+  }
 }
 
 // TODO: define an Ilk type with all possible values (based on collateral map in lib/constants)
