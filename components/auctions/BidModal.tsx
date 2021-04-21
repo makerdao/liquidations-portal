@@ -10,6 +10,7 @@ import { calculateCollateralAmt } from 'lib/utils';
 import useAuctionStore from 'stores/auctions';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
+import { useModalsStore } from 'stores/modals';
 import LogoBanner from './LogoBanner';
 import { COLLATERAL_MAP } from 'lib/constants';
 
@@ -40,6 +41,7 @@ const BidModal = ({
     state.joinIlkHopePending
   ]);
 
+  const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
   const { ilk, collateralAvailable, dustLimit, id } = auction;
   const account = useAccountsStore(state => state.currentAccount);
   const submitBid = useAuctionStore(state => state.submitBid);
@@ -61,15 +63,21 @@ const BidModal = ({
 
   const setMax = () => {
     // if the user's vat balance is greater than the value of the auction, use the auctionPrice
-    const max = new BigNumber(vatBalance).gt(auctionPrice) ? auctionPrice : new BigNumber(vatBalance);
+    const max = vatBalance.gt(auctionPrice) ? auctionPrice : vatBalance;
     setValue(max.toFormat(18));
   };
 
-  const disabled = !account;
+  const insufficientFunds = vatBalance.lt(new BigNumber(value));
+  const disabled = !account || insufficientFunds;
 
   const onClose = () => {
     onDismiss();
     setValue('');
+  };
+
+  const handleDepositMore = () => {
+    onClose();
+    toggleDepositWithdraw();
   };
 
   const ApprovalContent = () => {
@@ -77,7 +85,7 @@ const BidModal = ({
       <Flex sx={{ flexDirection: 'column' }}>
         <Flex sx={{ justifyContent: 'space-between', my: 3 }}>
           <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
-          <Text>{vatBalance}</Text>
+          <Text>{vatBalance.toFormat(2)}</Text>
         </Flex>
         {/* TODO: add button action */}
         <Button variant="outline" onClick={() => console.log('go to deposit modal')} sx={{ mb: 4 }}>
@@ -145,7 +153,11 @@ const BidModal = ({
                 <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', mb: 2 }}>
                   <Text sx={{ fontWeight: 'semiBold', fontSize: 3 }}>DAI you pay</Text>
                   <Flex sx={{ flexDirection: 'column', alignItems: 'flex-end' }}>
-                    <Button variant="textual" sx={{ color: 'primary', fontSize: 3, p: 0 }}>
+                    <Button
+                      variant="textual"
+                      onClick={handleDepositMore}
+                      sx={{ color: 'primary', fontSize: 3, p: 0 }}
+                    >
                       Deposit
                     </Button>
                     <Flex sx={{ alignItems: 'center' }}>
@@ -172,11 +184,10 @@ const BidModal = ({
                     }}
                     placeholder="0.00"
                     onChange={updateValue}
-                    // TODO can we use type=number without the spinbox arrows being added to right side of input?
-                    // type="number"
+                    type="number"
                     value={value}
                   />
-                  <Flex sx={{ position: 'absolute', right: '10px', top: '13px', alignItems: 'center' }}>
+                  <Flex sx={{ position: 'absolute', right: '30px', top: '13px', alignItems: 'center' }}>
                     <Button
                       variant="textual"
                       sx={{
@@ -229,6 +240,9 @@ const BidModal = ({
               >
                 Place a bid
               </Button>
+              {insufficientFunds && (
+                <Text sx={{ color: 'onWarning', textAlign: 'center', mt: 2 }}>Insufficient funds</Text>
+              )}
             </>
           )}
         </Flex>
