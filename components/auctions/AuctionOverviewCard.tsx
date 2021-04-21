@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js';
 
 import Auction from 'types/auction';
 import { useAuctionStatus } from 'lib/hooks';
-import { calculateColValue } from 'lib/utils';
+import { calculateColValue, formatAddress } from 'lib/utils';
 // import Tooltip from 'components/shared/Tooltip';
 import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
@@ -17,7 +17,7 @@ import { useModalsStore } from 'stores/modals';
 
 type Props = {
   auction: Auction;
-  vatBalance: string;
+  vatBalance: BigNumber;
   daiBalance: string;
 };
 
@@ -54,7 +54,6 @@ const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.El
         mobile={bpi === 0}
         auction={auction}
         vatBalance={vatBalance}
-        daiBalance={daiBalance}
         unitPrice={unitPrice}
         auctionPrice={auctionPrice}
       />
@@ -110,7 +109,7 @@ const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.El
                       whiteSpace: 'nowrap'
                     }}
                   >
-                    {urn}
+                    {formatAddress(urn)}
                   </Text>
                 </ExternalLink>
               </Flex>

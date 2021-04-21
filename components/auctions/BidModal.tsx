@@ -18,8 +18,7 @@ type Props = {
   onDismiss: () => void;
   mobile: boolean;
   auction: Auction;
-  vatBalance: string;
-  daiBalance: string;
+  vatBalance: BigNumber;
   unitPrice: BigNumber;
   auctionPrice: BigNumber;
 };
@@ -30,7 +29,6 @@ const BidModal = ({
   mobile,
   auction,
   vatBalance,
-  daiBalance,
   unitPrice,
   auctionPrice
 }: Props): JSX.Element => {
