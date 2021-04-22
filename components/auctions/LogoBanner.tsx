@@ -4,11 +4,11 @@ import { Flex, Text, Image, jsx } from 'theme-ui';
 import { COLLATERAL_MAP } from 'lib/constants';
 
 type Props = {
-  name: string;
+  ilk: string;
 };
 
-const LogoBanner = ({ name }: Props): JSX.Element => {
-  const { bannerPng, iconSvg } = COLLATERAL_MAP[name.toLowerCase()];
+const LogoBanner = ({ ilk }: Props): JSX.Element => {
+  const { bannerPng, iconSvg } = COLLATERAL_MAP[ilk];
 
   return (
     <Flex sx={{ position: 'relative', display: 'inline-block' }}>
@@ -34,10 +34,11 @@ const LogoBanner = ({ name }: Props): JSX.Element => {
           sx={{
             pl: 3,
             color: 'background',
-            fontSize: 8
+            fontSize: 8,
+            fontWeight: 'semiBold'
           }}
         >
-          {name}
+          {ilk}
         </Text>
       </Flex>
     </Flex>

@@ -3,6 +3,7 @@ import McdPlugin, { DAI } from '@makerdao/dai-plugin-mcd';
 import LedgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import TrezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import { Web3ReactPlugin } from './maker/web3react';
+import LiquidationPlugin from '@makerdao/dai-plugin-liquidations';
 
 import { SupportedNetworks, DEFAULT_NETWORK } from './constants';
 import { networkToRpc } from './maker/network';
@@ -63,7 +64,13 @@ let makerSingleton: Promise<Maker>;
 function getMaker(): Promise<Maker> {
   if (!makerSingleton) {
     makerSingleton = Maker.create('http', {
-      plugins: [[McdPlugin, { prefetch: false }], Web3ReactPlugin, LedgerPlugin, TrezorPlugin],
+      plugins: [
+        [McdPlugin, { prefetch: false }],
+        Web3ReactPlugin,
+        LedgerPlugin,
+        TrezorPlugin,
+        LiquidationPlugin
+      ],
       provider: {
         url: networkToRpc(getNetwork(), 'infura'),
         type: 'HTTP'

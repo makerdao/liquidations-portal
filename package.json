@@ -16,6 +16,7 @@
   "dependencies": {
     "@makerdao/dai": "^0.32.11",
     "@makerdao/dai-plugin-ledger-web": "^0.9.10",
+    "@makerdao/dai-plugin-liquidations": "0.1.0-beta17",
     "@makerdao/dai-plugin-mcd": "^1.6.21",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
     "@makerdao/dai-ui-icons": "^0.0.66",
@@ -35,6 +36,7 @@
     "lodash": "^4.7.0",
     "mixpanel-browser": "^2.39.0",
     "next": "^10.0.3",
+    "next-mdx-remote": "^2.1.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-loading-skeleton": "^2.0.1",

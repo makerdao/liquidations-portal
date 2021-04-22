@@ -1,13 +1,13 @@
 import create from 'zustand';
 
 type Store = {
-  isDepositRedeemOpen: boolean;
-  toggleDepositRedeem: () => void;
+  isDepositWithdrawOpen: boolean;
+  toggleDepositWithdraw: () => void;
 };
 
 const [useModalsStore] = create<Store>(set => ({
-  isDepositRedeemOpen: false,
-  toggleDepositRedeem: () => set(state => ({ isDepositRedeemOpen: !state.isDepositRedeemOpen }))
+  isDepositWithdrawOpen: false,
+  toggleDepositWithdraw: () => set(state => ({ isDepositWithdrawOpen: !state.isDepositWithdrawOpen }))
 }));
 
 export { useModalsStore };

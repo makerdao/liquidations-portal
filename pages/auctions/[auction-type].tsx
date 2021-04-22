@@ -1,9 +1,12 @@
 /** @jsx jsx */
 import Head from 'next/head';
-import useSWR from 'swr';
-import { Heading, Image, Text, Box, Flex, jsx } from 'theme-ui';
+import { useState } from 'react';
+import { Button, Heading, Image, Text, Box, Flex, jsx } from 'theme-ui';
 import { useRouter } from 'next/router';
+import Skeleton from 'react-loading-skeleton';
+import useSWR from 'swr';
 import BigNumber from 'bignumber.js';
+
 import SystemStatsSidebar from 'components/shared/SystemStatsSidebar';
 import ResourceBox from 'components/shared/ResourceBox';
 import SidebarLayout from 'components/layouts/Sidebar';
@@ -11,29 +14,68 @@ import PrimaryLayout from 'components/layouts/Primary';
 import AuctionOverviewCard from 'components/auctions/AuctionOverviewCard';
 import AuctionOverviewSkeleton from 'components/auctions/AuctionOverviewSkeleton';
 import Stack from 'components/layouts/Stack';
-import getMaker from 'lib/maker';
 import { COLLATERAL_MAP } from 'lib/constants';
-import Auction from 'types/auction';
-import { fetchAuctions } from '../index'; //todo move to lib/api
+import getMaker from 'lib/maker';
+import { getAuctionsByStatus, fromRad } from 'lib/utils';
+import { useAuctions, useVatGemBalance, useAccountVatBalance, useAccountTokenBalance } from 'lib/hooks';
+import { transactionsApi } from 'stores/transactions';
+import useAccountsStore from 'stores/accounts';
 
 export default function Auctions(): JSX.Element | null {
+  // router params
   const router = useRouter();
-  const type = router.query['auction-type']?.toString();
+  const type = router.query['auction-type']?.toString().toLowerCase();
 
-  // return loading indicator instead?
-  if (!type) return null;
+  const ilkData = type ? COLLATERAL_MAP[type.toUpperCase()] : undefined;
 
-  const { bannerPng, iconSvg, symbol } = COLLATERAL_MAP[type];
+  // auction data
+  const { data: auctions } = useAuctions(ilkData?.ilk);
+  const activeAuctions = auctions && getAuctionsByStatus(auctions, true);
+  const inactiveAuctions = auctions && getAuctionsByStatus(auctions, false);
 
-  // TODO: update to pull the right auctions
-  const { data: auctions } = useSWR<Auction[]>(`/auctions/fetch-${type}`, () =>
-    getMaker().then(fetchAuctions)
-  );
-  const { data: vatBalance } = useSWR<BigNumber>('/balances/vat', () =>
+  // account data
+  const account = useAccountsStore(state => state.currentAccount);
+  const address = account?.address;
+
+  // balances
+  const { data: vatGemBalance } = useVatGemBalance(ilkData?.ilk, address);
+  const { data: daiBalance } = useAccountTokenBalance('DAI', address);
+  // const { data: vatBalance } = useAccountVatBalance(address);
+
+  //TODO: AuctionOverview & BidModal expect a BigNumber, so this call will temporarily fetch the vatBalance for those components until we refactor useAccountVatBalance
+  const { data: vb } = useSWR<BigNumber>('/balances/vat', () =>
     getMaker().then(maker =>
       maker.service('smartContract').getContract('MCD_VAT').dai(maker.currentAddress())
     )
   );
+  const vatBalance = fromRad(vb);
+
+  // tx processing state
+  const [isTxProcessing, setIsTxProcessing] = useState(false);
+
+  // TODO: add error state here if true
+  if (!ilkData) return null;
+
+  const { bannerPng, iconSvg, ilk } = ilkData;
+
+  const redeemCollateral = async ilk => {
+    const maker = await getMaker();
+    const txCreator = () => maker.service('liquidation').exitGemFromAdapter(ilk, vatGemBalance);
+
+    await transactionsApi.getState().track(txCreator, `Exiting ${vatGemBalance.toFormat(18)} ${ilk}`, {
+      pending: () => {
+        setIsTxProcessing(true);
+      },
+      mined: txId => {
+        transactionsApi.getState().setMessage(txId, `Exited ${vatGemBalance.toFormat(18)} ${ilk}`);
+        setIsTxProcessing(false);
+      },
+      error: () => {
+        setIsTxProcessing(false);
+      }
+    });
+  };
+
   return (
     <div>
       <Head>
@@ -64,7 +106,7 @@ export default function Auctions(): JSX.Element | null {
           }}
         />
         <Text variant="largeHeading" sx={{ pl: 3, color: 'surface' }}>
-          {symbol}
+          {ilk}
         </Text>
       </Flex>
 
@@ -75,23 +117,40 @@ export default function Auctions(): JSX.Element | null {
               <Stack gap={2}>
                 <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <Heading as="h2">{`Active ${type?.toUpperCase()} Auctions`}</Heading>
-                  {/* TODO: replace with dynamic auction data */}
-                  <Text variant="smallText" sx={{ color: 'textSecondary' }}>
-                    3 AUCTIONS - POSTED MAY 18 2021 16:01 UTC{' '}
-                  </Text>
+                  {vatGemBalance && vatGemBalance.gt(0) && (
+                    <Button
+                      sx={{
+                        variant: 'buttons.card',
+                        borderRadius: 'round',
+                        '&:hover': {
+                          color: 'text',
+                          borderColor: 'onSecondary',
+                          backgroundColor: 'white'
+                        }
+                      }}
+                      onClick={() => redeemCollateral(ilk)}
+                      disabled={isTxProcessing}
+                    >
+                      <Text sx={{ fontSize: 2, color: 'textMuted', px: 2 }}>
+                        {vatGemBalance.toFormat(2)} LINK to Redeem
+                      </Text>
+                    </Button>
+                  )}
                 </Flex>
-                {/* TODO: implement refresh when network calls integrated */}
-                {/* <Flex sx={{ alignItems: 'center' }} onClick={console.log}>
-                <Icon name="edit" size={3} mr={1} sx={{ color: 'primary' }} />
-                <Text>Refresh Data</Text>
-              </Flex> */}
               </Stack>
               <Stack gap={2}>
                 {auctions ? (
-                  auctions?.map(
+                  (activeAuctions || []).map(
                     auction =>
-                      auction.name === type && (
-                        <AuctionOverviewCard key={auction.id} auction={auction} vatBalance={vatBalance} />
+                      auction.ilk === ilk && (
+                        <Box>
+                          <AuctionOverviewCard
+                            key={auction.id}
+                            auction={auction}
+                            vatBalance={vatBalance}
+                            daiBalance={daiBalance}
+                          />
+                        </Box>
                       )
                   )
                 ) : (
@@ -101,26 +160,17 @@ export default function Auctions(): JSX.Element | null {
             </Box>
             <Box>
               <Stack gap={2}>
-                {/* TODO: replace with inactive auction data */}
-                <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                  <Heading as="h2">{`Inactive ${type?.toUpperCase()} Auctions`}</Heading>
-                  {/* TODO: replace with dynamic auction data */}
-                  <Text variant="smallText" sx={{ color: 'textSecondary' }}>
-                    3 AUCTIONS - POSTED MAY 18 2021 16:01 UTC{' '}
-                  </Text>
-                </Flex>
-                {/* TODO: implement refresh when network calls integrated */}
-                {/* <Flex sx={{ alignItems: 'center' }} onClick={console.log}>
-                <Icon name="edit" size={3} mr={1} sx={{ color: 'primary' }} />
-                <Text>Refresh Data</Text>
-              </Flex> */}
-              </Stack>
-              <Stack>
+                <Heading as="h2" sx={{ mb: 3 }}>{`Inactive ${type?.toUpperCase()} Auctions`}</Heading>
                 {auctions ? (
-                  auctions?.map(
+                  (inactiveAuctions || []).map(
                     auction =>
-                      auction.name === type && (
-                        <AuctionOverviewCard key={auction.id} auction={auction} vatBalance={vatBalance} />
+                      auction.ilk === ilk && (
+                        <AuctionOverviewCard
+                          key={auction.id}
+                          auction={auction}
+                          vatBalance={vatBalance}
+                          daiBalance={daiBalance}
+                        />
                       )
                   )
                 ) : (
@@ -130,7 +180,7 @@ export default function Auctions(): JSX.Element | null {
             </Box>
           </Stack>
           <Stack gap={3}>
-            <SystemStatsSidebar />
+            <SystemStatsSidebar ilk={ilk} />
             <ResourceBox />
           </Stack>
         </SidebarLayout>

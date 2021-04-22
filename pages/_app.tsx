@@ -39,7 +39,8 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <ThemeProvider theme={theme}>
       <Head>
-        <meta
+        {/* TODO: come back to this/ */}
+        {/* <meta
           httpEquiv="Content-Security-Policy"
           content={
             "default-src 'none';" +
@@ -50,7 +51,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
             `script-src 'self' ${dev ? "'unsafe-eval'" : ''};` +
             "img-src 'self' https: data:"
           }
-        />
+        /> */}
         <meta
           name="description"
           content="Allowing ecosystem actors to view and participate in MakerDAO collateral liquidation auctions."
@@ -59,7 +60,8 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
 
       <SWRConfig
         value={{
-          refreshInterval: 5000,
+          // TODO: change back to 5 seconds
+          refreshInterval: 10000,
           fetcher: url => fetchJson(url)
         }}
       >

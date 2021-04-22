@@ -2,21 +2,24 @@
 import Link from 'next/link';
 import { Text, Button, Box, Image, Flex, jsx } from 'theme-ui';
 
-import Auction from '../../types/auction';
-import { COLLATERAL_MAP } from '../../lib/constants';
+import Auction from 'types/auction';
+import { getAuctionsByIlk, getTotalCollateralAvailable } from 'lib/utils';
 
 type Props = {
-  auction?: Auction;
+  type?: any;
+  auctions: Auction[];
 };
 
-export default function AuctionPreviewCard({ auction, ...otherProps }: Props): JSX.Element | null {
-  if (!auction) return null;
+export default function AuctionPreviewCard({ type, auctions }: Props): JSX.Element | null {
+  if (!type || !auctions) return null;
 
-  const { collateralAvailable, name } = auction;
-  const { cardTexturePng, iconSvg, symbol } = COLLATERAL_MAP[auction.name];
+  const { cardTexturePng, iconSvg, ilk } = type;
+  const filteredAuctions = getAuctionsByIlk(auctions, ilk);
+  const numberOfAuctions = filteredAuctions.length;
+  const totalCollateral = getTotalCollateralAvailable(filteredAuctions);
 
   return (
-    <Link href={`/auctions/${name}`}>
+    <Link href={`/auctions/${ilk.toLowerCase()}`}>
       <Box
         variant="cards.tight"
         sx={{
@@ -26,7 +29,6 @@ export default function AuctionPreviewCard({ auction, ...otherProps }: Props): J
           height: 264,
           ':hover': { borderColor: 'onSecondary', 'div:first-of-type': { opacity: 1 }, cursor: 'pointer' }
         }}
-        {...otherProps}
       >
         <Box
           sx={{
@@ -71,7 +73,8 @@ export default function AuctionPreviewCard({ auction, ...otherProps }: Props): J
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              height: '100%'
+              height: '100%',
+              width: '100%'
             }}
           >
             <Image
@@ -89,7 +92,7 @@ export default function AuctionPreviewCard({ auction, ...otherProps }: Props): J
                 fontWeight: 'semiBold'
               }}
             >
-              {symbol}
+              {ilk}
             </Text>
           </Flex>
         </Box>
@@ -115,7 +118,7 @@ export default function AuctionPreviewCard({ auction, ...otherProps }: Props): J
                 WebkitLineClamp: 2
               }}
             >
-              {collateralAvailable}
+              {totalCollateral}
             </Text>
           </Box>
 
@@ -139,7 +142,7 @@ export default function AuctionPreviewCard({ auction, ...otherProps }: Props): J
                 WebkitLineClamp: 2
               }}
             >
-              01
+              {numberOfAuctions}
             </Text>
           </Box>
         </Flex>

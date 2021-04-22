@@ -2,8 +2,13 @@ import { cloneElement } from 'react';
 import BigNumber from 'bignumber.js';
 import { jsx, SxStyleProp } from 'theme-ui';
 import { css } from '@theme-ui/css';
-import { SupportedNetworks, ETHERSCAN_PREFIXES } from './constants';
 import round from 'lodash/round';
+import Auction from 'types/auction';
+import { SupportedNetworks, ETHERSCAN_PREFIXES } from './constants';
+
+export const RAD = new BigNumber('1e45');
+export const WAD = new BigNumber('1e18');
+export const RAY = new BigNumber('1e27');
 
 export async function fetchJson(url: RequestInfo, init?: RequestInit): Promise<any> {
   const response = await fetch(url, init);
@@ -135,8 +140,73 @@ export function fromRad(value): BigNumber {
   return new BigNumber(value).shiftedBy(-45);
 }
 
-export const calculateCollateralAmt = (colAmt: BigNumber, colPrice: BigNumber): BigNumber =>
-  colAmt.div(colPrice);
+export function fromWad(value): BigNumber {
+  return new BigNumber(value).shiftedBy(-18);
+}
+
+export function fromRay(value): BigNumber {
+  return new BigNumber(value).shiftedBy(-27);
+}
+
+export const calculateCollateralAmt = (daiAmt: BigNumber, colPrice: BigNumber): BigNumber =>
+  daiAmt.isNaN() || colPrice.eq(0) ? new BigNumber(0) : daiAmt.div(colPrice);
 
 export const calculateColValue = (colAmt: BigNumber, colPrice: BigNumber): BigNumber =>
   colAmt.times(colPrice);
+
+// Auction response for reference
+// {
+//  "saleId": "4990",
+//  "pos": "5",
+//  "tab": "48150187464057295135313238110939183779274217273",
+//  "lot": "196969000000000000",
+//  "usr": "0xdaaFAe93C0e2A0226043E88a70aCF5be9b671124",
+//  "tic": "1595930405",
+//  "top": "6120186359841348405000000000000000000000000000",
+//  "active": true,
+//  "created": "2020-07-28T04:00:05",
+//  "updated": "2020-07-28T04:00:05"
+// }
+export function transformAuctions(response: any): Auction[] {
+  return response.map(resp => ({
+    id: resp.saleId,
+    active: resp.active,
+    ilk: 'LINK-A', // this won't come from response, will need to be specified based on req param
+    initialCollateral: '1000', // can look up by `sales()`
+    urn: resp.usr,
+    collateralAvailable: resp.lot.toFixed(2),
+    daiNeeded: resp.tab.toFixed(2),
+    dustLimit: '100', //get from chain on init?
+    auctionPrice: '100', // TODO: calc max bid aka auction price
+    startDate: resp.tic,
+    endDate: resp.endDate
+  }));
+}
+
+export function getAuctionCountByStatus(allClips: any[] = [], filterActive: boolean): number {
+  return allClips.filter(clip => Boolean(clip.active) === filterActive).length;
+}
+
+export function getAuctionsByStatus(auctions: any[] = [], filterActive: boolean): any[] {
+  return auctions.filter(auction => Boolean(auction.active) === filterActive);
+}
+
+export function getAuctionsByIlk(auctions: any[] = [], ilk: string): any[] {
+  return auctions.filter(auction => auction.ilk === ilk);
+}
+
+export function getDaiRequiredForAuctions(auctions: any[] = []): number {
+  const daiNeeded = auctions.reduce((acc, cur) => {
+    const num = new BigNumber(cur.daiNeeded);
+    return acc.plus(num);
+  }, new BigNumber(0));
+  return daiNeeded.toFixed(2);
+}
+
+export function getTotalCollateralAvailable(auctions: any[] = []): number {
+  const total = auctions.reduce((acc, cur) => {
+    const num = new BigNumber(cur.collateralAvailable);
+    return acc.plus(num);
+  }, new BigNumber(0));
+  return total.toFixed(2);
+}

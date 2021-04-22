@@ -1,17 +1,11 @@
 import mixpanel from 'mixpanel-browser';
 
-const env = process.env.NODE_ENV === 'production' ? 'prod' : 'test';
+const env = process.env.NODE_ENV === 'production' ? 'prod' : 'prod';
 
 const config = {
-  test: {
-    mixpanel: {
-      token: '4ff3f85397ffc3c6b6f0d4120a4ea40a',
-      config: { debug: true, ip: false, api_host: 'https://api.mixpanel.com' }
-    }
-  },
   prod: {
     mixpanel: {
-      token: 'a030d8845e34bfdc11be3d9f3054ad67',
+      token: 'b937718de4290b8bf3fda4e0bfabe111',
       config: { ip: false, api_host: 'https://api.mixpanel.com' }
     }
   }

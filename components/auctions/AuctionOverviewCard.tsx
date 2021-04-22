@@ -1,39 +1,50 @@
 /** @jsx jsx */
 import { useState } from 'react';
-import { Button, Text, Flex, Grid, Link as ExternalLink, jsx, Badge } from 'theme-ui';
+import { Box, Button, Text, Flex, Grid, Link as ExternalLink, jsx, Badge } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
+import { Icon } from '@makerdao/dai-ui-icons';
+import BigNumber from 'bignumber.js';
 
-// import { getNetwork } from 'lib/maker';
 import Auction from 'types/auction';
+import { useAuctionStatus } from 'lib/hooks';
+import { calculateColValue, formatAddress } from 'lib/utils';
 // import Tooltip from 'components/shared/Tooltip';
 import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
 import BidModal from './BidModal';
-import BigNumber from 'bignumber.js';
+import { COLLATERAL_MAP } from 'lib/constants';
+import { useModalsStore } from 'stores/modals';
 
 type Props = {
   auction: Auction;
-  vatBalance: BigNumber | undefined;
+  vatBalance: BigNumber;
+  daiBalance: string;
 };
 
-const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Element => {
-  const [showDialog, setShowDialog] = useState(false);
-
-  // const network = getNetwork();
-  const bpi = useBreakpointIndex();
-
+const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.Element => {
   const {
-    name,
+    id,
+    active,
+    ilk,
     initialCollateral,
     urn,
     collateralAvailable,
     daiNeeded,
     dustLimit,
-    maxBid,
+    startDate,
     endDate
   } = auction;
 
-  const canBid = vatBalance?.gt(0);
+  const [showDialog, setShowDialog] = useState(false);
+  const bpi = useBreakpointIndex();
+  const { auctionPrice: unitPrice } = useAuctionStatus(id);
+
+  const { symbol } = COLLATERAL_MAP[ilk];
+  const canBid = new BigNumber(vatBalance).gt(0);
+
+  const auctionPrice = calculateColValue(new BigNumber(collateralAvailable), unitPrice);
+
+  const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
 
   return (
     <>
@@ -43,9 +54,11 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
         mobile={bpi === 0}
         auction={auction}
         vatBalance={vatBalance}
+        unitPrice={unitPrice}
+        auctionPrice={auctionPrice}
       />
 
-      <div {...props}>
+      <Box>
         <Grid sx={{ variant: 'cards.primary', p: 0 }} columns="1fr 1fr 1fr 1fr">
           <Stack gap={1} sx={{ justifyContent: 'space-between' }}>
             <Flex sx={{ flexDirection: 'column' }}>
@@ -55,13 +68,29 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
               </Flex>
               <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>Auction ID {auction.id}</Text>
             </Flex>
-            <CountdownTimer endText="Auction ended" endDate={endDate} />
+            <Stack gap={2}>
+              <Flex sx={{ alignItems: 'center', flexDirection: 'row', flexWrap: 'nowrap' }}>
+                <Icon mr={1} name="calendar" sx={{ color: active ? 'primary' : 'secondary' }} />
+                <Text variant="caps" color="secondary">
+                  {`${new Date(startDate).toLocaleString('default', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: false,
+                    timeZone: 'UTC'
+                  })} UTC`}
+                </Text>
+              </Flex>
+              <CountdownTimer endText="Auction ended" endDate={endDate} />
+            </Stack>
           </Stack>
           <Stack gap={4}>
             <Flex sx={{ flexDirection: 'column', color: 'textSecondary' }}>
               <Text sx={{ color: 'textSecondary' }}>Initial Collateral</Text>
               <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>
-                {initialCollateral} {name.toUpperCase()}
+                {initialCollateral} {symbol.toUpperCase()}
               </Text>
             </Flex>
             <Flex>
@@ -71,8 +100,16 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
                 <Text sx={{ color: 'textSecondary' }}>Vault Owner</Text>
                 {/* </Tooltip> */}
                 <ExternalLink href={`https://etherscan.io/address/${urn}`} target="_blank">
-                  <Text variant="text" sx={{ ':hover': { color: 'primary' } }}>
-                    {urn}
+                  <Text
+                    variant="text"
+                    sx={{
+                      ':hover': { color: 'primary' },
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {formatAddress(urn)}
                   </Text>
                 </ExternalLink>
               </Flex>
@@ -83,7 +120,7 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
             <Flex sx={{ flexDirection: 'column' }}>
               <Text sx={{ color: 'textSecondary' }}>Collateral Available</Text>
               <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>
-                {collateralAvailable} {name.toUpperCase()}
+                {collateralAvailable} {symbol.toUpperCase()}
               </Text>
             </Flex>
             <Flex sx={{ flexDirection: 'column' }}>
@@ -95,19 +132,28 @@ const AuctionOverviewCard = ({ auction, vatBalance, ...props }: Props): JSX.Elem
             <Button disabled={!canBid} onClick={() => setShowDialog(true)}>
               Place a bid
             </Button>
+            {!canBid && (
+              <Button
+                variant="textual"
+                sx={{ color: 'primary', fontSize: 1, p: 0 }}
+                onClick={toggleDepositWithdraw}
+              >
+                Deposit DAI to Bid
+              </Button>
+            )}
             <Flex sx={{ justifyContent: 'space-between' }}>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
                 <Text>{dustLimit} DAI</Text>
               </Flex>
               <Flex sx={{ flexDirection: 'column' }}>
-                <Text sx={{ color: 'textSecondary' }}>Max bid</Text>
-                <Text>{maxBid} DAI</Text>
+                <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
+                <Text>{auctionPrice.toFormat(2)} DAI</Text>
               </Flex>
             </Flex>
           </Flex>
         </Grid>
-      </div>
+      </Box>
     </>
   );
 };

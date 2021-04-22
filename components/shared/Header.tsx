@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
 import { Button, Flex, NavLink, Container, Close, Box, IconButton, Divider, jsx, Text } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button';
@@ -10,31 +9,41 @@ import { Icon } from '@makerdao/dai-ui-icons';
 
 import { COLLATERAL_ARRAY } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
-import getMaker from 'lib/maker';
+import { useAuctions, useAccountVatBalance } from 'lib/hooks';
 import { useModalsStore } from 'stores/modals';
 import useAccountsStore from 'stores/accounts';
+import useApprovalsStore from 'stores/approvals';
 import AccountSelect from 'components/header/AccountSelect';
-import { fetchAuctions } from 'pages/index'; //todo move to lib/api
-import DepositRedeemModal from './DepositRedeemModal';
+import DepositWithdrawModal from './DepositWithdrawModal';
+import { COLLATERAL_MAP } from '../../lib/constants';
 
-const Header = (props: any): JSX.Element => {
+const Header = (): JSX.Element => {
   const network = getNetwork();
   const router = useRouter();
   const bpi = useBreakpointIndex();
-  const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
+  const { data: auctions } = useAuctions('all');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const isDepositRedeemOpen = useModalsStore(state => state.isDepositRedeemOpen);
-  const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
+  const isDepositWithdrawOpen = useModalsStore(state => state.isDepositWithdrawOpen);
+  const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
   const account = useAccountsStore(state => state.currentAccount);
   const address = account?.address;
+  const initApprovals = useApprovalsStore(state => state.initApprovals);
+  const { data: vatBalance } = useAccountVatBalance(address);
+
+  useEffect(() => {
+    if (!address) return;
+    initApprovals(
+      address,
+      Object.keys(COLLATERAL_MAP).map(ilk => COLLATERAL_MAP[ilk].ilk)
+    );
+  }, [address]);
 
   return (
     <>
-      <DepositRedeemModal
-        showDialog={isDepositRedeemOpen}
-        onDismiss={toggleDepositRedeem}
+      <DepositWithdrawModal
+        showDialog={isDepositWithdrawOpen}
+        onDismiss={toggleDepositWithdraw}
         mobile={bpi === 0}
-        vatBalance={undefined}
       />
 
       <Box
@@ -49,7 +58,6 @@ const Header = (props: any): JSX.Element => {
           justifyContent: 'space-between',
           width: '100%'
         }}
-        {...props}
       >
         <Link href={{ pathname: '/', query: { network } }}>
           <IconButton aria-label="Maker home" sx={{ width: '40px', height: 4, p: 0 }}>
@@ -84,8 +92,8 @@ const Header = (props: any): JSX.Element => {
               <MenuList sx={{ variant: 'cards.compact', width: 6 }}>
                 {COLLATERAL_ARRAY.map((type, index) => {
                   const numberOfAuctions = auctions
-                    ? auctions.filter(a => a.name === type.key).length.toString()
-                    : '00';
+                    ? auctions.filter(a => a.ilk === type.key).length.toString()
+                    : '0';
                   return (
                     <MenuItem key={index} onSelect={() => router.push(`/auctions/${type.key}`)}>
                       <Flex sx={{ justifyContent: 'space-between', py: 1, cursor: 'pointer', fontSize: 2 }}>
@@ -114,13 +122,14 @@ const Header = (props: any): JSX.Element => {
 
           {address && (
             <Button
-              aria-label="Deposit or Redeem Dai"
+              aria-label="Deposit or Withdraw Dai"
               sx={{
                 variant: 'buttons.card',
                 borderRadius: 'round',
                 color: 'textMuted',
-                px: [2, 3],
+                px: [2, 2, 3],
                 py: 2,
+                ml: [2, 2, 4],
                 alignSelf: 'flex-end',
                 '&:hover': {
                   color: 'text',
@@ -128,19 +137,17 @@ const Header = (props: any): JSX.Element => {
                   backgroundColor: 'white'
                 }
               }}
-              {...props}
-              onClick={props.onClick}
+              onClick={toggleDepositWithdraw}
             >
               <Flex sx={{ alignItems: 'center' }}>
-                {/* TODO: add dynamic DAI balance */}
-                <Text>0,00</Text>
-                <Icon name="dai" size="16px" sx={{ mx: 2 }} />
-                <Text>Deposit/Redeem</Text>
+                <Text>{vatBalance}</Text>
+                <Icon name="dai" size="16px" sx={{ mx: [0, 2] }} />
+                <Text sx={{ display: ['none', 'block'] }}>Deposit/Withdraw</Text>
               </Flex>
             </Button>
           )}
 
-          <AccountSelect sx={{ ml: [0, 2, 4] }} />
+          <AccountSelect sx={{ ml: [1, 2, 4] }} />
 
           <IconButton
             aria-label="Show menu"

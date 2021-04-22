@@ -1,65 +1,37 @@
 /** @jsx jsx */
-import useSWR, { mutate } from 'swr';
 import { Badge, Box, Grid, Link as ExternalLink, Flex, Text, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 import Skeleton from 'react-loading-skeleton';
 
-import getMaker from 'lib/maker';
+import { getAuctionCountByStatus, getDaiRequiredForAuctions } from 'lib/utils';
+import { useSystemStats } from 'lib/hooks';
 import Tooltip from 'components/shared/Tooltip';
 import SystemStat from 'types/systemStat';
 import Stack from '../layouts/Stack';
 
-async function getSystemStats(): Promise<string[]> {
-  // update this section once dai.js plugin is updated
-
-  const maker = await getMaker();
-  // return Promise.all([
-  //   maker.service('mcd:savings').getYearlyRate(),
-  //   maker.service('mcd:systemData').getTotalDai()
-  // ]);
-
-  // for now return whatever data
-  return Promise.all([
-    Promise.resolve('5'),
-    Promise.resolve('10'),
-    Promise.resolve('15'),
-    new Promise(resolve => {
-      setTimeout(resolve, 3000, '159,478');
-    }),
-    maker.service('mcd:systemData').getTotalDai()
-  ]);
-}
-
-// if we are on the browser, trigger a prefetch as soon as possible
-if (typeof window !== 'undefined') {
-  getSystemStats().then(stats => {
-    mutate('/system-stats-landing', stats, false);
-  });
-}
-
 export default function SystemStats(): JSX.Element {
-  const { data, error } = useSWR<string[]>('/system-stats-landing', getSystemStats);
+  const { data, error } = useSystemStats();
 
   // format property can be used to specify how to format data the particular value
   const fieldMap: SystemStat[] = [
     {
       title: 'Active Auctions',
-      format: val => val,
+      format: val => getAuctionCountByStatus(val, true),
       tooltip: 'This is placeholder text explaining what Active Auctions represents'
     },
     {
       title: 'Inactive Auctions',
-      format: val => val,
+      format: val => getAuctionCountByStatus(val, false),
       tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
     },
     {
       title: 'Vaults requiring kick',
-      format: val => val,
+      format: val => val.length,
       tooltip: 'This is placeholder text explaining what it means when vaults need to be kicked'
     },
     {
       title: 'Dai required for Auctions',
-      format: val => `${val} DAI`,
+      format: val => `${getDaiRequiredForAuctions(val)} DAI`,
       minWidth: 185,
       tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
     },
@@ -89,7 +61,7 @@ export default function SystemStats(): JSX.Element {
             <>
               <Flex sx={{ alignItems: 'center' }}>
                 <Badge variant="circle" p="3px" mr="3" />
-                <Text sx={{ fontSize: 5, fontWeight: 'semiBold' }}>System Status</Text>
+                <Text sx={{ fontSize: 5, fontWeight: 'semiBold' }}>System Stats</Text>
               </Flex>
               <ExternalLink href="https://daistats.com/" target="_blank">
                 <Flex sx={{ alignItems: 'center' }}>
@@ -113,7 +85,7 @@ export default function SystemStats(): JSX.Element {
             <Flex sx={{ alignItems: 'center' }}>
               <Flex sx={{ alignItems: 'center' }}>
                 <Badge variant="circle" p="3px" mr="3" bg="error" />
-                <Text sx={{ fontSize: 5, fontWeight: 'semiBold' }}>System Status</Text>
+                <Text sx={{ fontSize: 5, fontWeight: 'semiBold' }}>System Stats</Text>
               </Flex>
               <Text sx={{ fontSize: 3, color: 'textSecondary', ml: 3 }}>
                 {'Unable to fetch system data at this time'}
@@ -126,7 +98,7 @@ export default function SystemStats(): JSX.Element {
             const statWrapper = (
               <Flex key={stat.title} sx={{ flexDirection: 'column', minWidth: stat.minWidth }}>
                 <Text sx={{ fontSize: 3, color: 'textSecondary' }}>{stat.title}</Text>
-                {stat.value ? (
+                {stat.value !== null ? (
                   <Text sx={{ fontSize: 6, mt: 1 }}>{stat.value}</Text>
                 ) : (
                   <Box sx={{ mt: 3, width: 5 }}>
@@ -171,7 +143,7 @@ export default function SystemStats(): JSX.Element {
                   sx={{ flexDirection: 'row', justifyContent: 'space-between', height: '3rem' }}
                 >
                   <Text sx={{ fontSize: [2, 3], color: 'textSecondary' }}>{stat.title}</Text>
-                  {stat.value ? (
+                  {stat.value !== null ? (
                     <Text sx={{ fontSize: [2, 3] }}>{stat.value}</Text>
                   ) : (
                     <Box sx={{ width: 4 }}>

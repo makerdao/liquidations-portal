@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import Head from 'next/head';
-import useSWR from 'swr';
-import { Button, Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
+import { Badge, Button, Heading, Container, Text, NavLink, Box, Flex, Grid, jsx } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 
-import getMaker from 'lib/maker';
-import Auction from 'types/auction';
+import { COLLATERAL_ARRAY } from 'lib/constants';
+import { useAuctions } from 'lib/hooks';
+import { getAuctionsByStatus, getAuctionsByIlk } from 'lib/utils';
 import AuctionPreviewCard from 'components/index/AuctionPreviewCard';
 import AuctionPreviewSkeleton from 'components/index/AuctionPreviewSkeleton';
 import PrimaryLayout from 'components/layouts/Primary';
@@ -14,39 +14,12 @@ import SystemStats from 'components/index/SystemStats';
 import useAccountsStore from 'stores/accounts';
 import { useModalsStore } from 'stores/modals';
 
-const mockAuctions: Auction[] = [
-  {
-    id: 123,
-    name: 'link',
-    initialCollateral: '8000',
-    urn: '0x123',
-    collateralAvailable: '3000',
-    daiNeeded: '4000',
-    dustLimit: '111',
-    maxBid: '999',
-    endDate: 1619894140000
-  },
-  {
-    id: 234,
-    name: 'yfi',
-    initialCollateral: '4000',
-    urn: '0x345',
-    collateralAvailable: '1000',
-    daiNeeded: '6000',
-    dustLimit: '222',
-    maxBid: '888',
-    endDate: 1619894140000
-  }
-];
-
-export async function fetchAuctions(): Promise<Auction[]> {
-  return Promise.resolve(mockAuctions);
-}
-
 export default function LandingPage(): JSX.Element {
-  const { data: auctions } = useSWR('/auctions/fetch-all', () => getMaker().then(fetchAuctions));
+  const { data: auctions, loading: auctionsLoading } = useAuctions('all');
+  const activeAuctions = getAuctionsByStatus(auctions, true);
+  const inactiveAuctions = getAuctionsByStatus(auctions, false);
   const account = useAccountsStore(state => state.currentAccount);
-  const toggleDepositRedeem = useModalsStore(state => state.toggleDepositRedeem);
+  const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
 
   return (
     <div>
@@ -131,7 +104,7 @@ export default function LandingPage(): JSX.Element {
                     </NavLink>
                     {account && (
                       <Button
-                        onClick={toggleDepositRedeem}
+                        onClick={toggleDepositWithdraw}
                         sx={{
                           px: 3,
                           ml: [0, 3],
@@ -167,17 +140,82 @@ export default function LandingPage(): JSX.Element {
         </Stack>
 
         <section sx={{ py: 4 }}>
-          <Stack>
-            <Heading as="h3" sx={{ fontWeight: 'heading' }}>
-              Active Auctions
-            </Heading>
-            <Grid gap={4} columns={[1, 3]}>
-              {auctions ? (
-                auctions.map(auction => <AuctionPreviewCard key={auction.id} auction={auction} />)
-              ) : (
-                <AuctionPreviewSkeleton />
+          <Stack gap={5}>
+            <Stack>
+              <Flex sx={{ alignItems: 'center' }}>
+                <Badge
+                  variant="circle"
+                  p="3px"
+                  mr="3"
+                  bg={activeAuctions.length > 0 ? 'primary' : 'textSecondary'}
+                />
+                <Heading as="h3" sx={{ fontWeight: 'heading' }}>
+                  Active Auctions
+                </Heading>
+              </Flex>
+              <Grid gap={4} columns={[1, 3]}>
+                {COLLATERAL_ARRAY.map(type => {
+                  const ilkAuctions = getAuctionsByIlk(activeAuctions, type.ilk);
+                  return (
+                    <Box key={type.ilk}>
+                      {auctionsLoading && <AuctionPreviewSkeleton />}
+                      {auctions && ilkAuctions.length > 0 && (
+                        <AuctionPreviewCard key={type.name} type={type} auctions={ilkAuctions} />
+                      )}
+                    </Box>
+                  );
+                })}
+              </Grid>
+              {auctions && activeAuctions.length === 0 && (
+                <Flex
+                  sx={{
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    border: '2px dashed #D8E0E3',
+                    borderRadius: 'small',
+                    p: 6
+                  }}
+                >
+                  <Box>
+                    <Icon
+                      name="maker"
+                      size={5}
+                      sx={{
+                        p: 2,
+                        color: 'textSecondary',
+                        border: '2px dashed #D8E0E3',
+                        borderRadius: '50%'
+                      }}
+                    />
+                  </Box>
+                  <Text sx={{ color: 'textSecondary' }}>
+                    Currently there are no active auctions. Please check back later.
+                  </Text>
+                </Flex>
               )}
-            </Grid>
+            </Stack>
+            <Stack>
+              <Flex sx={{ alignItems: 'center' }}>
+                <Badge variant="circle" p="3px" mr="3" bg="badgeOrange" />
+                <Heading as="h3" sx={{ fontWeight: 'heading' }}>
+                  Inactive Auctions
+                </Heading>
+              </Flex>
+              <Grid gap={4} columns={[1, 3]}>
+                {COLLATERAL_ARRAY.map(type => {
+                  const ilkAuctions = getAuctionsByIlk(inactiveAuctions, type.ilk);
+                  return (
+                    <Box key={type.ilk}>
+                      {auctionsLoading && <AuctionPreviewSkeleton />}
+                      {auctions && ilkAuctions.length > 0 && (
+                        <AuctionPreviewCard key={type.name} type={type} auctions={ilkAuctions} />
+                      )}
+                    </Box>
+                  );
+                })}
+              </Grid>
+            </Stack>
           </Stack>
         </section>
       </PrimaryLayout>
