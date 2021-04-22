@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { Button, Heading, Image, Text, Box, Flex, jsx } from 'theme-ui';
 import { useRouter } from 'next/router';
-import Skeleton from 'react-loading-skeleton';
 import useSWR from 'swr';
 import BigNumber from 'bignumber.js';
 
@@ -13,11 +12,12 @@ import SidebarLayout from 'components/layouts/Sidebar';
 import PrimaryLayout from 'components/layouts/Primary';
 import AuctionOverviewCard from 'components/auctions/AuctionOverviewCard';
 import AuctionOverviewSkeleton from 'components/auctions/AuctionOverviewSkeleton';
+import NoActiveAuctions from 'components/shared/NoActiveAuctions';
 import Stack from 'components/layouts/Stack';
 import { COLLATERAL_MAP } from 'lib/constants';
 import getMaker from 'lib/maker';
 import { getAuctionsByStatus, fromRad } from 'lib/utils';
-import { useAuctions, useVatGemBalance, useAccountVatBalance, useAccountTokenBalance } from 'lib/hooks';
+import { useAuctions, useVatGemBalance, useAccountTokenBalance } from 'lib/hooks';
 import { transactionsApi } from 'stores/transactions';
 import useAccountsStore from 'stores/accounts';
 
@@ -140,44 +140,40 @@ export default function Auctions(): JSX.Element | null {
               </Stack>
               <Stack gap={2}>
                 {auctions ? (
-                  (activeAuctions || []).map(
-                    auction =>
-                      auction.ilk === ilk && (
-                        <Box>
-                          <AuctionOverviewCard
-                            key={auction.id}
-                            auction={auction}
-                            vatBalance={vatBalance}
-                            daiBalance={daiBalance}
-                          />
-                        </Box>
-                      )
+                  activeAuctions && activeAuctions.length > 0 ? (
+                    activeAuctions.map(
+                      auction =>
+                        auction.ilk === ilk && (
+                          <Box>
+                            <AuctionOverviewCard key={auction.id} auction={auction} vatBalance={vatBalance} />
+                          </Box>
+                        )
+                    )
+                  ) : (
+                    <NoActiveAuctions />
                   )
                 ) : (
                   <AuctionOverviewSkeleton />
                 )}
               </Stack>
             </Box>
-            <Box>
-              <Stack gap={2}>
-                <Heading as="h2" sx={{ mb: 3 }}>{`Inactive ${type?.toUpperCase()} Auctions`}</Heading>
-                {auctions ? (
-                  (inactiveAuctions || []).map(
-                    auction =>
-                      auction.ilk === ilk && (
-                        <AuctionOverviewCard
-                          key={auction.id}
-                          auction={auction}
-                          vatBalance={vatBalance}
-                          daiBalance={daiBalance}
-                        />
-                      )
-                  )
-                ) : (
-                  <AuctionOverviewSkeleton />
-                )}
-              </Stack>
-            </Box>
+            {auctions && inactiveAuctions.length > 0 && (
+              <Box>
+                <Stack gap={2}>
+                  <Heading as="h2" sx={{ mb: 3 }}>{`Inactive ${type?.toUpperCase()} Auctions`}</Heading>
+                  {auctions ? (
+                    (inactiveAuctions || []).map(
+                      auction =>
+                        auction.ilk === ilk && (
+                          <AuctionOverviewCard key={auction.id} auction={auction} vatBalance={vatBalance} />
+                        )
+                    )
+                  ) : (
+                    <AuctionOverviewSkeleton />
+                  )}
+                </Stack>
+              </Box>
+            )}
           </Stack>
           <Stack gap={3}>
             <SystemStatsSidebar ilk={ilk} />

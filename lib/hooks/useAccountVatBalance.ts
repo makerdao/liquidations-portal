@@ -10,7 +10,9 @@ async function fetchAccountVatBalance(address?: string): Promise<any> {
 }
 
 export function useAccountVatBalance(address?: string): any {
-  const { data, error } = useSWR(address ? '/balances/vat/dai' : null, () => fetchAccountVatBalance(address));
+  const { data, error } = useSWR(address ? `/balances/vat/dai/${address}` : null, () =>
+    fetchAccountVatBalance(address)
+  );
 
   return {
     data,

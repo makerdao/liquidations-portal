@@ -8,9 +8,10 @@ import { useAuctions } from 'lib/hooks';
 import { getAuctionsByStatus, getAuctionsByIlk } from 'lib/utils';
 import AuctionPreviewCard from 'components/index/AuctionPreviewCard';
 import AuctionPreviewSkeleton from 'components/index/AuctionPreviewSkeleton';
+import SystemStats from 'components/index/SystemStats';
 import PrimaryLayout from 'components/layouts/Primary';
 import Stack from 'components/layouts/Stack';
-import SystemStats from 'components/index/SystemStats';
+import NoActiveAuctions from 'components/shared/NoActiveAuctions';
 import useAccountsStore from 'stores/accounts';
 import { useModalsStore } from 'stores/modals';
 
@@ -166,56 +167,31 @@ export default function LandingPage(): JSX.Element {
                   );
                 })}
               </Grid>
-              {auctions && activeAuctions.length === 0 && (
-                <Flex
-                  sx={{
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    border: '2px dashed #D8E0E3',
-                    borderRadius: 'small',
-                    p: 6
-                  }}
-                >
-                  <Box>
-                    <Icon
-                      name="maker"
-                      size={5}
-                      sx={{
-                        p: 2,
-                        color: 'textSecondary',
-                        border: '2px dashed #D8E0E3',
-                        borderRadius: '50%'
-                      }}
-                    />
-                  </Box>
-                  <Text sx={{ color: 'textSecondary' }}>
-                    Currently there are no active auctions. Please check back later.
-                  </Text>
+              {auctions && activeAuctions.length === 0 && <NoActiveAuctions />}
+            </Stack>
+            {auctions && inactiveAuctions.length > 0 && (
+              <Stack>
+                <Flex sx={{ alignItems: 'center' }}>
+                  <Badge variant="circle" p="3px" mr="3" bg="badgeOrange" />
+                  <Heading as="h3" sx={{ fontWeight: 'heading' }}>
+                    Inactive Auctions
+                  </Heading>
                 </Flex>
-              )}
-            </Stack>
-            <Stack>
-              <Flex sx={{ alignItems: 'center' }}>
-                <Badge variant="circle" p="3px" mr="3" bg="badgeOrange" />
-                <Heading as="h3" sx={{ fontWeight: 'heading' }}>
-                  Inactive Auctions
-                </Heading>
-              </Flex>
-              <Grid gap={4} columns={[1, 3]}>
-                {COLLATERAL_ARRAY.map(type => {
-                  const ilkAuctions = getAuctionsByIlk(inactiveAuctions, type.ilk);
-                  return (
-                    <Box key={type.ilk}>
-                      {auctionsLoading && <AuctionPreviewSkeleton />}
-                      {auctions && ilkAuctions.length > 0 && (
-                        <AuctionPreviewCard key={type.name} type={type} auctions={ilkAuctions} />
-                      )}
-                    </Box>
-                  );
-                })}
-              </Grid>
-            </Stack>
+                <Grid gap={4} columns={[1, 3]}>
+                  {COLLATERAL_ARRAY.map(type => {
+                    const ilkAuctions = getAuctionsByIlk(inactiveAuctions, type.ilk);
+                    return (
+                      <Box key={type.ilk}>
+                        {auctionsLoading && <AuctionPreviewSkeleton />}
+                        {auctions && ilkAuctions.length > 0 && (
+                          <AuctionPreviewCard key={type.name} type={type} auctions={ilkAuctions} />
+                        )}
+                      </Box>
+                    );
+                  })}
+                </Grid>
+              </Stack>
+            )}
           </Stack>
         </section>
       </PrimaryLayout>

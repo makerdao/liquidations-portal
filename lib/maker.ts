@@ -62,6 +62,11 @@ function determineNetwork(): SupportedNetworks {
 
 let makerSingleton: Promise<Maker>;
 function getMaker(): Promise<Maker> {
+  let vulcanize;
+  if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    vulcanize = urlParams.get('vulcanize');
+  }
   if (!makerSingleton) {
     makerSingleton = Maker.create('http', {
       plugins: [
@@ -69,7 +74,7 @@ function getMaker(): Promise<Maker> {
         Web3ReactPlugin,
         LedgerPlugin,
         TrezorPlugin,
-        LiquidationPlugin
+        [LiquidationPlugin, { vulcanize }]
       ],
       provider: {
         url: networkToRpc(getNetwork(), 'infura'),
