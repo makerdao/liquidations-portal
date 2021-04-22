@@ -29,7 +29,7 @@ export default function Auctions(): JSX.Element | null {
   const ilkData = type ? COLLATERAL_MAP[type.toUpperCase()] : undefined;
 
   // auction data
-  const { data: auctions } = useAuctions(ilkData?.ilk);
+  const { data: auctions, error: auctionsError } = useAuctions(ilkData?.ilk);
   const activeAuctions = auctions && getAuctionsByStatus(auctions, true);
   const inactiveAuctions = auctions && getAuctionsByStatus(auctions, false);
 
@@ -39,8 +39,6 @@ export default function Auctions(): JSX.Element | null {
 
   // balances
   const { data: vatGemBalance } = useVatGemBalance(ilkData?.ilk, address);
-  const { data: daiBalance } = useAccountTokenBalance('DAI', address);
-  // const { data: vatBalance } = useAccountVatBalance(address);
 
   //TODO: AuctionOverview & BidModal expect a BigNumber, so this call will temporarily fetch the vatBalance for those components until we refactor useAccountVatBalance
   const { data: vb } = useSWR<BigNumber>('/balances/vat', () =>
@@ -152,6 +150,8 @@ export default function Auctions(): JSX.Element | null {
                   ) : (
                     <NoActiveAuctions />
                   )
+                ) : auctionsError ? (
+                  <NoActiveAuctions error={auctionsError} />
                 ) : (
                   <AuctionOverviewSkeleton />
                 )}

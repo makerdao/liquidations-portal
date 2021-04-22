@@ -67,7 +67,12 @@ export function getVulcanizeParam(): boolean {
     vulcanize = urlParams.get('vulcanize');
   }
 
-  // convert urlParam from string to boolean
+  // no vulcanize param, default to true
+  if (vulcanize === null) {
+    return true;
+  }
+
+  // vulcanize param exists, convert from string to boolean
   return vulcanize === 'true';
 }
 

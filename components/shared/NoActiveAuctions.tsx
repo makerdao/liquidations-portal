@@ -1,13 +1,17 @@
 import { Flex, Box, Text } from 'theme-ui';
 import { Icon } from '@makerdao/dai-ui-icons';
 
-const NoActiveAuctions = (): JSX.Element => (
+type Props = {
+  error?: string;
+};
+const NoActiveAuctions = ({ error }: Props): JSX.Element => (
   <Flex
     sx={{
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       border: '2px dashed #D8E0E3',
+      borderColor: error ? 'error' : '#D8E0E3',
       borderRadius: 'small',
       p: 6
     }}
@@ -25,7 +29,9 @@ const NoActiveAuctions = (): JSX.Element => (
       />
     </Box>
     <Text sx={{ color: 'textSecondary' }}>
-      Currently there are no active auctions. Please check back later.
+      {error
+        ? 'It looks like something went wrong. Please check back later.'
+        : 'Currently there are no active auctions. Please check back later.'}
     </Text>
   </Flex>
 );
