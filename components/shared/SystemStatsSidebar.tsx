@@ -3,6 +3,7 @@ import { Badge, Card, Flex, Link as ExternalLink, Text, Box, jsx } from 'theme-u
 import { Icon } from '@makerdao/dai-ui-icons';
 import Skeleton from 'react-loading-skeleton';
 
+import { getVulcanizeParam } from 'lib/maker';
 import Stack from 'components/layouts/Stack';
 import Tooltip from 'components/shared/Tooltip';
 import SystemStat from 'types/systemStat';
@@ -15,6 +16,8 @@ type Props = {
 
 export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
   const { data, error } = useSystemStatsSidebar(ilk);
+
+  const usingVulcanize = getVulcanizeParam();
 
   const fieldMap: SystemStat[] = [
     {
@@ -29,7 +32,7 @@ export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
     },
     {
       title: 'Inactive Auctions',
-      format: val => getAuctionCountByStatus(val, false),
+      format: val => (usingVulcanize ? getAuctionCountByStatus(val, false) : '--'),
       tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
     },
     {

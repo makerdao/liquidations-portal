@@ -3,6 +3,7 @@ import { Badge, Box, Grid, Link as ExternalLink, Flex, Text, jsx } from 'theme-u
 import { Icon } from '@makerdao/dai-ui-icons';
 import Skeleton from 'react-loading-skeleton';
 
+import { getVulcanizeParam } from 'lib/maker';
 import { getAuctionCountByStatus, getDaiRequiredForAuctions } from 'lib/utils';
 import { useSystemStats } from 'lib/hooks';
 import Tooltip from 'components/shared/Tooltip';
@@ -11,6 +12,8 @@ import Stack from '../layouts/Stack';
 
 export default function SystemStats(): JSX.Element {
   const { data, error } = useSystemStats();
+
+  const usingVulcanize = getVulcanizeParam();
 
   // format property can be used to specify how to format data the particular value
   const fieldMap: SystemStat[] = [
@@ -21,7 +24,7 @@ export default function SystemStats(): JSX.Element {
     },
     {
       title: 'Inactive Auctions',
-      format: val => getAuctionCountByStatus(val, false),
+      format: val => (usingVulcanize ? getAuctionCountByStatus(val, false) : '--'),
       tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
     },
     {
