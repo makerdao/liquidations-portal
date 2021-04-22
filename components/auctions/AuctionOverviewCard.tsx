@@ -18,10 +18,9 @@ import { useModalsStore } from 'stores/modals';
 type Props = {
   auction: Auction;
   vatBalance: BigNumber;
-  daiBalance: string;
 };
 
-const AuctionOverviewCard = ({ auction, vatBalance, daiBalance }: Props): JSX.Element => {
+const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
   const {
     id,
     active,
