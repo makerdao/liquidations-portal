@@ -1,4 +1,3 @@
-import Auction from 'types/auction';
 import create from 'zustand';
 import getMaker from '../lib/maker';
 import { transactionsApi } from './transactions';
@@ -9,7 +8,6 @@ type Store = {
 
 const [useAuctionStore] = create<Store>((set, get) => ({
   submitBid: async (ilk, id, amount, maxPrice, address) => {
-    console.log('submit bid called with', id, amount, maxPrice, address);
     const maker = await getMaker();
 
     // maxPrice is approximate, or else we get "Clipper/too-expensive" errors
@@ -28,4 +26,3 @@ const [useAuctionStore] = create<Store>((set, get) => ({
 }));
 
 export default useAuctionStore;
-//485.62
