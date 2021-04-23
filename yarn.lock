@@ -1810,10 +1810,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-liquidations@0.1.0-beta19":
-  version "0.1.0-beta19"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-liquidations/-/dai-plugin-liquidations-0.1.0-beta19.tgz#6da6a2d91aac84b2d688d2c88fdf0ba2c3b8469a"
-  integrity sha512-lD702Rg6JCP+Q4iH39O4snRZ3f9QIWicA6hi5sIDsIn8JpEA3pn7B9PTNZDbCG43HuptnUWCbbWuDWXFJqpu+Q==
+"@makerdao/dai-plugin-liquidations@0.1.0-beta20":
+  version "0.1.0-beta20"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-liquidations/-/dai-plugin-liquidations-0.1.0-beta20.tgz#215f738f2f34290dba5df8ce4a85c8bb40d0ef46"
+  integrity sha512-kG9Q8N6Wsgploie5T0iZEDJ8yto7BkgKgJeW1SKu2Vgd971fEOylB3bqOLFLtVZlYf6BZ/YESDGpYu3k5YS+AQ==
   dependencies:
     "@makerdao/currency" "0.9.9"
     "@makerdao/services-core" "^0.9.9"

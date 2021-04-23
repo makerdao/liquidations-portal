@@ -24,6 +24,7 @@ export default function Education({ source }): JSX.Element {
 }
 
 export async function getStaticProps() {
+  // See: https://github.com/hashicorp/next-mdx-remote
   const source = fs.readFileSync(path.join(path.join(process.cwd(), 'content'), 'education.mdx'), 'utf8');
   const mdxSource = await renderToString(source);
   return { props: { source: mdxSource } };
