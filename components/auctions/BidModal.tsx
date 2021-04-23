@@ -236,7 +236,7 @@ const BidModal = ({
               <Button
                 disabled={disabled}
                 sx={{ mt: 3 }}
-                onClick={() => submitBid(id, colAmount, unitPrice, account?.address)}
+                onClick={() => submitBid(ilk, id, colAmount, unitPrice, account?.address)}
               >
                 Place a bid
               </Button>

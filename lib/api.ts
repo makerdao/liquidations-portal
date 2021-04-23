@@ -79,8 +79,8 @@ export async function getHoleAndDirtForIlk(ilk: string): Promise<any> {
   return maker.service('liquidation').getHoleAndDirtForIlk(ilk);
 }
 
-export async function getAuctionStatus(id: string): Promise<any> {
+export async function getAuctionStatus(ilk: string, id: string): Promise<any> {
   const maker = await getMaker();
 
-  return maker.service('liquidation').getStatus(id);
+  return maker.service('liquidation').getStatus(ilk, id);
 }

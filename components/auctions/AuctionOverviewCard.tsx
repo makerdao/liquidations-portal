@@ -36,7 +36,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
 
   const [showDialog, setShowDialog] = useState(false);
   const bpi = useBreakpointIndex();
-  const { auctionPrice: unitPrice } = useAuctionStatus(id);
+  const { auctionPrice: unitPrice } = useAuctionStatus(ilk, id);
 
   const { symbol } = COLLATERAL_MAP[ilk];
   const canBid = new BigNumber(vatBalance).gt(0);
