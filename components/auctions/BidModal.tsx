@@ -243,7 +243,7 @@ const BidModal = ({
                   <Flex sx={{ justifyContent: 'space-between', mt: 2, px: 2 }}>
                     <Flex sx={{ flexDirection: 'column' }}>
                       <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Dust limit</Text>
-                      <Text sx={{ color: 'textMuted', fontSize: 2 }}>{dustLimit} DAI</Text>
+                      <Text sx={{ color: 'textMuted', fontSize: 2 }}>{dustLimit.toFixed(0)} DAI</Text>
                     </Flex>
                     <Flex sx={{ flexDirection: 'column' }}>
                       <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Auction price</Text>

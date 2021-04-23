@@ -143,7 +143,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
             <Flex sx={{ justifyContent: 'space-between' }}>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
-                <Text>{dustLimit} DAI</Text>
+                <Text>{dustLimit.toFixed(0)} DAI</Text>
               </Flex>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Auction price</Text>

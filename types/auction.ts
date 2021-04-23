@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 type Auction = {
   id: number;
   active: boolean;
@@ -6,7 +8,7 @@ type Auction = {
   urn: string;
   collateralAvailable: string;
   daiNeeded: string;
-  dustLimit: string;
+  dustLimit: BigNumber;
   startDate: number;
   endDate: number;
 };
