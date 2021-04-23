@@ -35,9 +35,7 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
     state.joinDaiApprovalPending,
     state.joinDaiHopePending
   ]);
-  const [value, setValue] = useState<string>('');
   const [isDeposit, setIsDeposit] = useState(true);
-  const [isTxProcessing, setIsTxProcessing] = useState(false);
   const account = useAccountsStore(state => state.currentAccount);
   const address = account?.address;
   const { data: daiBalance } = useAccountTokenBalance('DAI', address);
@@ -112,6 +110,9 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
   };
 
   const DepositWithdrawContent = () => {
+    const [value, setValue] = useState<string>('');
+    const [isTxProcessing, setIsTxProcessing] = useState(false);
+
     const canDeposit = new BigNumber(value).lte(new BigNumber(daiBalance));
     const canWithdraw = new BigNumber(value).lte(new BigNumber(vatBalance));
 
