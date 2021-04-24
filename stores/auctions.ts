@@ -6,12 +6,14 @@ type Store = {
   submitBid: (ilk, id, amount, maxPrice, address) => Promise<void>;
   bidTxPending: boolean;
   bidTxSuccess: boolean;
+  bidTxError: boolean;
   resetBidSuccess: () => void;
 };
 
 const [useAuctionStore] = create<Store>((set, get) => ({
   bidTxPending: false,
   bidTxSuccess: false,
+  bidTxError: false,
   resetBidSuccess: () => set(state => ({ bidTxSuccess: false })),
   submitBid: async (ilk, id, amount, maxPrice, address) => {
     const maker = await getMaker();
@@ -23,19 +25,22 @@ const [useAuctionStore] = create<Store>((set, get) => ({
     await transactionsApi.getState().track(txCreator, `Submit bid on ID: ${id}`, {
       pending: () => {
         set({
-          bidTxPending: true
+          bidTxPending: true,
+          bidTxError: false
         });
       },
       mined: txId => {
         transactionsApi.getState().setMessage(txId, `Submit bid finished for ID: ${id}`);
         set({
           bidTxPending: false,
-          bidTxSuccess: true
+          bidTxSuccess: true,
+          bidTxError: false
         });
       },
       error: () => {
         set({
-          bidTxPending: false
+          bidTxPending: false,
+          bidTxError: true
         });
       }
     });

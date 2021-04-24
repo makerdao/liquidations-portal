@@ -44,10 +44,10 @@ const BidModal = ({
   const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
   const { ilk, collateralAvailable, dustLimit, id } = auction;
   const account = useAccountsStore(state => state.currentAccount);
-  const [bidTxPending, bidTxSuccess, resetBidSuccess, submitBid] = useAuctionStore(state => [
+  const [bidTxPending, bidTxSuccess, bidTxError, resetBidSuccess, submitBid] = useAuctionStore(state => [
     state.bidTxPending,
     state.bidTxSuccess,
-    // TODO add an error state on reverts
+    state.bidTxError,
     state.resetBidSuccess,
     state.submitBid
   ]);
@@ -277,6 +277,9 @@ const BidModal = ({
                 </Button>
                 {insufficientFunds && (
                   <Text sx={{ color: 'onWarning', textAlign: 'center', mt: 2 }}>Insufficient funds</Text>
+                )}
+                {bidTxError && (
+                  <Text sx={{ color: 'onWarning', textAlign: 'center', mt: 2 }}>Transaction failed</Text>
                 )}
               </>
             )}
