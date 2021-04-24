@@ -89,7 +89,9 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
             <Flex sx={{ flexDirection: 'column', color: 'textSecondary' }}>
               <Text sx={{ color: 'textSecondary' }}>Initial Collateral</Text>
               <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>
-                {initialCollateral} {symbol.toUpperCase()}
+                {/* TODO add this when we have the data */}
+                {/* {initialCollateral} {symbol.toUpperCase()} */}
+                --
               </Text>
             </Flex>
             <Flex>
