@@ -56,6 +56,7 @@ export default function Auctions(): JSX.Element | null {
 
   const { bannerPng, iconSvg, ilk } = ilkData;
 
+  // TODO move to store so this can be reused
   const redeemCollateral = async ilk => {
     const maker = await getMaker();
     const txCreator = () => maker.service('liquidation').exitGemFromAdapter(ilk, vatGemBalance);
