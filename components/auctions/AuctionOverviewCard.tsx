@@ -13,6 +13,7 @@ import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
 import BidModal from './BidModal';
 import { COLLATERAL_MAP } from 'lib/constants';
+import useAccountsStore from 'stores/accounts';
 import { useModalsStore } from 'stores/modals';
 
 type Props = {
@@ -25,7 +26,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
     id,
     active,
     ilk,
-    initialCollateral,
+    // initialCollateral,
     urn,
     collateralAvailable,
     daiNeeded,
@@ -37,6 +38,8 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
   const [showDialog, setShowDialog] = useState(false);
   const bpi = useBreakpointIndex();
   const { auctionPrice: unitPrice } = useAuctionStatus(ilk, id);
+  const account = useAccountsStore(state => state.currentAccount);
+  const address = account?.address;
 
   const { symbol } = COLLATERAL_MAP[ilk];
   const canBid = new BigNumber(vatBalance).gt(0);
@@ -131,9 +134,9 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
           </Stack>
           <Flex sx={{ flexDirection: 'column', justifyContent: 'space-between' }}>
             <Button disabled={!canBid} onClick={() => setShowDialog(true)}>
-              Place a bid
+              {address ? 'Place a bid' : 'Connect to bid'}
             </Button>
-            {!canBid && (
+            {address && !canBid && (
               <Button
                 variant="textual"
                 sx={{ color: 'primary', fontSize: 1, p: 0 }}

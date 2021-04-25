@@ -17,7 +17,7 @@ import Stack from 'components/layouts/Stack';
 import { COLLATERAL_MAP } from 'lib/constants';
 import getMaker from 'lib/maker';
 import { getAuctionsByStatus, fromRad } from 'lib/utils';
-import { useAuctions, useVatGemBalance, useAccountTokenBalance } from 'lib/hooks';
+import { useAuctions, useVatGemBalance } from 'lib/hooks';
 import { transactionsApi } from 'stores/transactions';
 import useAccountsStore from 'stores/accounts';
 

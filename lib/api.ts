@@ -1,6 +1,7 @@
 import { stringToBytes } from '@makerdao/dai-plugin-mcd/dist/utils';
 import getMaker from 'lib/maker';
 import Auction from 'types/auction';
+import BigNumber from 'bignumber.js';
 
 export async function getTotalDai(): Promise<any> {
   const maker = await getMaker();
@@ -26,7 +27,7 @@ const mockAuctions: Auction[] = [
     urn: '0x123',
     collateralAvailable: '3000',
     daiNeeded: '4000',
-    dustLimit: '111',
+    dustLimit: new BigNumber(111),
     // auctionPrice: '999',
     startDate: 1619894140000,
     endDate: 1619994140000
@@ -39,7 +40,7 @@ const mockAuctions: Auction[] = [
     urn: '0x345',
     collateralAvailable: '1000',
     daiNeeded: '6000',
-    dustLimit: '222',
+    dustLimit: new BigNumber(222),
     // auctionPrice: '888',
     startDate: 1619894140000,
     endDate: 1619994140000
