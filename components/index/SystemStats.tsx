@@ -19,30 +19,30 @@ export default function SystemStats(): JSX.Element {
   const fieldMap: SystemStat[] = [
     {
       title: 'Active Auctions',
-      format: val => getAuctionCountByStatus(val, true),
-      tooltip: 'This is placeholder text explaining what Active Auctions represents'
+      format: val => getAuctionCountByStatus(val, true)
+      // tooltip: 'This is placeholder text explaining what Active Auctions represents'
     },
     {
       title: 'Inactive Auctions',
-      format: val => (usingVulcanize ? getAuctionCountByStatus(val, false) : '--'),
-      tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
+      format: val => (usingVulcanize ? getAuctionCountByStatus(val, false) : '--')
+      // tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
     },
     {
       title: 'Vaults requiring kick',
-      format: val => val.length,
-      tooltip: 'This is placeholder text explaining what it means when vaults need to be kicked'
+      format: val => val.length
+      // tooltip: 'This is placeholder text explaining what it means when vaults need to be kicked'
     },
     {
       title: 'Dai required for Auctions',
       format: val => `${getDaiRequiredForAuctions(val)} DAI`,
-      minWidth: 185,
-      tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
+      minWidth: 185
+      // tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
     },
     {
       title: 'Global max available',
       format: val => `${val.toBigNumber().toFormat(0)} DAI`,
-      minWidth: 205,
-      tooltip: 'This is placeholder text explaining what Global max available represents'
+      minWidth: 205
+      // tooltip: 'This is placeholder text explaining what Global max available represents'
     }
   ];
 

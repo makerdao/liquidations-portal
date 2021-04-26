@@ -61,19 +61,23 @@ function determineNetwork(): SupportedNetworks {
 }
 
 export function getVulcanizeParam(): boolean {
-  let vulcanize;
-  if (typeof window !== 'undefined') {
-    const urlParams = new URLSearchParams(window.location.search);
-    vulcanize = urlParams.get('vulcanize');
-  }
+  // let vulcanize;
+  // if (typeof window !== 'undefined') {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   vulcanize = urlParams.get('vulcanize');
+  // }
 
-  // no vulcanize param, default to true
-  if (vulcanize === null) {
-    return true;
-  }
+  // // no vulcanize param, default to true
+  // if (vulcanize === null) {
+  //   return true;
+  // }
 
-  // vulcanize param exists, convert from string to boolean
-  return vulcanize === 'true';
+  // // vulcanize param exists, convert from string to boolean
+  // return vulcanize === 'true';
+
+  // TODO remove hardcoded 'false' when vulcanize is ready
+
+  return false;
 }
 
 let makerSingleton: Promise<Maker>;
@@ -87,9 +91,7 @@ function getMaker(): Promise<Maker> {
         Web3ReactPlugin,
         LedgerPlugin,
         TrezorPlugin,
-        // [LiquidationPlugin, { vulcanize: usingVulcanize }]
-        // TODO remove hardcoded 'false' when vulcanize is ready
-        [LiquidationPlugin, { vulcanize: false }]
+        [LiquidationPlugin, { vulcanize: usingVulcanize }]
       ],
       provider: {
         url: networkToRpc(getNetwork(), 'infura'),
