@@ -35,13 +35,41 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
     state.joinDaiApprovalPending,
     state.joinDaiHopePending
   ]);
-
   const [isDeposit, setIsDeposit] = useState(true);
-  const [isTxProcessing, setIsTxProcessing] = useState(false);
+  const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
   const account = useAccountsStore(state => state.currentAccount);
   const address = account?.address;
   const { data: daiBalance } = useAccountTokenBalance('DAI', address);
   const { data: vatBalance } = useAccountVatBalance(address);
+
+  const handleAcceptTerms = () => setHasAcceptedTerms(true);
+
+  const LegalContent = () => {
+    return (
+      <>
+        <Box variant="cards.primary" sx={{ mt: 2 }}>
+          <Text sx={{ fontWeight: 'bold', mb: 2 }}>1. Acceptance of Terms</Text>
+          <Text>
+            Please read these Terms of Use (the “Terms” or “Terms of Use”) carefully before using the Service.
+            By using or otherwise accessing the Service, or clicking to accept or agree to these Terms where
+            that option is made available, you (1) agree that you have read and understand these Terms (2)
+            accept and agree to these Terms and (3) any additional terms, rules and conditions of
+            participation issued from time-to-time. If you do not agree to the Terms, then you may not access
+            or use the Content or Service. MKR is a cryptographic governance token used in the Dai System and
+            Software, which is an autonomous system of smart contract
+          </Text>
+        </Box>
+        <Flex sx={{ mt: 3, justifyContent: 'space-between' }}>
+          <Button variant="outline" onClick={onDismiss} sx={{ width: '100%', mr: 3 }}>
+            Cancel
+          </Button>
+          <Button onClick={handleAcceptTerms} sx={{ width: '100%' }}>
+            I agree
+          </Button>
+        </Flex>
+      </>
+    );
+  };
 
   const ApprovalsContent = () => {
     return (
@@ -113,6 +141,7 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
 
   const DepositWithdrawContent = () => {
     const [value, setValue] = useState<string>('');
+    const [isTxProcessing, setIsTxProcessing] = useState(false);
 
     const canDeposit = new BigNumber(value).lte(new BigNumber(daiBalance));
     const canWithdraw = new BigNumber(value).lte(new BigNumber(vatBalance));
@@ -240,7 +269,11 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
       >
         <Flex sx={{ flexDirection: 'column', pb: 3 }}>
           <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
-            <Heading sx={{ fontWeight: 'bold' }}>Unlock DAI to bid</Heading>
+            <Heading sx={{ fontWeight: 'bold' }}>
+              {!hasJoinDaiApproval && !hasJoinDaiHope && !hasAcceptedTerms
+                ? 'Terms of Use'
+                : 'Unlock DAI to bid'}
+            </Heading>
             <Close
               sx={{
                 alignSelf: 'flex-end',
@@ -254,7 +287,13 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
               onClick={onDismiss}
             />
           </Flex>
-          {hasJoinDaiApproval && hasJoinDaiHope ? <DepositWithdrawContent /> : <ApprovalsContent />}
+          {hasJoinDaiApproval && hasJoinDaiHope ? (
+            <DepositWithdrawContent />
+          ) : !hasAcceptedTerms ? (
+            <LegalContent />
+          ) : (
+            <ApprovalsContent />
+          )}
         </Flex>
       </DialogContent>
     </DialogOverlay>

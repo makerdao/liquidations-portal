@@ -16,7 +16,7 @@ import useAccountsStore from 'stores/accounts';
 import { useModalsStore } from 'stores/modals';
 
 export default function LandingPage(): JSX.Element {
-  const { data: auctions, loading: auctionsLoading } = useAuctions('all');
+  const { data: auctions, loading: auctionsLoading, error: auctionsError } = useAuctions('all');
   const activeAuctions = getAuctionsByStatus(auctions, true);
   const inactiveAuctions = getAuctionsByStatus(auctions, false);
   const account = useAccountsStore(state => state.currentAccount);
@@ -148,7 +148,7 @@ export default function LandingPage(): JSX.Element {
                   variant="circle"
                   p="3px"
                   mr="3"
-                  bg={activeAuctions.length > 0 ? 'primary' : 'textSecondary'}
+                  bg={activeAuctions.length > 0 ? 'primary' : auctionsError ? 'error' : 'textSecondary'}
                 />
                 <Heading as="h3" sx={{ fontWeight: 'heading' }}>
                   Active Auctions
@@ -167,7 +167,9 @@ export default function LandingPage(): JSX.Element {
                   );
                 })}
               </Grid>
-              {auctions && activeAuctions.length === 0 && <NoActiveAuctions />}
+              {((auctions && activeAuctions.length === 0) || auctionsError) && (
+                <NoActiveAuctions error={auctionsError} />
+              )}
             </Stack>
             {auctions && inactiveAuctions.length > 0 && (
               <Stack>

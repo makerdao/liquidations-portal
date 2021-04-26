@@ -17,7 +17,7 @@ import Stack from 'components/layouts/Stack';
 import { COLLATERAL_MAP } from 'lib/constants';
 import getMaker from 'lib/maker';
 import { getAuctionsByStatus, fromRad } from 'lib/utils';
-import { useAuctions, useVatGemBalance, useAccountTokenBalance } from 'lib/hooks';
+import { useAuctions, useVatGemBalance } from 'lib/hooks';
 import { transactionsApi } from 'stores/transactions';
 import useAccountsStore from 'stores/accounts';
 
@@ -29,7 +29,7 @@ export default function Auctions(): JSX.Element | null {
   const ilkData = type ? COLLATERAL_MAP[type.toUpperCase()] : undefined;
 
   // auction data
-  const { data: auctions } = useAuctions(ilkData?.ilk);
+  const { data: auctions, error: auctionsError } = useAuctions(ilkData?.ilk);
   const activeAuctions = auctions && getAuctionsByStatus(auctions, true);
   const inactiveAuctions = auctions && getAuctionsByStatus(auctions, false);
 
@@ -39,8 +39,6 @@ export default function Auctions(): JSX.Element | null {
 
   // balances
   const { data: vatGemBalance } = useVatGemBalance(ilkData?.ilk, address);
-  const { data: daiBalance } = useAccountTokenBalance('DAI', address);
-  // const { data: vatBalance } = useAccountVatBalance(address);
 
   //TODO: AuctionOverview & BidModal expect a BigNumber, so this call will temporarily fetch the vatBalance for those components until we refactor useAccountVatBalance
   const { data: vb } = useSWR<BigNumber>('/balances/vat', () =>
@@ -58,6 +56,7 @@ export default function Auctions(): JSX.Element | null {
 
   const { bannerPng, iconSvg, ilk } = ilkData;
 
+  // TODO move to store so this can be reused
   const redeemCollateral = async ilk => {
     const maker = await getMaker();
     const txCreator = () => maker.service('liquidation').exitGemFromAdapter(ilk, vatGemBalance);
@@ -152,6 +151,8 @@ export default function Auctions(): JSX.Element | null {
                   ) : (
                     <NoActiveAuctions />
                   )
+                ) : auctionsError ? (
+                  <NoActiveAuctions error={auctionsError} />
                 ) : (
                   <AuctionOverviewSkeleton />
                 )}

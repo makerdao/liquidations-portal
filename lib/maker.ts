@@ -60,13 +60,26 @@ function determineNetwork(): SupportedNetworks {
   }
 }
 
-let makerSingleton: Promise<Maker>;
-function getMaker(): Promise<Maker> {
+export function getVulcanizeParam(): boolean {
   let vulcanize;
   if (typeof window !== 'undefined') {
     const urlParams = new URLSearchParams(window.location.search);
     vulcanize = urlParams.get('vulcanize');
   }
+
+  // no vulcanize param, default to true
+  if (vulcanize === null) {
+    return true;
+  }
+
+  // vulcanize param exists, convert from string to boolean
+  return vulcanize === 'true';
+}
+
+let makerSingleton: Promise<Maker>;
+function getMaker(): Promise<Maker> {
+  const usingVulcanize = getVulcanizeParam();
+
   if (!makerSingleton) {
     makerSingleton = Maker.create('http', {
       plugins: [
@@ -74,7 +87,9 @@ function getMaker(): Promise<Maker> {
         Web3ReactPlugin,
         LedgerPlugin,
         TrezorPlugin,
-        [LiquidationPlugin, { vulcanize }]
+        // [LiquidationPlugin, { vulcanize: usingVulcanize }]
+        // TODO remove hardcoded 'false' when vulcanize is ready
+        [LiquidationPlugin, { vulcanize: false }]
       ],
       provider: {
         url: networkToRpc(getNetwork(), 'infura'),

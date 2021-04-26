@@ -13,6 +13,7 @@ import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
 import BidModal from './BidModal';
 import { COLLATERAL_MAP } from 'lib/constants';
+import useAccountsStore from 'stores/accounts';
 import { useModalsStore } from 'stores/modals';
 
 type Props = {
@@ -25,7 +26,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
     id,
     active,
     ilk,
-    initialCollateral,
+    // initialCollateral,
     urn,
     collateralAvailable,
     daiNeeded,
@@ -36,7 +37,9 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
 
   const [showDialog, setShowDialog] = useState(false);
   const bpi = useBreakpointIndex();
-  const { auctionPrice: unitPrice } = useAuctionStatus(id);
+  const { auctionPrice: unitPrice } = useAuctionStatus(ilk, id);
+  const account = useAccountsStore(state => state.currentAccount);
+  const address = account?.address;
 
   const { symbol } = COLLATERAL_MAP[ilk];
   const canBid = new BigNumber(vatBalance).gt(0);
@@ -89,7 +92,9 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
             <Flex sx={{ flexDirection: 'column', color: 'textSecondary' }}>
               <Text sx={{ color: 'textSecondary' }}>Initial Collateral</Text>
               <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>
-                {initialCollateral} {symbol.toUpperCase()}
+                {/* TODO add this when we have the data */}
+                {/* {initialCollateral} {symbol.toUpperCase()} */}
+                --
               </Text>
             </Flex>
             <Flex>
@@ -129,9 +134,9 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
           </Stack>
           <Flex sx={{ flexDirection: 'column', justifyContent: 'space-between' }}>
             <Button disabled={!canBid} onClick={() => setShowDialog(true)}>
-              Place a bid
+              {address ? 'Place a bid' : 'Connect to bid'}
             </Button>
-            {!canBid && (
+            {address && !canBid && (
               <Button
                 variant="textual"
                 sx={{ color: 'primary', fontSize: 1, p: 0 }}
@@ -143,7 +148,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
             <Flex sx={{ justifyContent: 'space-between' }}>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
-                <Text>{dustLimit} DAI</Text>
+                <Text>{dustLimit.toFixed(0)} DAI</Text>
               </Flex>
               <Flex sx={{ flexDirection: 'column' }}>
                 <Text sx={{ color: 'textSecondary' }}>Auction price</Text>

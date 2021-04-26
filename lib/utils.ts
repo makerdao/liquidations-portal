@@ -176,7 +176,7 @@ export function transformAuctions(response: any): Auction[] {
     urn: resp.usr,
     collateralAvailable: resp.lot.toFixed(2),
     daiNeeded: resp.tab.toFixed(2),
-    dustLimit: '100', //get from chain on init?
+    dustLimit: resp.chost,
     auctionPrice: '100', // TODO: calc max bid aka auction price
     startDate: resp.tic,
     endDate: resp.endDate
