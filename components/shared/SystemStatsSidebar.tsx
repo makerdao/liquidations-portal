@@ -22,28 +22,28 @@ export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
   const fieldMap: SystemStat[] = [
     {
       title: 'Undercollateralized Vaults',
-      format: val => val.length,
-      tooltip: 'This is placeholder text explaining what Undercollateralized Vaults represents'
+      format: val => val.length
+      // tooltip: 'This is placeholder text explaining what Undercollateralized Vaults represents'
     },
     {
       title: 'Active Auctions',
-      format: val => getAuctionCountByStatus(val, true),
-      tooltip: 'This is placeholder text explaining what Active Auctions represents'
+      format: val => getAuctionCountByStatus(val, true)
+      // tooltip: 'This is placeholder text explaining what Active Auctions represents'
     },
     {
       title: 'Inactive Auctions',
-      format: val => (usingVulcanize ? getAuctionCountByStatus(val, false) : '--'),
-      tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
+      format: val => (usingVulcanize ? getAuctionCountByStatus(val, false) : '--')
+      // tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
     },
     {
       title: 'Dai required for Auctions',
-      format: val => `${getDaiRequiredForAuctions(val)} DAI`,
-      tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
+      format: val => `${getDaiRequiredForAuctions(val)} DAI`
+      // tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
     },
     {
       title: 'Limit per collateral available',
-      format: val => `${val && val.diff ? val.diff.toFormat(2) : '--'} DAI`,
-      tooltip: 'This is placeholder text explaining what Limit per collateral available represents'
+      format: val => `${val && val.diff ? val.diff.toFormat(2) : '--'} DAI`
+      // tooltip: 'This is placeholder text explaining what Limit per collateral available represents'
     }
   ];
 
