@@ -87,7 +87,9 @@ function getMaker(): Promise<Maker> {
         Web3ReactPlugin,
         LedgerPlugin,
         TrezorPlugin,
-        [LiquidationPlugin, { vulcanize: usingVulcanize }]
+        // [LiquidationPlugin, { vulcanize: usingVulcanize }]
+        // TODO remove hardcoded 'false' when vulcanize is ready
+        [LiquidationPlugin, { vulcanize: false }]
       ],
       provider: {
         url: networkToRpc(getNetwork(), 'infura'),
