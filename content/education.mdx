@@ -1,3 +1,75 @@
-## Liquidations 2.0 Education Page
+# Liquidations2.0
 
-Stay tuned...
+This user interface acts as a backstop to democratize access to collateral without having to use command line interfaces. It is an MVP implementation that over-time will be extended to support all Maker collateral types.
+
+# Introduction
+
+Liquidations are the automatic transfer of collateral from an insufficiently collateralized vault, along with the transfer of that vault's debt, to the Maker protocol. Auctions are therefore used to sell the transfered collateral for DAI in an attempt to cancel out the debt now assigned to the protocol.
+
+This is achieved through Liquidations2.0, which is a Dutch-style auction system, where auction prices start high and drop over time. This auction system uses DAI for all collateral purchases, meaning that as time passes, the DAI that the protocol is willing to accept for the offered collateral will also fall.
+
+For more information on the technical implementation of Liquidations2.0 please refer to the [Forum Post](https://forum.makerdao.com/t/mip45-liquidations-2-0-liq-2-0-liquidation-system-redesign/6352) and our [Liquidations2.0 Module](https://docs.makerdao.com/smart-contract-modules/dog-and-clipper-detailed-documentation) documentation on docs.makerdao.com. Alternatively, for more technical users, this Auction-Demo-Keeper [educational resource](https://github.com/makerdao/auction-demo-keeper) will help Keepers transition from Liquidations1.2 to Liquidations2.0.
+
+The following guide will show you how to get setup to purchase collateral and participate in MakerDAO auctions through the UI.
+
+# Unlock and Authorize
+
+By clicking on the Deposit/Withdraw button on the homepage header, the user will be asked to conduct two one-time actions to **Unlock DAI to bid**:
+
+![](https://i.imgur.com/v4pb2Tp.png)
+
+This modal requires two transactions; 1. Unlock Dai in the VAT - which authorizes the user's address to deposit into the VAT. 2. Authorize the VAT - which authorizes the VAT to use the DAI that the user will deposit.
+
+Note: The VAT contract is the core vault engine of the Maker Protocol and as such manages the central accounting invariants of DAI. Depositing and interacting with the VAT is therefore necessary in order to participate in auctions. More technical information about the VAT can be found [here](https://docs.makerdao.com/smart-contract-modules/core-module/vat-detailed-documentation#2-contract-details).
+
+# Deposit Dai to Bid
+
+Once the above modal transactions are confirmed, the user will be able specify an amount of DAI to deposit from their wallet into the VAT.
+
+![](https://i.imgur.com/QVXLCaA.png)
+
+The DAI that the user has deposited into the VAT will then be available for auctions. Following this step, the user can proceed to the collateral-specific page.
+
+# Bidding on Collateral
+
+All supported collateral types that have active auctions will be shown on the home page under "Active Auctions" and can also be found under "Auctions" in the header.
+
+Upon visiting the Auction page for a specific collateral type, the user can see each auction represented by a card showing the corresponding information for that Auction ID:
+
+![](https://i.imgur.com/9wV2uH0.png)
+
+To participate in an auction, the user can then click "Place a Bid". If the user has yet to interact with this collateral, they will be required to first authorize their interaction with the collateral type (clipper contract). This needs only to be done once for **each** different collateral type and will not be required again in the future:
+
+![](https://i.imgur.com/CNkWhwU.png)
+
+Approving this one-time authorization will then reveal the Auction bid modal allowing the user to specify the amount of DAI they wish to offer and the equivalent collateral that this amount of DAI will purchase.
+
+![](https://i.imgur.com/y3ZOlYO.png)
+
+Clicking "Bid" will present the user with a window to approve the transaction, and if approved, the collateral will be deposited into the VAT.
+
+# Redeem Collateral from the VAT
+
+Once collateral has been purchased from an auction, it will appear on the collateral page, showing the amount to redeem.
+
+![](https://i.imgur.com/OmtUXQH.png)
+
+Clicking the redeem button will allow a user to redeem the collateral back to their original wallet address.
+
+---
+
+# Notes:
+
+It is worth mentioning that keepers will be competing with this interface by leveraging marketplace liquidity through single-block composability (flashloans) to purchase collateral. This UI does not yet support flashloans, however it is necessary to reduce the risk that auctions clear at a lower-than-market price as was seen in previous liquidation systems.
+
+For community discussion please reach out to us on forum.makerdao.com or [Rocketchat](https://chat.makerdao.com/home)
+
+# Resources:
+
+- Docs.makerdao - [Liquidations2.0 Module explanation](https://docs.makerdao.com/smart-contract-modules/dog-and-clipper-detailed-documentation#price-as-a-function-of-time)
+- MIP45 Forum Post - [Technical explanation](https://forum.makerdao.com/t/mip45-liquidations-2-0-liq-2-0-liquidation-system-redesign/6352)
+- MIP45 Forum [Audit Summary](https://forum.makerdao.com/t/mip45-audit-summary/7612)
+- Makerdao Forum - [Liquidations2 related information](https://forum.makerdao.com/tag/liq-20)
+- Auction Keeper [Educational Resource](https://github.com/makerdao/auction-demo-keeper)
+- Security.makerdao - [Liquidations2 Audits and reports](https://security.makerdao.com/liquidations-2.0)
+- Community Development - [Liquidations Educational Resource](https://community-development.makerdao.com/en/learn/vaults/liquidation/)
