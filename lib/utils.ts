@@ -210,3 +210,13 @@ export function getTotalCollateralAvailable(auctions: any[] = []): number {
   }, new BigNumber(0));
   return total.toFixed(2);
 }
+
+export function bigNumToFormat(value: BigNumber, currency: string): string {
+  if (!value) return '';
+  switch (currency) {
+    case 'DAI':
+      return value.toFormat(2);
+    default:
+      return value.toFormat(2);
+  }
+}

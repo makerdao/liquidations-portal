@@ -17,15 +17,16 @@ import {
 } from 'theme-ui';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import { Icon } from '@makerdao/dai-ui-icons';
+import BigNumber from 'bignumber.js';
 
 import { fadeIn, slideUp } from 'lib/keyframes';
 import { useAccountTokenBalance, useAccountVatBalance } from 'lib/hooks';
 import getMaker from 'lib/maker';
+import { bigNumToFormat } from 'lib/utils';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
 import { transactionsApi } from 'stores/transactions';
 import Stack from 'components/layouts/Stack';
-import BigNumber from 'bignumber.js';
 
 type Props = {
   showDialog: boolean;
@@ -103,7 +104,7 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
         <Divider sx={{ width: '100%' }} />
         <Flex sx={{ justifyContent: 'space-between', my: 2 }}>
           <Text sx={{ fontWeight: 'semiBold' }}>Dai Wallet Balance</Text>
-          <Text>{daiBalance}</Text>
+          <Text>{bigNumToFormat(daiBalance, 'DAI')}</Text>
         </Flex>
         <Divider sx={{ width: '100%', mb: 3 }} />
 
@@ -175,6 +176,14 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
       setValue(newValueStr);
     };
 
+    const depositMax = () => {
+      setValue(daiBalance.toFormat(6));
+    };
+
+    const withdrawMax = () => {
+      setValue(vatBalance.toFormat(6));
+    };
+
     const moveDai = async () => {
       const maker = await getMaker();
       const txCreator = isDeposit
@@ -205,7 +214,7 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
         <Divider sx={{ width: '100%' }} />
         <Flex sx={{ justifyContent: 'space-between', my: 2 }}>
           <Text sx={{ fontWeight: 'semiBold' }}>Dai Wallet Balance</Text>
-          <Text>{daiBalance}</Text>
+          <Text>{bigNumToFormat(daiBalance, 'DAI')}</Text>
         </Flex>
         <Divider sx={{ width: '100%', mb: 3 }} />
         <Flex sx={{ mb: 4 }}>
@@ -248,17 +257,32 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
         </Flex>
         <Flex sx={{ justifyContent: 'space-between', mb: 2 }}>
           <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
-          <Text>{vatBalance}</Text>
+          <Text>{bigNumToFormat(vatBalance, 'DAI')}</Text>
         </Flex>
         {isDeposit ? (
-          <Flex sx={{ mb: 4 }}>
+          <Flex sx={{ mb: 4, position: 'relative' }}>
             <Input sx={{ mr: 2 }} placeholder="0.00" onChange={updateValue} type="number" value={value} />
+            <Button
+              variant="textual"
+              disabled={daiBalance.lte(0)}
+              onClick={depositMax}
+              sx={{
+                position: 'absolute',
+                right: 166,
+                top: 1,
+                cursor: daiBalance.lte(0) ? 'not-allowed' : 'cursor',
+                color: daiBalance.lte(0) ? 'textSecondary' : 'primary',
+                px: 0
+              }}
+            >
+              Max
+            </Button>
             <Button sx={{ width: 180 }} onClick={moveDai} disabled={isTxProcessing || !canDeposit}>
               {isTxProcessing ? <Spinner size={20} sx={{ color: 'primary' }} /> : 'Deposit Dai'}
             </Button>
           </Flex>
         ) : (
-          <Flex sx={{ mb: 4 }}>
+          <Flex sx={{ mb: 4, position: 'relative' }}>
             <Input
               sx={{ mr: 2 }}
               placeholder="0.00"
@@ -267,6 +291,21 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
               value={value}
               disabled={isTxProcessing}
             />
+            <Button
+              variant="textual"
+              disabled={vatBalance.lte(0)}
+              onClick={withdrawMax}
+              sx={{
+                position: 'absolute',
+                right: 166,
+                top: 1,
+                cursor: vatBalance.lte(0) ? 'not-allowed' : 'cursor',
+                color: vatBalance.lte(0) ? 'textSecondary' : 'primary',
+                px: 0
+              }}
+            >
+              Max
+            </Button>
             <Button sx={{ width: 180 }} onClick={moveDai} disabled={isTxProcessing || !canWithdraw}>
               {isTxProcessing ? <Spinner size={20} sx={{ color: 'primary' }} /> : 'Withdraw Dai'}
             </Button>

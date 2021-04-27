@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import { Icon } from '@makerdao/dai-ui-icons';
 import Auction from 'types/auction';
 import { fadeIn, slideUp } from 'lib/keyframes';
-import { calculateCollateralAmt } from 'lib/utils';
+import { bigNumToFormat, calculateCollateralAmt } from 'lib/utils';
 import useAuctionStore from 'stores/auctions';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
@@ -92,7 +92,7 @@ const BidModal = ({
       <Flex sx={{ flexDirection: 'column' }}>
         <Flex sx={{ justifyContent: 'space-between', my: 3 }}>
           <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
-          <Text>{vatBalance.toFormat(2)}</Text>
+          <Text>{bigNumToFormat(vatBalance, 'DAI')}</Text>
         </Flex>
         {/* TODO: add button action */}
         <Button variant="outline" onClick={() => console.log('go to deposit modal')} sx={{ mb: 4 }}>
@@ -195,7 +195,7 @@ const BidModal = ({
                       </Button>
                       <Flex sx={{ alignItems: 'center' }}>
                         <Text sx={{ fontSize: 2, color: 'textSecondary' }}>DAI in the VAT:</Text>
-                        <Text sx={{ ml: 2 }}>{vatBalance.toFormat(2)}</Text>
+                        <Text sx={{ ml: 2 }}>{bigNumToFormat(vatBalance, 'DAI')}</Text>
                       </Flex>
                     </Flex>
                   </Flex>
