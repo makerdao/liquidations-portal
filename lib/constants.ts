@@ -29,16 +29,17 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     cardTexturePng: '/assets/link-card-texture.png',
     bannerPng: '/assets/link-banner-texture.png',
     iconSvg: '/assets/link-icon.svg',
-    colorIconName: 'chainlinkCircleColor'
+    colorIconName: 'linkCircleColor'
+  },
+  'YFI-A': {
+    name: 'yearn.finance',
+    ilk: 'YFI-A',
+    symbol: 'YFI',
+    cardTexturePng: '/assets/yfi-card-texture.png',
+    bannerPng: '/assets/yfi-banner-texture.png',
+    iconSvg: '/assets/yfi-icon.svg',
+    colorIconName: 'yfiCircleColor'
   }
-  // YFI: {
-  //   name: 'yfi',
-  //   ilk: 'YFI-A',
-  //   symbol: 'YFI',
-  //   cardTexturePng: '/assets/yfi-card-texture.png',
-  //   bannerPng: '/assets/yfi-banner-texture.png',
-  //   iconSvg: '/assets/yfi-icon.svg'
-  // }
 };
 
 export const COLLATERAL_ARRAY = Object.keys(COLLATERAL_MAP).map(currency => ({
