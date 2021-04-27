@@ -4,7 +4,7 @@ import { jsx, SxStyleProp } from 'theme-ui';
 import { css } from '@theme-ui/css';
 import round from 'lodash/round';
 import Auction from 'types/auction';
-import { SupportedNetworks, ETHERSCAN_PREFIXES } from './constants';
+import { SupportedNetworks, ETHERSCAN_PREFIXES, COLLATERAL_MAP } from './constants';
 
 export const RAD = new BigNumber('1e45');
 export const WAD = new BigNumber('1e18');
@@ -211,12 +211,13 @@ export function getTotalCollateralAvailable(auctions: any[] = []): number {
   return total.toFixed(2);
 }
 
-export function bigNumToFormat(value: BigNumber, currency: string): string {
+export function bigNumToFormat(value: BigNumber, ilk: string): string {
   if (!value) return '';
-  switch (currency) {
+  const cur = COLLATERAL_MAP[ilk];
+  switch (ilk) {
     case 'DAI':
       return value.toFormat(2);
     default:
-      return value.toFormat(2);
+      return cur.bigNumFormatter(value);
   }
 }

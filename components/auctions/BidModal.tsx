@@ -265,6 +265,13 @@ const BidModal = ({
                       <Text sx={{ fontSize: 3, fontWeight: 'semiBold', ml: 2 }}>{symbol}</Text>
                     </Flex>
                   </Flex>
+                  <Flex sx={{ justifyContent: 'space-between', mt: 2 }}>
+                    <Text sx={{ ml: 2, fontSize: 2, color: 'textSecondary' }}>Price</Text>
+                    <Text sx={{ fontSize: 2, color: 'textMuted' }}>{`≈ ${bigNumToFormat(
+                      unitPrice,
+                      ilk
+                    )} DAI per ${symbol}`}</Text>
+                  </Flex>
                 </Flex>
                 <Button
                   disabled={disabled}
