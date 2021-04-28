@@ -158,7 +158,7 @@ export default function Auctions(): JSX.Element | null {
                 )}
               </Stack>
             </Box>
-            {auctions && inactiveAuctions.length > 0 && (
+            {inactiveAuctions && inactiveAuctions.length > 0 && (
               <Box>
                 <Stack gap={2}>
                   <Heading as="h2" sx={{ mb: 3 }}>{`Inactive ${type?.toUpperCase()} Auctions`}</Heading>
