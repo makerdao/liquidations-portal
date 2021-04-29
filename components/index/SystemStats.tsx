@@ -40,7 +40,7 @@ export default function SystemStats(): JSX.Element {
     },
     {
       title: 'Global max available',
-      format: val => `${val.toBigNumber().toFormat(0)} DAI`,
+      format: val => `${val.toFormat(0)} DAI`,
       minWidth: 205
       // tooltip: 'This is placeholder text explaining what Global max available represents'
     }

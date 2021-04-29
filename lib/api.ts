@@ -2,11 +2,24 @@ import { stringToBytes } from '@makerdao/dai-plugin-mcd/dist/utils';
 import getMaker from 'lib/maker';
 import Auction from 'types/auction';
 import BigNumber from 'bignumber.js';
+import { COLLATERAL_MAP } from 'lib/constants';
 
+//as the number of ilks grows, this calculation will require a lot of calls.
+//should think about how to deal with that.
 export async function getTotalDai(): Promise<any> {
   const maker = await getMaker();
 
-  return maker.service('mcd:systemData').getTotalDai();
+  const vals = await Promise.all([
+    maker
+      .service('liquidation')
+      .getHoleAndDirt()
+      .then(x => x.diff),
+    ...Object.keys(COLLATERAL_MAP).map(c => getHoleAndDirtForIlk(c).then(x => x.diff))
+  ]);
+  const global = vals[0];
+  const ilks = vals.slice(1);
+  const ilkSum = ilks.reduce((a, b) => a.plus(b), new BigNumber(0));
+  return BigNumber.minimum(global, ilkSum);
 }
 
 const mockUnsafeVaults = ['unsafeUrn1'];
