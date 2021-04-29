@@ -2,14 +2,14 @@ import useSWR from 'swr';
 import { getAllClips } from 'lib/api';
 import Auction from 'types/auction';
 import { transformAuctions } from 'lib/utils';
+import { COLLATERAL_MAP } from 'lib/constants';
 
 async function fetchAuctions(ilk?: string): Promise<Auction[]> {
   if (!ilk) return [];
 
   if (ilk === 'all') {
-    // TODO loop over COLLATERAL_MAP here and call getAllClips for each ilk
-    const response = await getAllClips('LINK-A');
-    return transformAuctions(response);
+    const response = await Promise.all(Object.keys(COLLATERAL_MAP).map(c => getAllClips(c)));
+    return transformAuctions(response.flat());
   } else {
     const response = await getAllClips(ilk);
     return transformAuctions(response);
