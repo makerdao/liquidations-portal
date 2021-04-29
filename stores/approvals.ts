@@ -31,37 +31,56 @@ const [useApprovalsStore] = create<Store>((set, get) => ({
   joinIlkHopePending: {},
 
   setHasJoinDaiApproval: async address => {
-    const maker = await getMaker();
-    const allowance = await maker
-      .getToken('DAI')
-      .allowance(address, maker.service('smartContract').getContract('MCD_JOIN_DAI').address);
-    set({
-      hasJoinDaiApproval: allowance.toBigNumber().gt(0)
-    });
+    try {
+      const maker = await getMaker();
+      const allowance = await maker
+        .getToken('DAI')
+        .allowance(address, maker.service('smartContract').getContract('MCD_JOIN_DAI').address);
+      set({
+        hasJoinDaiApproval: allowance.toBigNumber().gt(0)
+      });
+    } catch (err) {
+      set({
+        hasJoinDaiApproval: false
+      });
+    }
   },
   setHasJoinDaiHope: async address => {
-    const maker = await getMaker();
-    const can = await maker
-      .service('smartContract')
-      .getContract('MCD_VAT')
-      .can(address, maker.service('smartContract').getContract('MCD_JOIN_DAI').address);
+    try {
+      const maker = await getMaker();
+      const can = await maker
+        .service('smartContract')
+        .getContract('MCD_VAT')
+        .can(address, maker.service('smartContract').getContract('MCD_JOIN_DAI').address);
 
-    set({
-      hasJoinDaiHope: can.toNumber() === 1
-    });
+      set({
+        hasJoinDaiHope: can.toNumber() === 1
+      });
+    } catch (err) {
+      set({
+        hasJoinDaiHope: false
+      });
+    }
   },
   setHasIlkHope: async (address, ilk) => {
-    const maker = await getMaker();
-    const clipperAddress = maker.service('liquidation')._clipperContractByIlk(ilk).address;
-
-    const can = await maker.service('smartContract').getContract('MCD_VAT').can(address, clipperAddress);
-
-    set(state => ({
-      hasIlkHope: {
-        ...state.hasIlkHope,
-        [ilk]: can.toNumber() === 1
-      }
-    }));
+    try {
+      const maker = await getMaker();
+      const clipperAddress = maker.service('liquidation')._clipperContractByIlk(ilk).address;
+      const can = await maker.service('smartContract').getContract('MCD_VAT').can(address, clipperAddress);
+      set(state => ({
+        hasIlkHope: {
+          ...state.hasIlkHope,
+          [ilk]: can.toNumber() === 1
+        }
+      }));
+    } catch (err) {
+      set(state => ({
+        hasIlkHope: {
+          ...state.hasIlkHope,
+          [ilk]: false
+        }
+      }));
+    }
   },
 
   enableJoinDaiApproval: async () => {

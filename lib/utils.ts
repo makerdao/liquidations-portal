@@ -171,7 +171,7 @@ export function transformAuctions(response: any): Auction[] {
   return response.map(resp => ({
     id: resp.saleId,
     active: resp.active,
-    ilk: 'LINK-A', // this won't come from response, will need to be specified based on req param
+    ilk: resp.ilk,
     initialCollateral: '1000', // can look up by `sales()`
     urn: resp.usr,
     collateralAvailable: resp.lot.toFixed(2),
