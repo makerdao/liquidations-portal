@@ -39,6 +39,7 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     name: 'yearn.finance',
     ilk: 'YFI-A',
     symbol: 'YFI',
+    bigNumFormatter: val => val.toFormat(2),
     cardTexturePng: '/assets/yfi-card-texture.png',
     bannerPng: '/assets/yfi-banner-texture.png',
     iconSvg: '/assets/yfi-icon.svg',
