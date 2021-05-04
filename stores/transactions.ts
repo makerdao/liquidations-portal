@@ -9,7 +9,7 @@ import TX, { TXMined, TXPending, TXInitialized, TXError } from '../types/transac
 type Hooks = {
   pending?: (txHash: string) => void;
   mined?: (txId: string, txHash: string) => void;
-  error?: () => void;
+  error?: (txId: string, error: string) => void;
 };
 
 type Store = {
@@ -130,7 +130,7 @@ const [useTransactionsStore, transactionsApi] = create<Store>((set, get) => ({
       },
       error: (_, error) => {
         get().setError(txId, error);
-        if (typeof hooks?.error === 'function') hooks.error();
+        if (typeof hooks?.error === 'function') hooks.error(txId, error);
       }
     });
 
