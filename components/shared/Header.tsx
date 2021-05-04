@@ -7,15 +7,15 @@ import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button';
 import { Icon } from '@makerdao/dai-ui-icons';
 
-import { COLLATERAL_ARRAY } from 'lib/constants';
+import { COLLATERAL_ARRAY, COLLATERAL_MAP } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
 import { useAuctions, useAccountVatBalance } from 'lib/hooks';
+import { bigNumToFormat } from 'lib/utils';
 import { useModalsStore } from 'stores/modals';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
 import AccountSelect from 'components/header/AccountSelect';
 import DepositWithdrawModal from './DepositWithdrawModal';
-import { COLLATERAL_MAP } from '../../lib/constants';
 
 const Header = (): JSX.Element => {
   const network = getNetwork();
@@ -140,7 +140,7 @@ const Header = (): JSX.Element => {
               onClick={toggleDepositWithdraw}
             >
               <Flex sx={{ alignItems: 'center' }}>
-                <Text>{vatBalance}</Text>
+                <Text>{bigNumToFormat(vatBalance, 'DAI')}</Text>
                 <Icon name="dai" size="16px" sx={{ mx: [0, 2] }} />
                 <Text sx={{ display: ['none', 'block'] }}>Deposit/Withdraw</Text>
               </Flex>

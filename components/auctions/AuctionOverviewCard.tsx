@@ -29,7 +29,6 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
     // initialCollateral,
     urn,
     collateralAvailable,
-    daiNeeded,
     dustLimit,
     startDate,
     endDate
@@ -41,7 +40,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
   const account = useAccountsStore(state => state.currentAccount);
   const address = account?.address;
 
-  const { symbol } = COLLATERAL_MAP[ilk];
+  const { symbol, bigNumFormatter } = COLLATERAL_MAP[ilk];
   const canBid = new BigNumber(vatBalance).gt(0);
 
   const auctionPrice = calculateColValue(new BigNumber(collateralAvailable), unitPrice);
@@ -128,8 +127,8 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
               </Text>
             </Flex>
             <Flex sx={{ flexDirection: 'column' }}>
-              <Text sx={{ color: 'textSecondary' }}>DAI needed</Text>
-              <Text>{daiNeeded} DAI</Text>
+              <Text sx={{ color: 'textSecondary' }}>{`DAI per ${symbol}`}</Text>
+              <Text>{bigNumFormatter(unitPrice)}</Text>
             </Flex>
           </Stack>
           <Flex sx={{ flexDirection: 'column', justifyContent: 'space-between' }}>

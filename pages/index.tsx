@@ -157,13 +157,14 @@ export default function LandingPage(): JSX.Element {
               <Grid gap={4} columns={[1, 3]}>
                 {COLLATERAL_ARRAY.map(type => {
                   const ilkAuctions = getAuctionsByIlk(activeAuctions, type.ilk);
-                  return (
-                    <Box key={type.ilk}>
-                      {auctionsLoading && <AuctionPreviewSkeleton />}
-                      {auctions && ilkAuctions.length > 0 && (
+                  return auctionsLoading ? (
+                    <AuctionPreviewSkeleton />
+                  ) : (
+                    auctions && ilkAuctions.length > 0 && (
+                      <Box key={type.ilk}>
                         <AuctionPreviewCard key={type.name} type={type} auctions={ilkAuctions} />
-                      )}
-                    </Box>
+                      </Box>
+                    )
                   );
                 })}
               </Grid>

@@ -4,7 +4,7 @@ import { jsx, SxStyleProp } from 'theme-ui';
 import { css } from '@theme-ui/css';
 import round from 'lodash/round';
 import Auction from 'types/auction';
-import { SupportedNetworks, ETHERSCAN_PREFIXES } from './constants';
+import { SupportedNetworks, ETHERSCAN_PREFIXES, COLLATERAL_MAP } from './constants';
 
 export const RAD = new BigNumber('1e45');
 export const WAD = new BigNumber('1e18');
@@ -171,7 +171,7 @@ export function transformAuctions(response: any): Auction[] {
   return response.map(resp => ({
     id: resp.saleId,
     active: resp.active,
-    ilk: 'LINK-A', // this won't come from response, will need to be specified based on req param
+    ilk: resp.ilk,
     initialCollateral: '1000', // can look up by `sales()`
     urn: resp.usr,
     collateralAvailable: resp.lot.toFixed(2),
@@ -209,4 +209,15 @@ export function getTotalCollateralAvailable(auctions: any[] = []): number {
     return acc.plus(num);
   }, new BigNumber(0));
   return total.toFixed(2);
+}
+
+export function bigNumToFormat(value: BigNumber, ilk: string): string {
+  if (!value) return '';
+  const cur = COLLATERAL_MAP[ilk];
+  switch (ilk) {
+    case 'DAI':
+      return value.toFormat(2);
+    default:
+      return cur.bigNumFormatter(value);
+  }
 }
