@@ -112,7 +112,7 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
           <Box>
             <Flex sx={{ justifyContent: 'space-between', my: 2 }}>
               <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
-              <Text>{vatBalance}</Text>
+              <Text>{bigNumToFormat(vatBalance, 'DAI')}</Text>
             </Flex>
             <Button
               sx={{ width: '100%' }}
