@@ -54,7 +54,7 @@ export default function Auctions(): JSX.Element | null {
   // TODO: add error state here if true
   if (!ilkData) return null;
 
-  const { bannerPng, iconSvg, ilk } = ilkData;
+  const { bannerPng, iconSvg, ilk, symbol } = ilkData;
 
   // TODO move to store so this can be reused
   const redeemCollateral = async ilk => {
@@ -131,7 +131,7 @@ export default function Auctions(): JSX.Element | null {
                       disabled={isTxProcessing}
                     >
                       <Text sx={{ fontSize: 2, color: 'textMuted', px: 2 }}>
-                        {vatGemBalance.toFormat(2)} LINK to Redeem
+                        {vatGemBalance.toFormat(2)} {symbol} to Redeem
                       </Text>
                     </Button>
                   )}
