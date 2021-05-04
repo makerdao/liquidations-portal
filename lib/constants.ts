@@ -25,6 +25,36 @@ type CollateralInfo = {
 };
 
 export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
+  'ETH-A': {
+    name: 'Ether',
+    ilk: 'ETH-A',
+    symbol: 'ETH',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/eth-card-texture.png',
+    bannerPng: '/assets/eth-banner-texture.png',
+    iconSvg: '/assets/eth-icon.svg',
+    colorIconName: 'etherCircleColor'
+  },
+  'ETH-B': {
+    name: 'Ether',
+    ilk: 'ETH-B',
+    symbol: 'ETH',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/eth-card-texture.png',
+    bannerPng: '/assets/eth-banner-texture.png',
+    iconSvg: '/assets/eth-icon.svg',
+    colorIconName: 'etherCircleColor'
+  },
+  'ETH-C': {
+    name: 'Ether',
+    ilk: 'ETH-C',
+    symbol: 'ETH',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/eth-card-texture.png',
+    bannerPng: '/assets/eth-banner-texture.png',
+    iconSvg: '/assets/eth-icon.svg',
+    colorIconName: 'etherCircleColor'
+  },
   'LINK-A': {
     name: 'chainlink',
     ilk: 'LINK-A',
@@ -44,6 +74,16 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     bannerPng: '/assets/yfi-banner-texture.png',
     iconSvg: '/assets/yfi-icon.svg',
     colorIconName: 'yfiCircleColor'
+  },
+  'WBTC-A': {
+    name: 'Wrapped Bitcoin',
+    ilk: 'WBTC-A',
+    symbol: 'WBTC',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/wbtc-card-texture.png',
+    bannerPng: '/assets/wbtc-banner-texture.png',
+    iconSvg: '/assets/wbtc-icon.svg',
+    colorIconName: 'wbtcCircleColor'
   }
 };
 
