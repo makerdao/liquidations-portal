@@ -64,7 +64,7 @@ const BidModal = ({
   ]);
   const hasIlkHopeApproval = hasIlkHope[ilk];
   const ilkHopePending = joinIlkHopePending[ilk];
-  const { symbol, colorIconName } = COLLATERAL_MAP[ilk];
+  const { symbol, colorIconName, decimals } = COLLATERAL_MAP[ilk];
 
   const updateValue = (e: { currentTarget: { value: string } }) => {
     const newValueStr = e.currentTarget.value;
@@ -81,7 +81,7 @@ const BidModal = ({
   const setMax = () => {
     // if the user's vat balance is greater than the value of the auction, use the auctionPrice
     const max = vatBalance.gt(auctionPrice) ? auctionPrice : vatBalance;
-    setValue(max.toFormat(18));
+    setValue(max.toFixed(decimals));
   };
 
   const insufficientFunds = vatBalance.lt(new BigNumber(value));

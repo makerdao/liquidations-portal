@@ -54,19 +54,21 @@ export default function Auctions(): JSX.Element | null {
   // TODO: add error state here if true
   if (!ilkData) return null;
 
-  const { bannerPng, iconSvg, ilk, symbol } = ilkData;
+  const { bannerPng, iconSvg, ilk, symbol, decimals } = ilkData;
 
   // TODO move to store so this can be reused
   const redeemCollateral = async ilk => {
     const maker = await getMaker();
-    const txCreator = () => maker.service('liquidation').exitGemFromAdapter(ilk, vatGemBalance);
+    // TODO this isn't working for WBTC
+    const txCreator = () =>
+      maker.service('liquidation').exitGemFromAdapter(ilk, new BigNumber(vatGemBalance.toFixed(decimals)));
 
-    await transactionsApi.getState().track(txCreator, `Exiting ${vatGemBalance.toFormat(18)} ${ilk}`, {
+    await transactionsApi.getState().track(txCreator, `Exiting ${vatGemBalance.toFormat(decimals)} ${ilk}`, {
       pending: () => {
         setIsTxProcessing(true);
       },
       mined: txId => {
-        transactionsApi.getState().setMessage(txId, `Exited ${vatGemBalance.toFormat(18)} ${ilk}`);
+        transactionsApi.getState().setMessage(txId, `Exited ${vatGemBalance.toFormat(decimals)} ${ilk}`);
         setIsTxProcessing(false);
       },
       error: () => {
