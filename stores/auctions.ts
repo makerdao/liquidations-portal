@@ -6,15 +6,15 @@ type Store = {
   submitBid: (ilk, id, amount, maxPrice, address) => Promise<void>;
   bidTxPending: boolean;
   bidTxSuccess: boolean;
-  bidTxError: boolean;
-  resetBidSuccess: () => void;
+  bidTxError: { txId: string; error: string; hash: string } | null;
+  resetBidState: () => void;
 };
 
 const [useAuctionStore] = create<Store>((set, get) => ({
   bidTxPending: false,
   bidTxSuccess: false,
-  bidTxError: false,
-  resetBidSuccess: () => set(state => ({ bidTxSuccess: false })),
+  bidTxError: null,
+  resetBidState: () => set(state => ({ bidTxSuccess: false, bidTxPending: false, bidTxError: null })),
   submitBid: async (ilk, id, amount, maxPrice, address) => {
     const maker = await getMaker();
 
@@ -25,7 +25,7 @@ const [useAuctionStore] = create<Store>((set, get) => ({
       pending: () => {
         set({
           bidTxPending: true,
-          bidTxError: false
+          bidTxError: null
         });
       },
       mined: txId => {
@@ -33,14 +33,13 @@ const [useAuctionStore] = create<Store>((set, get) => ({
         set({
           bidTxPending: false,
           bidTxSuccess: true,
-          bidTxError: false
+          bidTxError: null
         });
       },
-      // TODO: pass txId and error in bidTxError
-      error: (txId, error) => {
+      error: (txId, error, hash) => {
         set({
           bidTxPending: false,
-          bidTxError: true
+          bidTxError: { txId, error, hash }
         });
       }
     });

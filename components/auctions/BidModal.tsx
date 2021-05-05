@@ -1,6 +1,17 @@
 /** @jsx jsx */
 import { useState, useEffect } from 'react';
-import { Button, Flex, Text, jsx, Input, Heading, Divider, Close, Spinner } from 'theme-ui';
+import {
+  Button,
+  Flex,
+  Text,
+  jsx,
+  Input,
+  Link as ExternalLink,
+  Heading,
+  Divider,
+  Close,
+  Spinner
+} from 'theme-ui';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import BigNumber from 'bignumber.js';
 import { Icon } from '@makerdao/dai-ui-icons';
@@ -44,11 +55,11 @@ const BidModal = ({
   const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
   const { ilk, collateralAvailable, dustLimit, id } = auction;
   const account = useAccountsStore(state => state.currentAccount);
-  const [bidTxPending, bidTxSuccess, bidTxError, resetBidSuccess, submitBid] = useAuctionStore(state => [
+  const [bidTxPending, bidTxSuccess, bidTxError, resetBidState, submitBid] = useAuctionStore(state => [
     state.bidTxPending,
     state.bidTxSuccess,
     state.bidTxError,
-    state.resetBidSuccess,
+    state.resetBidState,
     state.submitBid
   ]);
   const hasIlkHopeApproval = hasIlkHope[ilk];
@@ -77,7 +88,7 @@ const BidModal = ({
   const disabled = !account || insufficientFunds || bidTxPending;
 
   const onClose = () => {
-    resetBidSuccess();
+    resetBidState();
     setValue('');
     onDismiss();
   };
@@ -123,8 +134,8 @@ const BidModal = ({
     return (
       <Flex sx={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
         <Icon name="bidWin" size={6} sx={{ mt: 2 }} />
-        <Text variant="smallHeading" sx={{ mt: 2, mb: 4 }}>
-          Bid Approved!
+        <Text variant="smallHeading" sx={{ mt: 2, mb: 4, fontWeight: 'bold' }}>
+          Bid approved!
         </Text>
         <Text color="textMuted" sx={{ mb: 2 }}>
           Collateral you received
@@ -142,6 +153,37 @@ const BidModal = ({
     );
   };
 
+  const ErrorContent = () => {
+    return (
+      <Flex sx={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+        <Icon name="warning" color="error" size={6} sx={{ mt: 2 }} />
+        <Text variant="smallHeading" sx={{ mt: 2, mb: 4, fontWeight: 'bold' }}>
+          Bid failed
+        </Text>
+        <Text sx={{ px: 4, mb: 5, textAlign: 'center' }}>
+          Something went wrong with your transaction. Please try again.
+        </Text>
+        <Text sx={{ px: 4, mb: 2, fontSize: 2, textAlign: 'center' }}>
+          View more details about the failed transaction.
+        </Text>
+        <ExternalLink href={`https://etherscan.io/tx/${bidTxError && bidTxError.hash}`} target="_blank">
+          <Text
+            variant="text"
+            sx={{
+              color: 'accentBlue',
+              fontSize: 2
+            }}
+          >
+            View on Etherscan <Icon name="arrowTopRight" size="2" color="accentBlue" />
+          </Text>
+        </ExternalLink>
+        <Button variant="primaryOutline" onClick={resetBidState} sx={{ width: '100%', mt: 4, mb: 2 }}>
+          Go back and try again
+        </Button>
+      </Flex>
+    );
+  };
+
   return (
     <DialogOverlay isOpen={showDialog} onDismiss={onClose}>
       <DialogContent
@@ -152,8 +194,11 @@ const BidModal = ({
             : { variant: 'dialog.desktop', animation: `${fadeIn} 350ms ease`, width: '450px' }
         }
       >
-        {bidTxSuccess ? (
-          <SuccessContent />
+        {bidTxSuccess || bidTxError ? (
+          <>
+            {bidTxSuccess && <SuccessContent />}
+            {bidTxError && <ErrorContent />}
+          </>
         ) : (
           <Flex sx={{ flexDirection: 'column', pb: 3 }}>
             <Flex sx={{ justifyContent: 'space-between' }}>
