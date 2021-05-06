@@ -155,10 +155,10 @@ export default function LandingPage(): JSX.Element {
                 </Heading>
               </Flex>
               <Grid gap={4} columns={[1, 3]}>
-                {COLLATERAL_ARRAY.map(type => {
+                {COLLATERAL_ARRAY.map((type, index) => {
                   const ilkAuctions = getAuctionsByIlk(activeAuctions, type.ilk);
                   return auctionsLoading ? (
-                    <AuctionPreviewSkeleton />
+                    <AuctionPreviewSkeleton key={index} />
                   ) : (
                     auctions && ilkAuctions.length > 0 && (
                       <Box key={type.ilk}>
