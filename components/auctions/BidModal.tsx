@@ -141,7 +141,7 @@ const BidModal = ({
           Collateral you received
         </Text>
         <Text variant="smallHeading" sx={{ mb: 5 }}>
-          {colAmount.toFormat(2)} {symbol}
+          {colAmount.gte(0.01) ? colAmount.toFormat(2) : colAmount.toFormat(4)} {symbol}
         </Text>
         <Button variant="outline" onClick={onClose} sx={{ width: '100%', mb: 3 }}>
           Bid on more auctions
@@ -304,7 +304,7 @@ const BidModal = ({
                   <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Collateral you receive</Text>
                   <Flex sx={{ justifyContent: 'space-between', width: '100%' }}>
                     <Text sx={{ fontWeight: 'bold', fontSize: 6, color: 'textMuted', pl: 2 }}>
-                      {colAmount.toFormat(2)}
+                      {colAmount.gte(0.01) ? colAmount.toFormat(2) : colAmount.toFormat(4)}
                     </Text>
                     <Flex sx={{ alignItems: 'center' }}>
                       <Icon size={30} name={colorIconName} />
