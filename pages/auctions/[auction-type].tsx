@@ -61,14 +61,20 @@ export default function Auctions(): JSX.Element | null {
     const maker = await getMaker();
     // TODO this isn't working for WBTC
     const txCreator = () =>
-      maker.service('liquidation').exitGemFromAdapter(ilk, new BigNumber(vatGemBalance.toFixed(decimals)));
-
-    await transactionsApi.getState().track(txCreator, `Exiting ${vatGemBalance.toFormat(decimals)} ${ilk}`, {
+      maker.service('liquidation').exitGemFromAdapter(
+        ilk,
+        //account for non-standard decimals, also subtract one wei to avoid any rounding issues
+        vatGemBalance
+          .times(Math.pow(10, decimals - 18))
+          .minus(Math.pow(10, -18))
+          .toFixed(18)
+      );
+    await transactionsApi.getState().track(txCreator, `Exiting ${vatGemBalance.toFormat(4)} ${ilk}`, {
       pending: () => {
         setIsTxProcessing(true);
       },
       mined: txId => {
-        transactionsApi.getState().setMessage(txId, `Exited ${vatGemBalance.toFormat(decimals)} ${ilk}`);
+        transactionsApi.getState().setMessage(txId, `Exited ${vatGemBalance.toFormat(4)} ${ilk}`);
         setIsTxProcessing(false);
       },
       error: () => {
@@ -118,7 +124,7 @@ export default function Auctions(): JSX.Element | null {
               <Stack gap={2}>
                 <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <Heading as="h2">{`Active ${type?.toUpperCase()} Auctions`}</Heading>
-                  {vatGemBalance && vatGemBalance.gt(0) && (
+                  {vatGemBalance && vatGemBalance.gt(Math.pow(10, -decimals)) && (
                     <Button
                       sx={{
                         variant: 'buttons.card',
@@ -133,7 +139,8 @@ export default function Auctions(): JSX.Element | null {
                       disabled={isTxProcessing}
                     >
                       <Text sx={{ fontSize: 2, color: 'textMuted', px: 2 }}>
-                        {vatGemBalance.toFormat(2)} {symbol} to Redeem
+                        {vatGemBalance.gte(0.01) ? vatGemBalance.toFormat(2) : vatGemBalance.toFormat(4)}{' '}
+                        {symbol} to Redeem
                       </Text>
                     </Button>
                   )}
