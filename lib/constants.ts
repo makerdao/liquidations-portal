@@ -70,17 +70,6 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     colorIconName: 'linkCircleColor',
     decimals: 18
   },
-  'YFI-A': {
-    name: 'yearn.finance',
-    ilk: 'YFI-A',
-    symbol: 'YFI',
-    bigNumFormatter: val => val.toFormat(2),
-    cardTexturePng: '/assets/yfi-card-texture.png',
-    bannerPng: '/assets/yfi-banner-texture.png',
-    iconSvg: '/assets/yfi-icon.svg',
-    colorIconName: 'yfiCircleColor',
-    decimals: 18
-  },
   'WBTC-A': {
     name: 'Wrapped Bitcoin',
     ilk: 'WBTC-A',
@@ -91,6 +80,17 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     iconSvg: '/assets/wbtc-icon.svg',
     colorIconName: 'wbtcCircleColor',
     decimals: 8
+  },
+  'YFI-A': {
+    name: 'yearn.finance',
+    ilk: 'YFI-A',
+    symbol: 'YFI',
+    bigNumFormatter: val => val.toFormat(2),
+    cardTexturePng: '/assets/yfi-card-texture.png',
+    bannerPng: '/assets/yfi-banner-texture.png',
+    iconSvg: '/assets/yfi-icon.svg',
+    colorIconName: 'yfiCircleColor',
+    decimals: 18
   }
 };
 

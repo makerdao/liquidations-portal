@@ -13,7 +13,9 @@ const NoActiveAuctions = ({ error }: Props): JSX.Element => (
       border: '2px dashed #D8E0E3',
       borderColor: error ? 'error' : '#D8E0E3',
       borderRadius: 'small',
-      p: 6
+      textAlign: 'center',
+      py: 6,
+      px: 4
     }}
   >
     <Box>
