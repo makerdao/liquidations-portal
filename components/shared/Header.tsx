@@ -190,9 +190,9 @@ const MobileMenu = ({ hide, network, router }) => {
           <NavLink>Home</NavLink>
         </Link>
         <Divider sx={{ width: '100%' }} />
-        <Link href={{ pathname: '/auctions', query: { network } }}>
-          <NavLink>Auctions</NavLink>
-        </Link>
+        <Text variant="links.nav" sx={{ fontSize: 6 }}>
+          Auctions
+        </Text>
         {COLLATERAL_ARRAY.map(type => {
           return (
             <Link key={type.key} href={{ pathname: `/auctions/${type.key}`, query: { network } }}>
