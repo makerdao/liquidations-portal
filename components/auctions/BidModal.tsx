@@ -264,7 +264,9 @@ const BidModal = ({
                       onChange={updateValue}
                       type="number"
                       // value={parseInt(value).toFixed(6)}
-                      value={value.length > 15 ? value.slice(0, 15) : value}
+                      value={
+                        typeof value === 'undefined' ? '0.00' : value.length > 15 ? value.slice(0, 15) : value
+                      }
                     />
                     <Flex sx={{ position: 'absolute', right: '30px', top: '13px', alignItems: 'center' }}>
                       <Button
