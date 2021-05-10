@@ -200,7 +200,7 @@ export function getDaiRequiredForAuctions(auctions: any[] = []): number {
     const num = new BigNumber(cur.daiNeeded);
     return acc.plus(num);
   }, new BigNumber(0));
-  return daiNeeded.toFixed(2);
+  return daiNeeded.toFormat(2);
 }
 
 export function getTotalCollateralAvailable(auctions: any[] = []): number {
@@ -208,7 +208,7 @@ export function getTotalCollateralAvailable(auctions: any[] = []): number {
     const num = cur.collateralAvailable;
     return acc.plus(num);
   }, new BigNumber(0));
-  return total.toFixed(2);
+  return total.toFormat(2);
 }
 
 export function bigNumToFormat(value: BigNumber, ilk: string): string {
