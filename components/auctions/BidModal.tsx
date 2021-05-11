@@ -17,7 +17,8 @@ import BigNumber from 'bignumber.js';
 import { Icon } from '@makerdao/dai-ui-icons';
 import Auction from 'types/auction';
 import { fadeIn, slideUp } from 'lib/keyframes';
-import { bigNumToFormat, calculateCollateralAmt } from 'lib/utils';
+import { bigNumToFormat, calculateCollateralAmt, getEtherscanLink } from 'lib/utils';
+import { getNetwork } from 'lib/maker';
 import useAuctionStore from 'stores/auctions';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
@@ -166,7 +167,10 @@ const BidModal = ({
         <Text sx={{ px: 4, mb: 2, fontSize: 2, textAlign: 'center' }}>
           View more details about the failed transaction.
         </Text>
-        <ExternalLink href={`https://etherscan.io/tx/${bidTxError && bidTxError.hash}`} target="_blank">
+        <ExternalLink
+          href={getEtherscanLink(getNetwork(), (bidTxError && bidTxError.hash) || '', 'transaction')}
+          target="_blank"
+        >
           <Text
             variant="text"
             sx={{
