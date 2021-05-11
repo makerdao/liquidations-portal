@@ -174,8 +174,8 @@ export function transformAuctions(response: any): Auction[] {
     ilk: resp.ilk,
     initialCollateral: '1000', // can look up by `sales()`
     urn: resp.usr,
-    collateralAvailable: resp.lot.toFixed(2),
-    daiNeeded: resp.tab.toFixed(2),
+    collateralAvailable: resp.lot,
+    daiNeeded: resp.tab,
     dustLimit: resp.chost,
     auctionPrice: '100', // TODO: calc max bid aka auction price
     startDate: resp.tic,
@@ -205,7 +205,7 @@ export function getDaiRequiredForAuctions(auctions: any[] = []): number {
 
 export function getTotalCollateralAvailable(auctions: any[] = []): number {
   const total = auctions.reduce((acc, cur) => {
-    const num = new BigNumber(cur.collateralAvailable);
+    const num = cur.collateralAvailable;
     return acc.plus(num);
   }, new BigNumber(0));
   return total.toFixed(2);

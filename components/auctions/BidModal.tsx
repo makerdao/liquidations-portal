@@ -219,7 +219,7 @@ const BidModal = ({
             <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', my: 2 }}>
               <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Collateral Available</Text>
               <Text>
-                {collateralAvailable} {symbol}
+                {bigNumToFormat(collateralAvailable, ilk)} {symbol}
               </Text>
             </Flex>
             <LogoBanner ilk={ilk} />

@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js';
 
 import Auction from 'types/auction';
 import { useAuctionStatus } from 'lib/hooks';
-import { calculateColValue, formatAddress } from 'lib/utils';
+import { bigNumToFormat, calculateColValue, formatAddress } from 'lib/utils';
 // import Tooltip from 'components/shared/Tooltip';
 import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
@@ -43,7 +43,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
   const { symbol, bigNumFormatter } = COLLATERAL_MAP[ilk];
   const canBid = new BigNumber(vatBalance).gt(0);
 
-  const auctionPrice = calculateColValue(new BigNumber(collateralAvailable), unitPrice);
+  const auctionPrice = calculateColValue(collateralAvailable, unitPrice);
 
   const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
 
@@ -123,7 +123,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
             <Flex sx={{ flexDirection: 'column' }}>
               <Text sx={{ color: 'textSecondary' }}>Collateral Available</Text>
               <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>
-                {collateralAvailable} {symbol.toUpperCase()}
+                {bigNumToFormat(collateralAvailable, ilk)} {symbol}
               </Text>
             </Flex>
             <Flex sx={{ flexDirection: 'column' }}>
