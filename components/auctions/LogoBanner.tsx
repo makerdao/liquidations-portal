@@ -20,7 +20,8 @@ const LogoBanner = ({ ilk }: Props): JSX.Element => {
           position: 'absolute',
           top: '50%',
           left: '50%',
-          transform: 'translate(-50%, -50%)'
+          transform: 'translate(-50%, -50%)',
+          width: '100%'
         }}
       >
         <Image

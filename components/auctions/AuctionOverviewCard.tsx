@@ -7,7 +7,8 @@ import BigNumber from 'bignumber.js';
 
 import Auction from 'types/auction';
 import { useAuctionStatus } from 'lib/hooks';
-import { bigNumToFormat, calculateColValue, formatAddress } from 'lib/utils';
+import { getNetwork } from 'lib/maker';
+import { bigNumToFormat, calculateColValue, formatAddress, getEtherscanLink } from 'lib/utils';
 // import Tooltip from 'components/shared/Tooltip';
 import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
@@ -105,7 +106,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
                 {/* <Tooltip label="Placeholder text explaining what Urn handler/Vault owner is"> */}
                 <Text sx={{ color: 'textSecondary' }}>Vault Owner</Text>
                 {/* </Tooltip> */}
-                <ExternalLink href={`https://etherscan.io/address/${urn}`} target="_blank">
+                <ExternalLink href={getEtherscanLink(getNetwork(), urn, 'address')} target="_blank">
                   <Text
                     variant="text"
                     sx={{
