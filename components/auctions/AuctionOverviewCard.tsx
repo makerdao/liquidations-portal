@@ -84,7 +84,10 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
                   })} UTC`}
                 </Text>
               </Flex>
-              <CountdownTimer endText="Auction ended" endDate={endDate} />
+              <CountdownTimer
+                endText={collateralAvailable.gt(0) ? 'Needs Reset' : 'Auction ended'}
+                endDate={endDate}
+              />
             </Stack>
           </Stack>
           <Stack gap={4}>
