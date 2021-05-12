@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Text, Button, Box, Image, Flex, jsx } from 'theme-ui';
 
 import Auction from 'types/auction';
-import { getAuctionsByIlk, getTotalCollateralAvailable } from 'lib/utils';
+import { bigNumToFormat, getAuctionsByIlk, getTotalCollateralAvailable } from 'lib/utils';
 
 type Props = {
   type?: any;
@@ -118,7 +118,7 @@ export default function AuctionPreviewCard({ type, auctions }: Props): JSX.Eleme
                 WebkitLineClamp: 2
               }}
             >
-              {totalCollateral}
+              {bigNumToFormat(totalCollateral, ilk)}
             </Text>
           </Box>
 
