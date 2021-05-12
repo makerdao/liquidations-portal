@@ -106,8 +106,7 @@ const BidModal = ({
           <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
           <Text>{bigNumToFormat(vatBalance, 'DAI')}</Text>
         </Flex>
-        {/* TODO: add button action */}
-        <Button variant="outline" onClick={() => console.log('go to deposit modal')} sx={{ mb: 4 }}>
+        <Button variant="outline" onClick={handleDepositMore} sx={{ mb: 4 }}>
           Deposit more DAI in the VAT
         </Button>
         <Button
