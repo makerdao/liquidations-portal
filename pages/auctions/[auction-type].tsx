@@ -3,8 +3,6 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { Button, Heading, Image, Text, Box, Flex, jsx } from 'theme-ui';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
-import BigNumber from 'bignumber.js';
 
 import SystemStatsSidebar from 'components/shared/SystemStatsSidebar';
 import ResourceBox from 'components/shared/ResourceBox';
@@ -16,8 +14,8 @@ import NoActiveAuctions from 'components/shared/NoActiveAuctions';
 import Stack from 'components/layouts/Stack';
 import { COLLATERAL_MAP } from 'lib/constants';
 import getMaker from 'lib/maker';
-import { getAuctionsByStatus, fromRad } from 'lib/utils';
-import { useAuctions, useVatGemBalance } from 'lib/hooks';
+import { getAuctionsByStatus } from 'lib/utils';
+import { useAuctions, useVatGemBalance, useAccountVatBalance } from 'lib/hooks';
 import { transactionsApi } from 'stores/transactions';
 import useAccountsStore from 'stores/accounts';
 
@@ -39,14 +37,7 @@ export default function Auctions(): JSX.Element | null {
 
   // balances
   const { data: vatGemBalance } = useVatGemBalance(ilkData?.ilk, address);
-
-  //TODO: AuctionOverview & BidModal expect a BigNumber, so this call will temporarily fetch the vatBalance for those components until we refactor useAccountVatBalance
-  const { data: vb } = useSWR<BigNumber>('/balances/vat', () =>
-    getMaker().then(maker =>
-      maker.service('smartContract').getContract('MCD_VAT').dai(maker.currentAddress())
-    )
-  );
-  const vatBalance = fromRad(vb);
+  const { data: vatBalance } = useAccountVatBalance(address);
 
   // tx processing state
   const [isTxProcessing, setIsTxProcessing] = useState(false);

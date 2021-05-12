@@ -77,7 +77,7 @@ const BidModal = ({
   useEffect(() => {
     const colAmt = calculateCollateralAmt(new BigNumber(value), unitPrice);
     setColAmount(colAmt);
-  }, [value]);
+  }, [value, unitPrice]);
 
   const setMax = () => {
     // if the user's vat balance is greater than the value of the auction, use the auctionPrice

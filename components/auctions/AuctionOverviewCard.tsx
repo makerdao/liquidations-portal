@@ -42,7 +42,15 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
   const address = account?.address;
 
   const { symbol, bigNumFormatter } = COLLATERAL_MAP[ilk];
-  const canBid = new BigNumber(vatBalance).gt(0);
+
+  // determine if auction needs reset
+  const now = Math.floor(new Date().getTime() / 1000);
+  const endTime = Math.floor(new Date(endDate).getTime() / 1000);
+  const timeLeft = endTime - now;
+  const requiresReset = timeLeft <= 0;
+
+  // check vat balance exists
+  const hasDai = vatBalance.gt(0);
 
   const auctionPrice = calculateColValue(collateralAvailable, unitPrice);
 
@@ -86,7 +94,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
                 </Text>
               </Flex>
               <CountdownTimer
-                endText={collateralAvailable.gt(0) ? 'Needs Reset' : 'Auction ended'}
+                endText={collateralAvailable.gt(0) ? 'Requires Reset' : 'Auction ended'}
                 endDate={endDate}
               />
             </Stack>
@@ -136,10 +144,10 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
             </Flex>
           </Stack>
           <Flex sx={{ flexDirection: 'column', justifyContent: 'space-between' }}>
-            <Button disabled={!canBid} onClick={() => setShowDialog(true)}>
-              {address ? 'Place a bid' : 'Connect to bid'}
+            <Button disabled={!hasDai || requiresReset} onClick={() => setShowDialog(true)}>
+              {address ? (requiresReset ? 'Auction requires reset' : 'Place a bid') : 'Connect to bid'}
             </Button>
-            {address && !canBid && (
+            {address && !hasDai && (
               <Button
                 variant="textual"
                 sx={{ color: 'primary', fontSize: 1, p: 0 }}
