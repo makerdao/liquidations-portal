@@ -267,7 +267,6 @@ const BidModal = ({
                       placeholder="0.00"
                       onChange={updateValue}
                       type="number"
-                      // value={parseInt(value).toFixed(6)}
                       value={
                         typeof value === 'undefined' ? '0.00' : value.length > 15 ? value.slice(0, 15) : value
                       }
@@ -281,7 +280,6 @@ const BidModal = ({
                           p: 0,
                           cursor: 'pointer'
                         }}
-                        // TODO fix max calc
                         onClick={setMax}
                       >
                         Set Max
@@ -295,7 +293,7 @@ const BidModal = ({
                   <Flex sx={{ justifyContent: 'space-between', mt: 2, px: 2 }}>
                     <Flex sx={{ flexDirection: 'column' }}>
                       <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Dust limit</Text>
-                      <Text sx={{ color: 'textMuted', fontSize: 2 }}>{dustLimit.toFixed(0)} DAI</Text>
+                      <Text sx={{ color: 'textMuted', fontSize: 2 }}>{dustLimit.toFormat(2)} DAI</Text>
                     </Flex>
                     <Flex sx={{ flexDirection: 'column' }}>
                       <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Auction price</Text>

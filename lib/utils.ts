@@ -195,20 +195,20 @@ export function getAuctionsByIlk(auctions: any[] = [], ilk: string): any[] {
   return auctions.filter(auction => auction.ilk === ilk);
 }
 
-export function getDaiRequiredForAuctions(auctions: any[] = []): number {
+export function getDaiRequiredForAuctions(auctions: any[] = []): BigNumber {
   const daiNeeded = auctions.reduce((acc, cur) => {
     const num = new BigNumber(cur.daiNeeded);
     return acc.plus(num);
   }, new BigNumber(0));
-  return daiNeeded.toFixed(2);
+  return daiNeeded;
 }
 
-export function getTotalCollateralAvailable(auctions: any[] = []): number {
+export function getTotalCollateralAvailable(auctions: any[] = []): BigNumber {
   const total = auctions.reduce((acc, cur) => {
     const num = cur.collateralAvailable;
     return acc.plus(num);
   }, new BigNumber(0));
-  return total.toFixed(2);
+  return total;
 }
 
 export function bigNumToFormat(value: BigNumber, ilk: string): string {
