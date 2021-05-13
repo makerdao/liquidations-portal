@@ -13,7 +13,7 @@ export default function Education({ source }): JSX.Element {
   return (
     <div>
       <Head>
-        <title>Maker liquidations Portal – Education</title>
+        <title>Maker Liquidations Portal – Education</title>
       </Head>
 
       <PrimaryLayout
