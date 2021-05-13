@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { Button, Heading, Image, Text, Box, Flex, jsx } from 'theme-ui';
 import { useRouter } from 'next/router';
+import BigNumber from 'bignumber.js';
 
 import SystemStatsSidebar from 'components/shared/SystemStatsSidebar';
 import ResourceBox from 'components/shared/ResourceBox';
@@ -37,7 +38,7 @@ export default function Auctions(): JSX.Element | null {
 
   // balances
   const { data: vatGemBalance } = useVatGemBalance(ilkData?.ilk, address);
-  const { data: vatBalance } = useAccountVatBalance(address);
+  const { data: vatBalance = new BigNumber(0) } = useAccountVatBalance(address);
 
   // tx processing state
   const [isTxProcessing, setIsTxProcessing] = useState(false);
