@@ -77,7 +77,7 @@ export default function Auctions(): JSX.Element | null {
   return (
     <div>
       <Head>
-        <title>Maker Liquidation Portal - Auctions</title>
+        <title>Maker Liquidations Portal - Auctions</title>
       </Head>
 
       {/* full width banner image */}

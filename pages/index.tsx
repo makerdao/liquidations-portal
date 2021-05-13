@@ -25,7 +25,7 @@ export default function LandingPage(): JSX.Element {
   return (
     <div>
       <Head>
-        <title>Maker Liquidation Portal</title>
+        <title>Maker Liquidations Portal</title>
       </Head>
 
       {/* full width banner image */}
