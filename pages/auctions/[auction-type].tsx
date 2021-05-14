@@ -144,8 +144,8 @@ export default function Auctions(): JSX.Element | null {
                     activeAuctions.map(
                       auction =>
                         auction.ilk === ilk && (
-                          <Box>
-                            <AuctionOverviewCard key={auction.id} auction={auction} vatBalance={vatBalance} />
+                          <Box key={auction.id}>
+                            <AuctionOverviewCard auction={auction} vatBalance={vatBalance} />
                           </Box>
                         )
                     )

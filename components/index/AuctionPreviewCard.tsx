@@ -80,7 +80,7 @@ export default function AuctionPreviewCard({ type, auctions }: Props): JSX.Eleme
             <Image
               src={iconSvg}
               sx={{
-                height: 44,
+                height: 38,
                 maxWidth: 'none'
               }}
             />
@@ -88,7 +88,7 @@ export default function AuctionPreviewCard({ type, auctions }: Props): JSX.Eleme
               sx={{
                 pl: 3,
                 color: 'background',
-                fontSize: 8,
+                fontSize: '38px',
                 fontWeight: 'semiBold'
               }}
             >
