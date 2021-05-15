@@ -175,8 +175,8 @@ export default function LandingPage(): JSX.Element {
                   })
                 )}
               </Grid>
-              {((auctions && activeAuctions.length === 0) || auctionsError) && (
-                <NoActiveAuctions error={auctionsError} />
+              {((auctions && activeAuctions.length === 0) || (!auctions && auctionsError)) && (
+                <NoActiveAuctions error={!auctions && auctionsError ? auctionsError : undefined} />
               )}
             </Stack>
             {auctions && inactiveAuctions.length > 0 && (
