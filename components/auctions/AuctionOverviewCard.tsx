@@ -7,7 +7,8 @@ import BigNumber from 'bignumber.js';
 
 import Auction from 'types/auction';
 import { useAuctionStatus } from 'lib/hooks';
-import { calculateColValue, formatAddress } from 'lib/utils';
+import { getNetwork } from 'lib/maker';
+import { bigNumToFormat, calculateColValue, formatAddress, getEtherscanLink } from 'lib/utils';
 // import Tooltip from 'components/shared/Tooltip';
 import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
@@ -41,9 +42,17 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
   const address = account?.address;
 
   const { symbol, bigNumFormatter } = COLLATERAL_MAP[ilk];
-  const canBid = new BigNumber(vatBalance).gt(0);
 
-  const auctionPrice = calculateColValue(new BigNumber(collateralAvailable), unitPrice);
+  // determine if auction needs reset
+  const now = Math.floor(new Date().getTime() / 1000);
+  const endTime = Math.floor(new Date(endDate).getTime() / 1000);
+  const timeLeft = endTime - now;
+  const requiresReset = timeLeft <= 0;
+
+  // check vat balance exists
+  const hasDai = vatBalance.gt(0);
+
+  const auctionPrice = calculateColValue(collateralAvailable, unitPrice);
 
   const toggleDepositWithdraw = useModalsStore(state => state.toggleDepositWithdraw);
 
@@ -84,7 +93,10 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
                   })} UTC`}
                 </Text>
               </Flex>
-              <CountdownTimer endText="Auction ended" endDate={endDate} />
+              <CountdownTimer
+                endText={collateralAvailable.gt(0) ? 'Requires Reset' : 'Auction ended'}
+                endDate={endDate}
+              />
             </Stack>
           </Stack>
           <Stack gap={4}>
@@ -102,7 +114,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
                 {/* <Tooltip label="Placeholder text explaining what Urn handler/Vault owner is"> */}
                 <Text sx={{ color: 'textSecondary' }}>Vault Owner</Text>
                 {/* </Tooltip> */}
-                <ExternalLink href={`https://etherscan.io/address/${urn}`} target="_blank">
+                <ExternalLink href={getEtherscanLink(getNetwork(), urn, 'address')} target="_blank">
                   <Text
                     variant="text"
                     sx={{
@@ -123,7 +135,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
             <Flex sx={{ flexDirection: 'column' }}>
               <Text sx={{ color: 'textSecondary' }}>Collateral Available</Text>
               <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>
-                {collateralAvailable} {symbol.toUpperCase()}
+                {bigNumToFormat(collateralAvailable, ilk)} {symbol}
               </Text>
             </Flex>
             <Flex sx={{ flexDirection: 'column' }}>
@@ -132,10 +144,10 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
             </Flex>
           </Stack>
           <Flex sx={{ flexDirection: 'column', justifyContent: 'space-between' }}>
-            <Button disabled={!canBid} onClick={() => setShowDialog(true)}>
-              {address ? 'Place a bid' : 'Connect to bid'}
+            <Button disabled={!hasDai || requiresReset} onClick={() => setShowDialog(true)}>
+              {address ? (requiresReset ? 'Auction requires reset' : 'Place a bid') : 'Connect to bid'}
             </Button>
-            {address && !canBid && (
+            {address && !hasDai && (
               <Button
                 variant="textual"
                 sx={{ color: 'primary', fontSize: 1, p: 0 }}
@@ -145,11 +157,11 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
               </Button>
             )}
             <Flex sx={{ justifyContent: 'space-between' }}>
-              <Flex sx={{ flexDirection: 'column' }}>
+              <Flex sx={{ flexDirection: ['row', 'column'] }}>
                 <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
-                <Text>{dustLimit.toFixed(0)} DAI</Text>
+                <Text>{dustLimit.toFormat(2)} DAI</Text>
               </Flex>
-              <Flex sx={{ flexDirection: 'column' }}>
+              <Flex sx={{ flexDirection: ['row', 'column'] }}>
                 <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
                 <Text>{auctionPrice.toFormat(2)} DAI</Text>
               </Flex>

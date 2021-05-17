@@ -13,10 +13,13 @@ export default function Education({ source }): JSX.Element {
   return (
     <div>
       <Head>
-        <title>Maker liquidations Portal – Education</title>
+        <title>Maker Liquidations Portal – Education</title>
       </Head>
 
-      <PrimaryLayout shortenFooter={true} sx={{ maxWidth: [null, null, null, 'page', 'dashboard'] }}>
+      <PrimaryLayout
+        shortenFooter={true}
+        sx={{ maxWidth: [null, null, null, 'page', 'dashboard'], img: { maxWidth: ['100%', null] } }}
+      >
         {content}
       </PrimaryLayout>
     </div>

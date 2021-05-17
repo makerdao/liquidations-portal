@@ -34,7 +34,7 @@ export default function SystemStats(): JSX.Element {
     },
     {
       title: 'Dai required for Auctions',
-      format: val => `${getDaiRequiredForAuctions(val)} DAI`,
+      format: val => `${getDaiRequiredForAuctions(val).toFormat(0)} DAI`,
       minWidth: 185
       // tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
     },

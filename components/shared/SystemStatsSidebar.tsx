@@ -37,7 +37,7 @@ export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
     },
     {
       title: 'Dai required for Auctions',
-      format: val => `${getDaiRequiredForAuctions(val)} DAI`
+      format: val => `${getDaiRequiredForAuctions(val).toFormat(0)} DAI`
       // tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
     },
     {

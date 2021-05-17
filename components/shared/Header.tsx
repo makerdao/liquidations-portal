@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import BigNumber from 'bignumber.js';
 import { Button, Flex, NavLink, Container, Close, Box, IconButton, Divider, jsx, Text } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Menu, MenuButton, MenuItem, MenuList } from '@reach/menu-button';
@@ -28,7 +29,7 @@ const Header = (): JSX.Element => {
   const account = useAccountsStore(state => state.currentAccount);
   const address = account?.address;
   const initApprovals = useApprovalsStore(state => state.initApprovals);
-  const { data: vatBalance } = useAccountVatBalance(address);
+  const { data: vatBalance = new BigNumber(0) } = useAccountVatBalance(address);
 
   useEffect(() => {
     if (!address) return;

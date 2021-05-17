@@ -25,7 +25,7 @@ export default function LandingPage(): JSX.Element {
   return (
     <div>
       <Head>
-        <title>Maker Liquidation Portal</title>
+        <title>Maker Liquidations Portal</title>
       </Head>
 
       {/* full width banner image */}
@@ -155,21 +155,28 @@ export default function LandingPage(): JSX.Element {
                 </Heading>
               </Flex>
               <Grid gap={4} columns={[1, 3]}>
-                {COLLATERAL_ARRAY.map((type, index) => {
-                  const ilkAuctions = getAuctionsByIlk(activeAuctions, type.ilk);
-                  return auctionsLoading ? (
-                    <AuctionPreviewSkeleton key={index} />
-                  ) : (
-                    auctions && ilkAuctions.length > 0 && (
-                      <Box key={type.ilk}>
-                        <AuctionPreviewCard key={type.name} type={type} auctions={ilkAuctions} />
-                      </Box>
-                    )
-                  );
-                })}
+                {auctionsLoading ? (
+                  <>
+                    <AuctionPreviewSkeleton />
+                    <AuctionPreviewSkeleton />
+                    <AuctionPreviewSkeleton />
+                  </>
+                ) : (
+                  COLLATERAL_ARRAY.map(type => {
+                    const ilkAuctions = getAuctionsByIlk(activeAuctions, type.ilk);
+                    return (
+                      auctions &&
+                      ilkAuctions.length > 0 && (
+                        <Box key={type.ilk}>
+                          <AuctionPreviewCard key={type.name} type={type} auctions={ilkAuctions} />
+                        </Box>
+                      )
+                    );
+                  })
+                )}
               </Grid>
-              {((auctions && activeAuctions.length === 0) || auctionsError) && (
-                <NoActiveAuctions error={auctionsError} />
+              {((auctions && activeAuctions.length === 0) || (!auctions && auctionsError)) && (
+                <NoActiveAuctions error={!auctions && auctionsError ? auctionsError : undefined} />
               )}
             </Stack>
             {auctions && inactiveAuctions.length > 0 && (

@@ -17,7 +17,8 @@ import BigNumber from 'bignumber.js';
 import { Icon } from '@makerdao/dai-ui-icons';
 import Auction from 'types/auction';
 import { fadeIn, slideUp } from 'lib/keyframes';
-import { bigNumToFormat, calculateCollateralAmt } from 'lib/utils';
+import { bigNumToFormat, calculateCollateralAmt, getEtherscanLink } from 'lib/utils';
+import { getNetwork } from 'lib/maker';
 import useAuctionStore from 'stores/auctions';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
@@ -76,7 +77,7 @@ const BidModal = ({
   useEffect(() => {
     const colAmt = calculateCollateralAmt(new BigNumber(value), unitPrice);
     setColAmount(colAmt);
-  }, [value]);
+  }, [value, unitPrice]);
 
   const setMax = () => {
     // if the user's vat balance is greater than the value of the auction, use the auctionPrice
@@ -105,8 +106,7 @@ const BidModal = ({
           <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
           <Text>{bigNumToFormat(vatBalance, 'DAI')}</Text>
         </Flex>
-        {/* TODO: add button action */}
-        <Button variant="outline" onClick={() => console.log('go to deposit modal')} sx={{ mb: 4 }}>
+        <Button variant="outline" onClick={handleDepositMore} sx={{ mb: 4 }}>
           Deposit more DAI in the VAT
         </Button>
         <Button
@@ -166,7 +166,10 @@ const BidModal = ({
         <Text sx={{ px: 4, mb: 2, fontSize: 2, textAlign: 'center' }}>
           View more details about the failed transaction.
         </Text>
-        <ExternalLink href={`https://etherscan.io/tx/${bidTxError && bidTxError.hash}`} target="_blank">
+        <ExternalLink
+          href={getEtherscanLink(getNetwork(), (bidTxError && bidTxError.hash) || '', 'transaction')}
+          target="_blank"
+        >
           <Text
             variant="text"
             sx={{
@@ -219,7 +222,7 @@ const BidModal = ({
             <Flex sx={{ justifyContent: 'space-between', alignItems: 'flex-end', my: 2 }}>
               <Text sx={{ fontSize: 3, fontWeight: 'semiBold' }}>Collateral Available</Text>
               <Text>
-                {collateralAvailable} {symbol}
+                {bigNumToFormat(collateralAvailable, ilk)} {symbol}
               </Text>
             </Flex>
             <LogoBanner ilk={ilk} />
@@ -263,8 +266,9 @@ const BidModal = ({
                       placeholder="0.00"
                       onChange={updateValue}
                       type="number"
-                      // value={parseInt(value).toFixed(6)}
-                      value={value.length > 15 ? value.slice(0, 15) : value}
+                      value={
+                        typeof value === 'undefined' ? '0.00' : value.length > 15 ? value.slice(0, 15) : value
+                      }
                     />
                     <Flex sx={{ position: 'absolute', right: '30px', top: '13px', alignItems: 'center' }}>
                       <Button
@@ -275,7 +279,6 @@ const BidModal = ({
                           p: 0,
                           cursor: 'pointer'
                         }}
-                        // TODO fix max calc
                         onClick={setMax}
                       >
                         Set Max
@@ -289,7 +292,7 @@ const BidModal = ({
                   <Flex sx={{ justifyContent: 'space-between', mt: 2, px: 2 }}>
                     <Flex sx={{ flexDirection: 'column' }}>
                       <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Dust limit</Text>
-                      <Text sx={{ color: 'textMuted', fontSize: 2 }}>{dustLimit.toFixed(0)} DAI</Text>
+                      <Text sx={{ color: 'textMuted', fontSize: 2 }}>{dustLimit.toFormat(2)} DAI</Text>
                     </Flex>
                     <Flex sx={{ flexDirection: 'column' }}>
                       <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Auction price</Text>
