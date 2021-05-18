@@ -18,13 +18,14 @@ import { Icon } from '@makerdao/dai-ui-icons';
 import Auction from 'types/auction';
 import { fadeIn, slideUp } from 'lib/keyframes';
 import { bigNumToFormat, calculateCollateralAmt, getEtherscanLink } from 'lib/utils';
+import { COLLATERAL_MAP, TOOLTIP_DICT } from 'lib/constants';
 import { getNetwork } from 'lib/maker';
 import useAuctionStore from 'stores/auctions';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
 import { useModalsStore } from 'stores/modals';
+import Tooltip from 'components/shared/Tooltip';
 import LogoBanner from './LogoBanner';
-import { COLLATERAL_MAP } from 'lib/constants';
 
 type Props = {
   showDialog: boolean;
@@ -103,7 +104,9 @@ const BidModal = ({
     return (
       <Flex sx={{ flexDirection: 'column' }}>
         <Flex sx={{ justifyContent: 'space-between', my: 3 }}>
-          <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
+          <Tooltip sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }} label={TOOLTIP_DICT.DAI_IN_VAT}>
+            <Text sx={{ fontWeight: 'semiBold' }}>Dai in the VAT</Text>
+          </Tooltip>
           <Text>{bigNumToFormat(vatBalance, 'DAI')}</Text>
         </Flex>
         <Button variant="outline" onClick={handleDepositMore} sx={{ mb: 4 }}>
@@ -242,7 +245,12 @@ const BidModal = ({
                         Deposit
                       </Button>
                       <Flex sx={{ alignItems: 'center' }}>
-                        <Text sx={{ fontSize: 2, color: 'textSecondary' }}>DAI in the VAT:</Text>
+                        <Tooltip
+                          sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }}
+                          label={TOOLTIP_DICT.DAI_IN_VAT}
+                        >
+                          <Text sx={{ fontSize: 2, color: 'textSecondary' }}>DAI in the VAT:</Text>
+                        </Tooltip>
                         <Text sx={{ ml: 2 }}>{bigNumToFormat(vatBalance, 'DAI')}</Text>
                       </Flex>
                     </Flex>
@@ -291,11 +299,21 @@ const BidModal = ({
                   </Flex>
                   <Flex sx={{ justifyContent: 'space-between', mt: 2, px: 2 }}>
                     <Flex sx={{ flexDirection: 'column' }}>
-                      <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Dust limit</Text>
+                      <Tooltip
+                        sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }}
+                        label={TOOLTIP_DICT.DUST_LIMIT}
+                      >
+                        <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Dust limit</Text>
+                      </Tooltip>
                       <Text sx={{ color: 'textMuted', fontSize: 2 }}>{dustLimit.toFormat(2)} DAI</Text>
                     </Flex>
                     <Flex sx={{ flexDirection: 'column' }}>
-                      <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Auction price</Text>
+                      <Tooltip
+                        sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }}
+                        label={TOOLTIP_DICT.AUCTION_PRICE}
+                      >
+                        <Text sx={{ color: 'textSecondary', fontSize: 2 }}>Auction price</Text>
+                      </Tooltip>
                       <Text sx={{ color: 'textMuted', fontSize: 2, textAlign: 'right' }}>
                         {auctionPrice.toFormat(2)} DAI
                       </Text>

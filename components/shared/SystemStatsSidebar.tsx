@@ -4,11 +4,12 @@ import { Icon } from '@makerdao/dai-ui-icons';
 import Skeleton from 'react-loading-skeleton';
 
 import { getVulcanizeParam } from 'lib/maker';
-import Stack from 'components/layouts/Stack';
-import Tooltip from 'components/shared/Tooltip';
-import SystemStat from 'types/systemStat';
 import { getAuctionCountByStatus, getDaiRequiredForAuctions } from 'lib/utils';
 import { useSystemStatsSidebar } from 'lib/hooks';
+import { TOOLTIP_DICT } from 'lib/constants';
+import SystemStat from 'types/systemStat';
+import Stack from 'components/layouts/Stack';
+import Tooltip from 'components/shared/Tooltip';
 
 type Props = {
   ilk: string;
@@ -22,28 +23,28 @@ export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
   const fieldMap: SystemStat[] = [
     {
       title: 'Undercollateralized Vaults',
-      format: val => val.length
-      // tooltip: 'This is placeholder text explaining what Undercollateralized Vaults represents'
+      format: val => val.length,
+      tooltip: TOOLTIP_DICT.UNDERCOLLATERALIZED_VAULTS
     },
     {
       title: 'Active Auctions',
-      format: val => getAuctionCountByStatus(val, true)
-      // tooltip: 'This is placeholder text explaining what Active Auctions represents'
+      format: val => getAuctionCountByStatus(val, true).toString(),
+      tooltip: TOOLTIP_DICT.ACTIVE_AUCTIONS
     },
     {
       title: 'Inactive Auctions',
-      format: val => (usingVulcanize ? getAuctionCountByStatus(val, false) : '--')
-      // tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
+      format: val => (usingVulcanize ? getAuctionCountByStatus(val, false).toString() : '--'),
+      tooltip: TOOLTIP_DICT.INACTIVE_AUCTIONS
     },
     {
       title: 'Dai required for Auctions',
-      format: val => `${getDaiRequiredForAuctions(val).toFormat(0)} DAI`
-      // tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
+      format: val => `${getDaiRequiredForAuctions(val).toFormat(0)} DAI`,
+      tooltip: TOOLTIP_DICT.DAI_REQUIRED
     },
     {
       title: 'Limit per collateral available',
-      format: val => `${val && val.diff ? val.diff.toFormat(2) : '--'} DAI`
-      // tooltip: 'This is placeholder text explaining what Limit per collateral available represents'
+      format: val => `${val && val.diff ? val.diff.toFormat(2) : '--'} DAI`,
+      tooltip: TOOLTIP_DICT.MAX_AVAILABLE
     }
   ];
 
@@ -94,7 +95,7 @@ export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
             {statData.map(stat => (
               <Flex key={stat.title} sx={{ justifyContent: 'space-between', flexDirection: 'row' }}>
                 {stat.tooltip ? (
-                  <Tooltip label={stat.tooltip}>
+                  <Tooltip sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }} label={stat.tooltip}>
                     <Text sx={{ fontSize: 3, color: 'textSecondary' }}>{stat.title}</Text>
                   </Tooltip>
                 ) : (

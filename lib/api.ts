@@ -1,6 +1,5 @@
 import { stringToBytes } from '@makerdao/dai-plugin-mcd/dist/utils';
 import getMaker from 'lib/maker';
-import Auction from 'types/auction';
 import BigNumber from 'bignumber.js';
 import { COLLATERAL_MAP } from 'lib/constants';
 

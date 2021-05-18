@@ -208,3 +208,15 @@ export const COLLATERAL_ARRAY = Object.keys(COLLATERAL_MAP).map(currency => ({
   ...COLLATERAL_MAP[currency],
   key: currency
 }));
+
+export const TOOLTIP_DICT = {
+  ACTIVE_AUCTIONS: 'The number of active auctions in which you can place a bid.',
+  INACTIVE_AUCTIONS: 'The number of auctions that ended in which you can no longer place a bid.',
+  UNDERCOLLATERALIZED_VAULTS: 'The number of undercollateralized vaults that need to be initiated.',
+  DAI_REQUIRED: 'The amount of DAI required to purchase available auction collateral',
+  MAX_AVAILABLE: 'Max amount of DAI that can be auctioned.',
+  DAI_IN_VAT:
+    'The VAT contract is the core vault engine of the Maker Protocol and manages DAI accounting. Depositing DAI into this contract and approving permissions is necessary in order to participate in auctions.',
+  DUST_LIMIT: 'Minimum vault debt.',
+  AUCTION_PRICE: 'The maximum acceptable price.'
+};

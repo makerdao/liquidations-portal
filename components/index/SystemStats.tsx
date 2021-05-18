@@ -6,9 +6,10 @@ import Skeleton from 'react-loading-skeleton';
 import { getVulcanizeParam } from 'lib/maker';
 import { getAuctionCountByStatus, getDaiRequiredForAuctions } from 'lib/utils';
 import { useSystemStats } from 'lib/hooks';
-import Tooltip from 'components/shared/Tooltip';
+import { TOOLTIP_DICT } from 'lib/constants';
 import SystemStat from 'types/systemStat';
-import Stack from '../layouts/Stack';
+import Tooltip from 'components/shared/Tooltip';
+import Stack from 'components/layouts/Stack';
 
 export default function SystemStats(): JSX.Element {
   const { data, error } = useSystemStats();
@@ -19,30 +20,30 @@ export default function SystemStats(): JSX.Element {
   const fieldMap: SystemStat[] = [
     {
       title: 'Active Auctions',
-      format: val => getAuctionCountByStatus(val, true)
-      // tooltip: 'This is placeholder text explaining what Active Auctions represents'
+      format: val => getAuctionCountByStatus(val, true).toString(),
+      tooltip: TOOLTIP_DICT.ACTIVE_AUCTIONS
     },
     {
       title: 'Inactive Auctions',
-      format: val => (usingVulcanize ? getAuctionCountByStatus(val, false) : '--')
-      // tooltip: 'This is placeholder text explaining what Inactive Auctions represents'
+      format: val => (usingVulcanize ? getAuctionCountByStatus(val, false).toString() : '--'),
+      tooltip: TOOLTIP_DICT.INACTIVE_AUCTIONS
     },
     {
       title: 'Vaults requiring kick',
-      format: val => val.length
-      // tooltip: 'This is placeholder text explaining what it means when vaults need to be kicked'
+      format: val => val.length,
+      tooltip: TOOLTIP_DICT.UNDERCOLLATERALIZED_VAULTS
     },
     {
       title: 'Dai required for Auctions',
       format: val => `${getDaiRequiredForAuctions(val).toFormat(0)} DAI`,
-      minWidth: 185
-      // tooltip: 'This is placeholder text explaining what Dai required for Auctions represents'
+      minWidth: 185,
+      tooltip: TOOLTIP_DICT.DAI_REQUIRED
     },
     {
       title: 'Global max available',
       format: val => `${val.toFormat(0)} DAI`,
-      minWidth: 205
-      // tooltip: 'This is placeholder text explaining what Global max available represents'
+      minWidth: 205,
+      tooltip: TOOLTIP_DICT.MAX_AVAILABLE
     }
   ];
 
