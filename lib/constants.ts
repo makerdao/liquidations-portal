@@ -202,6 +202,105 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     colorIconName: 'zrxCircleColor',
     decimals: 18
   }
+  // 'UNIV2DAIETH-A': {
+  //   name: 'UNIV2DAIETH LP',
+  //   ilk: 'UNIV2DAIETH-A',
+  //   symbol: 'UNIV2DAIETH',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/zrx-card-texture.png',
+  //   bannerPng: '/assets/zrx-banner-texture.png',
+  //   iconSvg: '/assets/zrx-icon.svg',
+  //   colorIconName: 'zrxCircleColor',
+  //   decimals: 18
+  // },
+  // 'UNIV2USDCETH-A': {
+  //   name: 'UNIV2USDCETH LP',
+  //   ilk: 'UNIV2USDCETH-A',
+  //   symbol: 'UNIV2USDCETH',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/zrx-card-texture.png',
+  //   bannerPng: '/assets/zrx-banner-texture.png',
+  //   iconSvg: '/assets/zrx-icon.svg',
+  //   colorIconName: 'zrxCircleColor',
+  //   decimals: 18
+  // },
+  // 'UNIV2ETHUSDT-A': {
+  //   name: 'UNIV2ETHUSDT LP',
+  //   ilk: 'UNIV2ETHUSDT-A',
+  //   symbol: 'UNIV2ETHUSDT',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/zrx-card-texture.png',
+  //   bannerPng: '/assets/zrx-banner-texture.png',
+  //   iconSvg: '/assets/zrx-icon.svg',
+  //   colorIconName: 'zrxCircleColor',
+  //   decimals: 18
+  // },
+  // 'UNIV2WBTCDAI-A': {
+  //   name: 'UNIV2WBTCDAI LP',
+  //   ilk: 'UNIV2WBTCDAI-A',
+  //   symbol: 'UNIV2WBTCDAI',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/zrx-card-texture.png',
+  //   bannerPng: '/assets/zrx-banner-texture.png',
+  //   iconSvg: '/assets/zrx-icon.svg',
+  //   colorIconName: 'zrxCircleColor',
+  //   decimals: 18
+  // },
+  // 'UNIV2WBTCETH-A': {
+  //   name: 'UNIV2WBTCETH LP',
+  //   ilk: 'UNIV2WBTCETH-A',
+  //   symbol: 'UNIV2WBTCETH',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/zrx-card-texture.png',
+  //   bannerPng: '/assets/zrx-banner-texture.png',
+  //   iconSvg: '/assets/zrx-icon.svg',
+  //   colorIconName: 'zrxCircleColor',
+  //   decimals: 18
+  // },
+  // 'UNIV2LINKETH-A': {
+  //   name: 'UNIV2LINKETH LP',
+  //   ilk: 'UNIV2LINKETH-A',
+  //   symbol: 'UNIV2LINKETH',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/zrx-card-texture.png',
+  //   bannerPng: '/assets/zrx-banner-texture.png',
+  //   iconSvg: '/assets/zrx-icon.svg',
+  //   colorIconName: 'zrxCircleColor',
+  //   decimals: 18
+  // },
+  // 'UNIV2UNIETH-A': {
+  //   name: 'UNIV2UNIETH LP',
+  //   ilk: 'UNIV2UNIETH-A',
+  //   symbol: 'UNIV2UNIETH',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/zrx-card-texture.png',
+  //   bannerPng: '/assets/zrx-banner-texture.png',
+  //   iconSvg: '/assets/zrx-icon.svg',
+  //   colorIconName: 'zrxCircleColor',
+  //   decimals: 18
+  // },
+  // 'UNIV2AAVEETH-A': {
+  //   name: 'UNIV2AAVEETH LP',
+  //   ilk: 'UNIV2AAVEETH-A',
+  //   symbol: 'UNIV2AAVEETH',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/zrx-card-texture.png',
+  //   bannerPng: '/assets/zrx-banner-texture.png',
+  //   iconSvg: '/assets/zrx-icon.svg',
+  //   colorIconName: 'zrxCircleColor',
+  //   decimals: 18
+  // },
+  // 'UNIV2DAIUSDT-A': {
+  //   name: 'UNIV2DAIUSDT LP',
+  //   ilk: 'UNIV2DAIUSDT-A',
+  //   symbol: 'UNIV2DAIUSDT',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/zrx-card-texture.png',
+  //   bannerPng: '/assets/zrx-banner-texture.png',
+  //   iconSvg: '/assets/zrx-icon.svg',
+  //   colorIconName: 'zrxCircleColor',
+  //   decimals: 18
+  // }
 };
 
 export const COLLATERAL_ARRAY = Object.keys(COLLATERAL_MAP).map(currency => ({
