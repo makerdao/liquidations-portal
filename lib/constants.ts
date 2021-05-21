@@ -23,6 +23,11 @@ type CollateralInfo = {
   iconSvg: string;
   colorIconName: string;
   decimals: number;
+  lpToken?: boolean;
+  protocol?: string;
+  protocolSvg?: string;
+  pool?: string;
+  poolSvg?: string;
 };
 
 export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
@@ -191,17 +196,40 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     colorIconName: 'yfiCircleColor',
     decimals: 18
   },
+
+  // TODO comment this back when removing test ilk
+
+  // 'ZRX-A': {
+  //   name: '0x',
+  //   ilk: 'ZRX-A',
+  //   symbol: 'ZRX',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/zrx-card-texture.png',
+  //   bannerPng: '/assets/zrx-banner-texture.png',
+  //   iconSvg: '/assets/zrx-icon.svg',
+  //   colorIconName: 'zrxCircleColor',
+  //   decimals: 18
+  // },
+
+  // test ilk
   'ZRX-A': {
-    name: '0x',
+    name: 'UNIV2DAIETH LP',
     ilk: 'ZRX-A',
-    symbol: 'ZRX',
+    symbol: 'UNIV2DAIETH',
     bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
     cardTexturePng: '/assets/zrx-card-texture.png',
     bannerPng: '/assets/zrx-banner-texture.png',
     iconSvg: '/assets/zrx-icon.svg',
     colorIconName: 'zrxCircleColor',
-    decimals: 18
+    decimals: 18,
+    lpToken: true,
+    protocol: 'UNI V2',
+    protocolSvg: '/assets/uni-icon.svg',
+    pool: 'DAIETH-A',
+    poolSvg: '/assets/eth-icon.svg'
   }
+  // end test ilk
+
   // 'UNIV2DAIETH-A': {
   //   name: 'UNIV2DAIETH LP',
   //   ilk: 'UNIV2DAIETH-A',
