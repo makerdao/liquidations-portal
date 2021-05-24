@@ -8,7 +8,7 @@ type Props = {
 };
 
 const LogoBanner = ({ ilk }: Props): JSX.Element => {
-  const { bannerPng, iconSvg } = COLLATERAL_MAP[ilk];
+  const { bannerPng, iconSvg, lpToken, protocol, protocolSvg, pool, poolSvg } = COLLATERAL_MAP[ilk];
 
   return (
     <Flex sx={{ position: 'relative', display: 'inline-block' }}>
@@ -24,23 +24,67 @@ const LogoBanner = ({ ilk }: Props): JSX.Element => {
           width: '100%'
         }}
       >
-        <Image
-          src={iconSvg}
-          sx={{
-            height: 44,
-            maxWidth: 'none'
-          }}
-        />
-        <Text
-          sx={{
-            pl: 3,
-            color: 'background',
-            fontSize: 8,
-            fontWeight: 'semiBold'
-          }}
-        >
-          {ilk}
-        </Text>
+        {lpToken ? (
+          <Flex sx={{ flexDirection: 'column' }}>
+            <Flex sx={{ justifyContent: 'center', alignItems: 'center' }}>
+              <Text
+                sx={{
+                  pr: 2,
+                  color: 'background',
+                  fontSize: 6
+                }}
+              >
+                {protocol}
+              </Text>
+              <Image
+                src={protocolSvg}
+                sx={{
+                  height: 24,
+                  maxWidth: 'none'
+                }}
+              />
+            </Flex>
+            <Flex sx={{ alignItems: 'center', mt: '-8px' }}>
+              <Image
+                src={poolSvg}
+                sx={{
+                  height: 32,
+                  maxWidth: 'none'
+                }}
+              />
+              <Text
+                sx={{
+                  pl: 3,
+                  color: 'background',
+                  fontSize: 7,
+                  fontWeight: 'semiBold'
+                }}
+              >
+                {pool}
+              </Text>
+            </Flex>
+          </Flex>
+        ) : (
+          <>
+            <Image
+              src={iconSvg}
+              sx={{
+                height: 44,
+                maxWidth: 'none'
+              }}
+            />
+            <Text
+              sx={{
+                pl: 3,
+                color: 'background',
+                fontSize: 8,
+                fontWeight: 'semiBold'
+              }}
+            >
+              {ilk}
+            </Text>
+          </>
+        )}
       </Flex>
     </Flex>
   );
