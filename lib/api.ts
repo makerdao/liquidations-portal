@@ -1,6 +1,5 @@
 import { stringToBytes } from '@makerdao/dai-plugin-mcd/dist/utils';
 import getMaker from 'lib/maker';
-import Auction from 'types/auction';
 import BigNumber from 'bignumber.js';
 import { COLLATERAL_MAP } from 'lib/constants';
 
@@ -25,7 +24,8 @@ export async function getTotalDai(): Promise<any> {
 export async function getUnsafeVaults(ilk: string): Promise<any> {
   const maker = await getMaker();
 
-  return maker.service('liquidation').getUnsafeVaults(ilk);
+  const ilkArray = ilk === 'all' ? Object.keys(COLLATERAL_MAP) : [ilk];
+  return maker.service('liquidation').getUnsafeVaults(ilkArray);
 }
 
 export async function getAllClips(ilk: string): Promise<any> {

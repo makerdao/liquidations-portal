@@ -9,9 +9,10 @@ import Auction from 'types/auction';
 import { useAuctionStatus } from 'lib/hooks';
 import { getNetwork } from 'lib/maker';
 import { bigNumToFormat, calculateColValue, formatAddress, getEtherscanLink } from 'lib/utils';
-// import Tooltip from 'components/shared/Tooltip';
+import { TOOLTIP_DICT } from 'lib/constants';
 import Stack from 'components/layouts/Stack';
 import CountdownTimer from 'components/shared/CountdownTimer';
+import Tooltip from 'components/shared/Tooltip';
 import BidModal from './BidModal';
 import { COLLATERAL_MAP } from 'lib/constants';
 import useAccountsStore from 'stores/accounts';
@@ -110,10 +111,7 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
             </Flex>
             <Flex>
               <Flex sx={{ flexDirection: 'column' }}>
-                {/* TODO do we want a tooltip here? */}
-                {/* <Tooltip label="Placeholder text explaining what Urn handler/Vault owner is"> */}
                 <Text sx={{ color: 'textSecondary' }}>Vault Owner</Text>
-                {/* </Tooltip> */}
                 <ExternalLink href={getEtherscanLink(getNetwork(), urn, 'address')} target="_blank">
                   <Text
                     variant="text"
@@ -158,11 +156,21 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
             )}
             <Flex sx={{ justifyContent: 'space-between' }}>
               <Flex sx={{ flexDirection: ['row', 'column'] }}>
-                <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
+                <Tooltip
+                  sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }}
+                  label={TOOLTIP_DICT.DUST_LIMIT}
+                >
+                  <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
+                </Tooltip>
                 <Text>{dustLimit.toFormat(2)} DAI</Text>
               </Flex>
               <Flex sx={{ flexDirection: ['row', 'column'] }}>
-                <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
+                <Tooltip
+                  sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }}
+                  label={TOOLTIP_DICT.AUCTION_PRICE}
+                >
+                  <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
+                </Tooltip>
                 <Text>{auctionPrice.toFormat(2)} DAI</Text>
               </Flex>
             </Flex>
