@@ -24,7 +24,8 @@ export async function getTotalDai(): Promise<any> {
 export async function getUnsafeVaults(ilk: string): Promise<any> {
   const maker = await getMaker();
 
-  return maker.service('liquidation').getUnsafeVaults(ilk);
+  const ilkArray = ilk === 'all' ? Object.keys(COLLATERAL_MAP) : [ilk];
+  return maker.service('liquidation').getUnsafeVaults(ilkArray);
 }
 
 export async function getAllClips(ilk: string): Promise<any> {

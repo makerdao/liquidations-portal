@@ -86,8 +86,14 @@ const BidModal = ({
     setValue(max.toFixed(decimals));
   };
 
+  // determine if bid would fail dust limit check
+  const dustLimitExceeded = auctionPrice.minus(new BigNumber(value)).lte(dustLimit);
+
+  // maximum non-total amount allowable without failing dust limit check
+  const dustLimitAllowance = auctionPrice.minus(dustLimit).toFormat(2);
+
   const insufficientFunds = vatBalance.lt(new BigNumber(value));
-  const disabled = !account || insufficientFunds || bidTxPending;
+  const disabled = !account || insufficientFunds || bidTxPending || dustLimitExceeded;
 
   const onClose = () => {
     resetBidState();
@@ -349,8 +355,14 @@ const BidModal = ({
                     {!bidTxPending ? 'Place a bid' : <Spinner size={20} ml={2} />}
                   </Flex>
                 </Button>
-                {insufficientFunds && (
-                  <Text sx={{ color: 'onWarning', textAlign: 'center', mt: 2 }}>Insufficient funds</Text>
+                {(insufficientFunds || dustLimitExceeded) && (
+                  <Text sx={{ color: 'onWarning', textAlign: 'center', mt: 2 }}>
+                    {dustLimitExceeded
+                      ? `Please bid the full amount or any amount lower than ${dustLimitAllowance} DAI. It is not permitted to leave less than the dust limit of ${dustLimit.toFormat(
+                          2
+                        )} DAI in the auction.`
+                      : 'Insufficient funds'}
+                  </Text>
                 )}
                 {bidTxError && (
                   <Text sx={{ color: 'onWarning', textAlign: 'center', mt: 2 }}>Transaction failed</Text>
