@@ -90,7 +90,7 @@ const Header = (): JSX.Element => {
               >
                 Auctions
               </Text>
-              <MenuList sx={{ variant: 'cards.compact', width: 6 }}>
+              <MenuList sx={{ variant: 'cards.compact', width: '190px' }}>
                 {COLLATERAL_ARRAY.map((type, index) => {
                   const numberOfAuctions = auctions
                     ? auctions.filter(a => a.ilk === type.key).length.toString()
