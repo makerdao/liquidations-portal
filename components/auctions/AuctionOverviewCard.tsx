@@ -69,7 +69,8 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
         auctionPrice={auctionPrice}
       />
 
-      <Box>
+      {/* Desktop */}
+      <Box sx={{ display: ['none', 'none', 'block', 'none', 'block'] }}>
         <Grid sx={{ variant: 'cards.primary', p: 0 }} columns="1fr 1fr 1fr 1fr">
           <Stack gap={1} sx={{ justifyContent: 'space-between' }}>
             <Flex sx={{ flexDirection: 'column' }}>
@@ -173,6 +174,111 @@ const AuctionOverviewCard = ({ auction, vatBalance }: Props): JSX.Element => {
                 </Tooltip>
                 <Text>{auctionPrice.toFormat(2)} DAI</Text>
               </Flex>
+            </Flex>
+          </Flex>
+        </Grid>
+      </Box>
+
+      {/* Mobile */}
+      <Box sx={{ display: ['block', 'block', 'none', 'block', 'none'] }}>
+        <Grid sx={{ variant: 'cards.primary', p: 3 }} columns="4fr">
+          <Grid columns="2fr 2fr">
+            <Flex sx={{ flexDirection: 'column' }}>
+              <Flex sx={{ alignItems: 'center' }}>
+                <Badge variant="circle" mr={2} />
+                <Text sx={{ color: 'textSecondary' }}>Active</Text>
+              </Flex>
+              <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>Auction ID {auction.id}</Text>
+            </Flex>
+            <Flex sx={{ flexDirection: 'column' }}>
+              <Flex sx={{ alignItems: 'center', flexDirection: 'row', flexWrap: 'nowrap', mb: 1 }}>
+                <Icon mr={1} name="calendar" sx={{ color: active ? 'primary' : 'secondary' }} />
+                <Text variant="caps" color="secondary">
+                  {`${new Date(startDate).toLocaleString('default', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: false,
+                    timeZone: 'UTC'
+                  })} UTC`}
+                </Text>
+              </Flex>
+              <CountdownTimer
+                endText={collateralAvailable.gt(0) ? 'Requires Reset' : 'Auction ended'}
+                endDate={endDate}
+              />
+            </Flex>
+          </Grid>
+          <Grid columns="2fr 2fr">
+            <Flex sx={{ flexDirection: 'column', color: 'textSecondary' }}>
+              <Text sx={{ color: 'textSecondary' }}>Initial Collateral</Text>
+              <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>
+                {/* TODO add this when we have the data */}
+                {/* {initialCollateral} {symbol.toUpperCase()} */}
+                --
+              </Text>
+            </Flex>
+            <Flex sx={{ flexDirection: 'column' }}>
+              <Text sx={{ color: 'textSecondary' }}>Collateral Available</Text>
+              <Text sx={{ fontWeight: 'bold', fontSize: 6 }}>
+                {bigNumToFormat(collateralAvailable, ilk)} {symbol}
+              </Text>
+            </Flex>
+          </Grid>
+          <Grid columns="2fr 2fr">
+            <Flex sx={{ flexDirection: 'column' }}>
+              <Text sx={{ color: 'textSecondary' }}>Vault Owner</Text>
+              <ExternalLink href={getEtherscanLink(getNetwork(), urn, 'address')} target="_blank">
+                <Text
+                  variant="text"
+                  sx={{
+                    ':hover': { color: 'primary' },
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {formatAddress(urn)}
+                </Text>
+              </ExternalLink>
+            </Flex>
+            <Flex sx={{ flexDirection: 'column' }}>
+              <Text sx={{ color: 'textSecondary' }}>{`DAI per ${symbol}`}</Text>
+              <Text>{bigNumFormatter(unitPrice)}</Text>
+            </Flex>
+          </Grid>
+          <Button disabled={!hasDai || requiresReset} onClick={() => setShowDialog(true)}>
+            {address ? (requiresReset ? 'Auction requires reset' : 'Place a bid') : 'Connect to bid'}
+          </Button>
+          {address && !hasDai && (
+            <Button
+              variant="textual"
+              sx={{ color: 'primary', fontSize: 1, p: 0 }}
+              onClick={toggleDepositWithdraw}
+            >
+              Deposit DAI to Bid
+            </Button>
+          )}
+          <Flex sx={{ justifyContent: 'space-between' }}>
+            <Flex sx={{ flexDirection: 'column' }}>
+              <Tooltip
+                sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }}
+                label={TOOLTIP_DICT.DUST_LIMIT}
+              >
+                <Text sx={{ color: 'textSecondary' }}>Dust limit</Text>
+              </Tooltip>
+              <Text>{dustLimit.toFormat(2)} DAI</Text>
+            </Flex>
+            <Flex sx={{ flexDirection: 'column' }}>
+              <Tooltip
+                sx={{ padding: 3, maxWidth: 360, whiteSpace: 'normal' }}
+                label={TOOLTIP_DICT.AUCTION_PRICE}
+              >
+                <Text sx={{ color: 'textSecondary' }}>Auction price</Text>
+              </Tooltip>
+              <Text sx={{ textAlign: 'right' }}>{auctionPrice.toFormat(2)} DAI</Text>
             </Flex>
           </Flex>
         </Grid>
