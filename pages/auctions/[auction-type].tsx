@@ -62,7 +62,6 @@ export default function Auctions(): JSX.Element | null {
   // TODO move to store so this can be reused
   const redeemCollateral = async ilk => {
     const maker = await getMaker();
-    // TODO this isn't working for WBTC
     const txCreator = () =>
       maker.service('liquidation').exitGemFromAdapter(
         ilk,
