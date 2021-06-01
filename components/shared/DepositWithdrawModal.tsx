@@ -177,11 +177,11 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
     };
 
     const depositMax = () => {
-      setValue(daiBalance.toFormat(6));
+      setValue(daiBalance.toFixed(6));
     };
 
     const withdrawMax = () => {
-      setValue(vatBalance.toFormat(6));
+      setValue(vatBalance.toFixed(6));
     };
 
     const moveDai = async () => {
@@ -268,14 +268,16 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
               onClick={depositMax}
               sx={{
                 position: 'absolute',
-                right: 166,
-                top: 1,
+                right: 152,
+                top: '6px',
                 cursor: daiBalance.lte(0) ? 'not-allowed' : 'cursor',
                 color: daiBalance.lte(0) ? 'textSecondary' : 'primary',
-                px: 0
+                fontSize: '10px',
+                fontWeight: 'bold',
+                textTransform: 'uppercase'
               }}
             >
-              Max
+              max
             </Button>
             <Button sx={{ width: 180 }} onClick={moveDai} disabled={isTxProcessing || !canDeposit}>
               {isTxProcessing ? <Spinner size={20} sx={{ color: 'primary' }} /> : 'Deposit Dai'}
@@ -297,14 +299,16 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
               onClick={withdrawMax}
               sx={{
                 position: 'absolute',
-                right: 166,
-                top: 1,
-                cursor: vatBalance.lte(0) ? 'not-allowed' : 'cursor',
-                color: vatBalance.lte(0) ? 'textSecondary' : 'primary',
-                px: 0
+                right: 152,
+                top: '6px',
+                cursor: daiBalance.lte(0) ? 'not-allowed' : 'cursor',
+                color: daiBalance.lte(0) ? 'textSecondary' : 'primary',
+                fontSize: '10px',
+                fontWeight: 'bold',
+                textTransform: 'uppercase'
               }}
             >
-              Max
+              max
             </Button>
             <Button sx={{ width: 180 }} onClick={moveDai} disabled={isTxProcessing || !canWithdraw}>
               {isTxProcessing ? <Spinner size={20} sx={{ color: 'primary' }} /> : 'Withdraw Dai'}
