@@ -108,6 +108,17 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     colorIconName: 'ethCircleColor',
     decimals: 18
   },
+  // 'GUSD-A': {
+  //   name: 'Gemini Dollar',
+  //   ilk: 'GUSD-A',
+  //   symbol: 'GUSD',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/gusd-card-texture.png',
+  //   bannerPng: '/assets/gusd-banner-texture.png',
+  //   iconSvg: '/assets/gusd-icon.svg',
+  //   colorIconName: 'gusdCircleColor',
+  //   decimals: 18
+  // },
   'KNC-A': {
     name: 'Kyber Network Crystal',
     ilk: 'KNC-A',
@@ -152,6 +163,17 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     colorIconName: 'manaCircleColor',
     decimals: 18
   },
+  // 'PAX-A': {
+  //   name: 'Paxos Standard',
+  //   ilk: 'PAX-A',
+  //   symbol: 'PAX',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/pax-card-texture.png',
+  //   bannerPng: '/assets/pax-banner-texture.png',
+  //   iconSvg: '/assets/pax-icon.svg',
+  //   colorIconName: 'paxCircleColor',
+  //   decimals: 18
+  // },
   'RENBTC-A': {
     name: 'renBTC',
     ilk: 'RENBTC-A',
@@ -163,6 +185,17 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     colorIconName: 'renbtcCircleColor',
     decimals: 8
   },
+  // 'TUSD-A': {
+  //   name: 'True USD',
+  //   ilk: 'TUSD-A',
+  //   symbol: 'TUSD',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/tusd-card-texture.png',
+  //   bannerPng: '/assets/tusd-banner-texture.png',
+  //   iconSvg: '/assets/tusd-icon.svg',
+  //   colorIconName: 'tusdCircleColor',
+  //   decimals: 18
+  // },
   'UNI-A': {
     name: 'Uniswap',
     ilk: 'UNI-A',
@@ -174,6 +207,17 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     colorIconName: 'uniCircleColor',
     decimals: 18
   },
+  // 'USDC-A': {
+  //   name: 'USD Coin',
+  //   ilk: 'USDC-A',
+  //   symbol: 'USDC',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/usdc-card-texture.png',
+  //   bannerPng: '/assets/usdc-banner-texture.png',
+  //   iconSvg: '/assets/usdc-icon.svg',
+  //   colorIconName: 'usdcCircleColor',
+  //   decimals: 18
+  // },
   'WBTC-A': {
     name: 'Wrapped Bitcoin',
     ilk: 'WBTC-A',
