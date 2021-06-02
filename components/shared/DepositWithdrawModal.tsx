@@ -21,8 +21,8 @@ import BigNumber from 'bignumber.js';
 
 import { fadeIn, slideUp } from 'lib/keyframes';
 import { useAccountTokenBalance, useAccountVatBalance } from 'lib/hooks';
-import getMaker from 'lib/maker';
-import { bigNumToFormat } from 'lib/utils';
+import getMaker, { getNetwork } from 'lib/maker';
+import { bigNumToFormat, getEtherscanLink } from 'lib/utils';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
 import { transactionsApi } from 'stores/transactions';
@@ -165,9 +165,15 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
   const DepositWithdrawContent = () => {
     const [value, setValue] = useState<string>('');
     const [isTxProcessing, setIsTxProcessing] = useState(false);
+    const [isTxError, setIsTxError] = useState(false);
 
     const canDeposit = new BigNumber(value).lte(new BigNumber(daiBalance));
     const canWithdraw = new BigNumber(value).lte(new BigNumber(vatBalance));
+
+    const resetModalState = () => {
+      setIsTxProcessing(false);
+      setIsTxError(false);
+    };
 
     const updateValue = (e: { currentTarget: { value: string } }) => {
       const newValueStr = e.currentTarget.value;
@@ -193,16 +199,54 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
       await transactionsApi.getState().track(txCreator, `${isDeposit ? 'Depositing' : 'Withdrawing'} DAI`, {
         pending: () => {
           setIsTxProcessing(true);
+          setIsTxError(false);
         },
         mined: txId => {
           transactionsApi.getState().setMessage(txId, `${isDeposit ? 'Deposit' : 'Withdraw'} DAI finished`);
           setIsTxProcessing(false);
+          setIsTxError(false);
           onDismiss();
         },
-        error: () => {
+        error: err => {
+          console.log(err);
           setIsTxProcessing(false);
+          setIsTxError(true);
         }
       });
+    };
+
+    const ErrorContent = () => {
+      return (
+        <Flex sx={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+          <Icon name="warning" color="error" size={6} sx={{ mt: 2 }} />
+          <Text variant="smallHeading" sx={{ mt: 2, mb: 4, fontWeight: 'bold' }}>
+            Bid failed
+          </Text>
+          <Text sx={{ px: 4, mb: 5, textAlign: 'center' }}>
+            Something went wrong with your transaction. Please try again.
+          </Text>
+          <Text sx={{ px: 4, mb: 2, fontSize: 2, textAlign: 'center' }}>
+            View more details about the failed transaction.
+          </Text>
+          <Link
+            href={getEtherscanLink(getNetwork(), /* (bidTxError && bidTxError.hash) || */ '', 'transaction')}
+            target="_blank"
+          >
+            <Text
+              variant="text"
+              sx={{
+                color: 'accentBlue',
+                fontSize: 2
+              }}
+            >
+              View on Etherscan <Icon name="arrowTopRight" size="2" color="accentBlue" />
+            </Text>
+          </Link>
+          <Button variant="primaryOutline" onClick={resetModalState} sx={{ width: '100%', mt: 4, mb: 2 }}>
+            Go back and try again
+          </Button>
+        </Flex>
+      );
     };
 
     return (
@@ -279,7 +323,7 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
             >
               max
             </Button>
-            <Button sx={{ width: 180 }} onClick={moveDai} disabled={isTxProcessing || !canDeposit}>
+            <Button sx={{ width: 180 }} onClick={moveDai} /* disabled={isTxProcessing || !canDeposit} */>
               {isTxProcessing ? <Spinner size={20} sx={{ color: 'primary' }} /> : 'Deposit Dai'}
             </Button>
           </Flex>
