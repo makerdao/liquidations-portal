@@ -164,15 +164,15 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
 
   const DepositWithdrawContent = () => {
     const [value, setValue] = useState<string>('');
-    const [isTxProcessing, setIsTxProcessing] = useState(false);
-    const [isTxError, setIsTxError] = useState(false);
+    const [isTxProcessing, setIsTxProcessing] = useState<boolean>(false);
+    const [isTxError, setIsTxError] = useState<{ txId: string; error: string; hash: string } | null>(null);
 
     const canDeposit = new BigNumber(value).lte(new BigNumber(daiBalance));
     const canWithdraw = new BigNumber(value).lte(new BigNumber(vatBalance));
 
     const resetModalState = () => {
       setIsTxProcessing(false);
-      setIsTxError(false);
+      setIsTxError(null);
     };
 
     const updateValue = (e: { currentTarget: { value: string } }) => {
@@ -199,18 +199,15 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
       await transactionsApi.getState().track(txCreator, `${isDeposit ? 'Depositing' : 'Withdrawing'} DAI`, {
         pending: () => {
           setIsTxProcessing(true);
-          setIsTxError(false);
+          setIsTxError(null);
         },
         mined: txId => {
           transactionsApi.getState().setMessage(txId, `${isDeposit ? 'Deposit' : 'Withdraw'} DAI finished`);
-          setIsTxProcessing(false);
-          setIsTxError(false);
           onDismiss();
         },
-        error: err => {
-          console.log(err);
+        error: (txId, error, hash) => {
           setIsTxProcessing(false);
-          setIsTxError(true);
+          setIsTxError({ txId, error, hash });
         }
       });
     };
@@ -220,7 +217,7 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
         <Flex sx={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
           <Icon name="warning" color="error" size={6} sx={{ mt: 2 }} />
           <Text variant="smallHeading" sx={{ mt: 2, mb: 4, fontWeight: 'bold' }}>
-            Bid failed
+            {`${isDeposit ? 'Deposit' : 'Withdraw'} failed`}
           </Text>
           <Text sx={{ px: 4, mb: 5, textAlign: 'center' }}>
             Something went wrong with your transaction. Please try again.
@@ -229,7 +226,7 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
             View more details about the failed transaction.
           </Text>
           <Link
-            href={getEtherscanLink(getNetwork(), /* (bidTxError && bidTxError.hash) || */ '', 'transaction')}
+            href={getEtherscanLink(getNetwork(), (isTxError && isTxError.hash) || '', 'transaction')}
             target="_blank"
           >
             <Text
@@ -249,7 +246,9 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
       );
     };
 
-    return (
+    return isTxError ? (
+      <ErrorContent />
+    ) : (
       <>
         <Text sx={{ color: 'secondaryEmphasis', mb: 2 }}>
           You can deposit Dai in the VAT here. This is the DAI that you will be able to use for bidding on
@@ -323,7 +322,7 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
             >
               max
             </Button>
-            <Button sx={{ width: 180 }} onClick={moveDai} /* disabled={isTxProcessing || !canDeposit} */>
+            <Button sx={{ width: 180 }} onClick={moveDai} disabled={isTxProcessing || !canDeposit}>
               {isTxProcessing ? <Spinner size={20} sx={{ color: 'primary' }} /> : 'Deposit Dai'}
             </Button>
           </Flex>
