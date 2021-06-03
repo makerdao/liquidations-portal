@@ -16,7 +16,6 @@ async function fetchAuctions(ilk?: string): Promise<Auction[]> {
   }
 }
 
-// TODO: define an Ilk type with all possible values (based on collateral map in lib/constants)
 export function useAuctions(ilk?: string): { data?: Auction[]; loading: boolean; error: string } {
   const { data, error } = useSWR(ilk ? `/auctions/fetch-${ilk}` : null, () => fetchAuctions(ilk), {
     // sets interval to 60 seconds for "all ilk" queries, 10 seconds for ilk-specific

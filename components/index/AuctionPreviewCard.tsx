@@ -13,7 +13,7 @@ type Props = {
 export default function AuctionPreviewCard({ type, auctions }: Props): JSX.Element | null {
   if (!type || !auctions) return null;
 
-  const { cardTexturePng, iconSvg, ilk } = type;
+  const { cardTexturePng, iconSvg, ilk, lpToken, protocol, protocolSvg, pool, poolSvg } = type;
   const filteredAuctions = getAuctionsByIlk(auctions, ilk);
   const numberOfAuctions = filteredAuctions.length;
   const totalCollateral = getTotalCollateralAvailable(filteredAuctions);
@@ -77,23 +77,67 @@ export default function AuctionPreviewCard({ type, auctions }: Props): JSX.Eleme
               width: '100%'
             }}
           >
-            <Image
-              src={iconSvg}
-              sx={{
-                height: 38,
-                maxWidth: 'none'
-              }}
-            />
-            <Text
-              sx={{
-                pl: 3,
-                color: 'background',
-                fontSize: '38px',
-                fontWeight: 'semiBold'
-              }}
-            >
-              {ilk}
-            </Text>
+            {lpToken ? (
+              <Flex sx={{ flexDirection: 'column' }}>
+                <Flex sx={{ justifyContent: 'center', alignItems: 'center' }}>
+                  <Text
+                    sx={{
+                      pr: 2,
+                      color: 'background',
+                      fontSize: 6
+                    }}
+                  >
+                    {protocol}
+                  </Text>
+                  <Image
+                    src={protocolSvg}
+                    sx={{
+                      height: 24,
+                      maxWidth: 'none'
+                    }}
+                  />
+                </Flex>
+                <Flex sx={{ alignItems: 'center' }}>
+                  <Image
+                    src={poolSvg}
+                    sx={{
+                      height: 32,
+                      maxWidth: 'none'
+                    }}
+                  />
+                  <Text
+                    sx={{
+                      pl: 3,
+                      color: 'background',
+                      fontSize: 7,
+                      fontWeight: 'semiBold'
+                    }}
+                  >
+                    {pool}
+                  </Text>
+                </Flex>
+              </Flex>
+            ) : (
+              <>
+                <Image
+                  src={iconSvg}
+                  sx={{
+                    height: 38,
+                    maxWidth: 'none'
+                  }}
+                />
+                <Text
+                  sx={{
+                    pl: 3,
+                    color: 'background',
+                    fontSize: '38px',
+                    fontWeight: 'semiBold'
+                  }}
+                >
+                  {ilk}
+                </Text>
+              </>
+            )}
           </Flex>
         </Box>
 

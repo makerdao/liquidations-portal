@@ -23,6 +23,11 @@ type CollateralInfo = {
   iconSvg: string;
   colorIconName: string;
   decimals: number;
+  lpToken?: boolean;
+  protocol?: string;
+  protocolSvg?: string;
+  pool?: string;
+  poolSvg?: string;
 };
 
 export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
@@ -201,6 +206,150 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     iconSvg: '/assets/zrx-icon.svg',
     colorIconName: 'zrxCircleColor',
     decimals: 18
+  },
+  'UNIV2DAIETH-A': {
+    name: 'UNIV2DAIETH LP',
+    ilk: 'UNIV2DAIETH-A',
+    symbol: 'UNIV2DAIETH',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/univ2daieth-card-texture.png',
+    bannerPng: '/assets/univ2daieth-banner-texture.png',
+    iconSvg: '/assets/univ2daieth-icon.svg',
+    colorIconName: 'uniDaiEthLp',
+    decimals: 18,
+    lpToken: true,
+    protocol: 'UNI V2',
+    protocolSvg: '/assets/uni-icon.svg',
+    pool: 'DAIETH-A',
+    poolSvg: '/assets/univ2daieth-icon.svg'
+  },
+  'UNIV2USDCETH-A': {
+    name: 'UNIV2USDCETH LP',
+    ilk: 'UNIV2USDCETH-A',
+    symbol: 'UNIV2USDCETH',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/univ2usdceth-card-texture.png',
+    bannerPng: '/assets/univ2usdceth-banner-texture.png',
+    iconSvg: '/assets/univ2usdceth-icon.svg',
+    colorIconName: 'uniUsdcEthLp',
+    decimals: 18,
+    lpToken: true,
+    protocol: 'UNI V2',
+    protocolSvg: '/assets/uni-icon.svg',
+    pool: 'USDCETH-A',
+    poolSvg: '/assets/univ2usdceth-icon.svg'
+  },
+  'UNIV2ETHUSDT-A': {
+    name: 'UNIV2ETHUSDT LP',
+    ilk: 'UNIV2ETHUSDT-A',
+    symbol: 'UNIV2ETHUSDT',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/univ2ethusdt-card-texture.png',
+    bannerPng: '/assets/univ2ethusdt-banner-texture.png',
+    iconSvg: '/assets/univ2ethusdt-icon.svg',
+    colorIconName: 'uniEthUsdtLp',
+    decimals: 18,
+    lpToken: true,
+    protocol: 'UNI V2',
+    protocolSvg: '/assets/uni-icon.svg',
+    pool: 'ETHUSDT-A',
+    poolSvg: '/assets/univ2ethusdt-icon.svg'
+  },
+  'UNIV2WBTCDAI-A': {
+    name: 'UNIV2WBTCDAI LP',
+    ilk: 'UNIV2WBTCDAI-A',
+    symbol: 'UNIV2WBTCDAI',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/univ2wbtcdai-card-texture.png',
+    bannerPng: '/assets/univ2wbtcdai-banner-texture.png',
+    iconSvg: '/assets/univ2wbtcdai-icon.svg',
+    colorIconName: 'uniWbtcDaiLp',
+    decimals: 18,
+    lpToken: true,
+    protocol: 'UNI V2',
+    protocolSvg: '/assets/uni-icon.svg',
+    pool: 'WBTCDAI-A',
+    poolSvg: '/assets/univ2wbtcdai-icon.svg'
+  },
+  'UNIV2WBTCETH-A': {
+    name: 'UNIV2WBTCETH LP',
+    ilk: 'UNIV2WBTCETH-A',
+    symbol: 'UNIV2WBTCETH',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/univ2wbtceth-card-texture.png',
+    bannerPng: '/assets/univ2wbtceth-banner-texture.png',
+    iconSvg: '/assets/univ2wbtceth-icon.svg',
+    colorIconName: 'uniWbtcEthLp',
+    decimals: 18,
+    lpToken: true,
+    protocol: 'UNI V2',
+    protocolSvg: '/assets/uni-icon.svg',
+    pool: 'WBTCETH-A',
+    poolSvg: '/assets/univ2wbtceth-icon.svg'
+  },
+  'UNIV2LINKETH-A': {
+    name: 'UNIV2LINKETH LP',
+    ilk: 'UNIV2LINKETH-A',
+    symbol: 'UNIV2LINKETH',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/univ2linketh-card-texture.png',
+    bannerPng: '/assets/univ2linketh-banner-texture.png',
+    iconSvg: '/assets/univ2linketh-icon.svg',
+    colorIconName: 'uniLinkEthLp',
+    decimals: 18,
+    lpToken: true,
+    protocol: 'UNI V2',
+    protocolSvg: '/assets/uni-icon.svg',
+    pool: 'LINKETH-A',
+    poolSvg: '/assets/univ2linketh-icon.svg'
+  },
+  'UNIV2UNIETH-A': {
+    name: 'UNIV2UNIETH LP',
+    ilk: 'UNIV2UNIETH-A',
+    symbol: 'UNIV2UNIETH',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/univ2unieth-card-texture.png',
+    bannerPng: '/assets/univ2unieth-banner-texture.png',
+    iconSvg: '/assets/univ2unieth-icon.svg',
+    colorIconName: 'uniUniEthLp',
+    decimals: 18,
+    lpToken: true,
+    protocol: 'UNI V2',
+    protocolSvg: '/assets/uni-icon.svg',
+    pool: 'UNIETH-A',
+    poolSvg: '/assets/univ2unieth-icon.svg'
+  },
+  'UNIV2AAVEETH-A': {
+    name: 'UNIV2AAVEETH LP',
+    ilk: 'UNIV2AAVEETH-A',
+    symbol: 'UNIV2AAVEETH',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/univ2aaveeth-card-texture.png',
+    bannerPng: '/assets/univ2aaveeth-banner-texture.png',
+    iconSvg: '/assets/univ2aaveeth-icon.svg',
+    colorIconName: 'uniAaveEthLp',
+    decimals: 18,
+    lpToken: true,
+    protocol: 'UNI V2',
+    protocolSvg: '/assets/uni-icon.svg',
+    pool: 'AAVEETH-A',
+    poolSvg: '/assets/univ2aaveeth-icon.svg'
+  },
+  'UNIV2DAIUSDT-A': {
+    name: 'UNIV2DAIUSDT LP',
+    ilk: 'UNIV2DAIUSDT-A',
+    symbol: 'UNIV2DAIUSDT',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/univ2daiusdt-card-texture.png',
+    bannerPng: '/assets/univ2daiusdt-banner-texture.png',
+    iconSvg: '/assets/univ2daiusdt-icon.svg',
+    colorIconName: 'uniDaiUsdtLp',
+    decimals: 18,
+    lpToken: true,
+    protocol: 'UNI V2',
+    protocolSvg: '/assets/uni-icon.svg',
+    pool: 'DAIUSDT-A',
+    poolSvg: '/assets/univ2daiusdt-icon.svg'
   }
 };
 

@@ -177,7 +177,6 @@ export function transformAuctions(response: any): Auction[] {
     collateralAvailable: resp.lot,
     daiNeeded: resp.tab,
     dustLimit: resp.chost,
-    auctionPrice: '100', // TODO: calc max bid aka auction price
     startDate: resp.tic,
     endDate: resp.endDate
   }));

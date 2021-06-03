@@ -46,12 +46,22 @@ export default function Auctions(): JSX.Element | null {
   // TODO: add error state here if true
   if (!ilkData) return null;
 
-  const { bannerPng, iconSvg, ilk, symbol, decimals } = ilkData;
+  const {
+    bannerPng,
+    iconSvg,
+    ilk,
+    symbol,
+    decimals,
+    lpToken,
+    protocol,
+    protocolSvg,
+    pool,
+    poolSvg
+  } = ilkData;
 
   // TODO move to store so this can be reused
   const redeemCollateral = async ilk => {
     const maker = await getMaker();
-    // TODO this isn't working for WBTC
     const txCreator = () =>
       maker.service('liquidation').exitGemFromAdapter(
         ilk,
@@ -97,16 +107,60 @@ export default function Auctions(): JSX.Element | null {
           alignItems: 'center'
         }}
       >
-        <Image
-          src={iconSvg}
-          sx={{
-            height: 44,
-            maxWidth: 'none'
-          }}
-        />
-        <Text variant="largeHeading" sx={{ pl: 3, color: 'surface' }}>
-          {ilk}
-        </Text>
+        {lpToken ? (
+          <Flex sx={{ flexDirection: 'column' }}>
+            <Flex sx={{ justifyContent: 'center', alignItems: 'center' }}>
+              <Text
+                sx={{
+                  pr: 2,
+                  color: 'background',
+                  fontSize: 6
+                }}
+              >
+                {protocol}
+              </Text>
+              <Image
+                src={protocolSvg}
+                sx={{
+                  height: 24,
+                  maxWidth: 'none'
+                }}
+              />
+            </Flex>
+            <Flex sx={{ alignItems: 'center' }}>
+              <Image
+                src={poolSvg}
+                sx={{
+                  height: 38,
+                  maxWidth: 'none'
+                }}
+              />
+              <Text
+                sx={{
+                  pl: 3,
+                  color: 'background',
+                  fontSize: '38px',
+                  fontWeight: 'semiBold'
+                }}
+              >
+                {pool}
+              </Text>
+            </Flex>
+          </Flex>
+        ) : (
+          <>
+            <Image
+              src={iconSvg}
+              sx={{
+                height: 44,
+                maxWidth: 'none'
+              }}
+            />
+            <Text variant="largeHeading" sx={{ pl: 3, color: 'surface' }}>
+              {ilk}
+            </Text>
+          </>
+        )}
       </Flex>
 
       <PrimaryLayout shortenFooter={true} sx={{ maxWidth: [null, null, null, 'page', 'dashboard'], mt: 180 }}>

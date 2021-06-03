@@ -87,7 +87,8 @@ const BidModal = ({
   };
 
   // determine if bid would fail dust limit check
-  const dustLimitExceeded = auctionPrice.minus(new BigNumber(value)).lte(dustLimit);
+  const dustLimitExceeded =
+    auctionPrice.minus(new BigNumber(value)).lte(dustLimit) && auctionPrice.minus(new BigNumber(value)).gt(0);
 
   // maximum non-total amount allowable without failing dust limit check
   const dustLimitAllowance = auctionPrice.minus(dustLimit).toFormat(2);
@@ -288,14 +289,18 @@ const BidModal = ({
                       <Button
                         variant="textual"
                         sx={{
-                          color: 'text',
-                          fontSize: 3,
-                          p: 0,
-                          cursor: 'pointer'
+                          color: 'textSecondary',
+                          fontSize: '10px',
+                          fontWeight: 'bold',
+                          border: '1px solid #D4D9E1',
+                          borderRadius: 'round',
+                          mr: 1,
+                          cursor: 'pointer',
+                          textTransform: 'uppercase'
                         }}
                         onClick={setMax}
                       >
-                        Set Max
+                        max
                       </Button>
                       <Flex sx={{ alignItems: 'center', ml: 1 }}>
                         <Icon size={30} name="daiCircleColor" />

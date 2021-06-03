@@ -60,7 +60,6 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
 
       <SWRConfig
         value={{
-          // TODO: change back to 5 seconds
           refreshInterval: 10000,
           fetcher: url => fetchJson(url)
         }}
