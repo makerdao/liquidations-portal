@@ -21,8 +21,8 @@ import BigNumber from 'bignumber.js';
 
 import { fadeIn, slideUp } from 'lib/keyframes';
 import { useAccountTokenBalance, useAccountVatBalance } from 'lib/hooks';
-import getMaker from 'lib/maker';
-import { bigNumToFormat } from 'lib/utils';
+import getMaker, { getNetwork } from 'lib/maker';
+import { bigNumToFormat, getEtherscanLink } from 'lib/utils';
 import useAccountsStore from 'stores/accounts';
 import useApprovalsStore from 'stores/approvals';
 import { transactionsApi } from 'stores/transactions';
@@ -164,10 +164,16 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
 
   const DepositWithdrawContent = () => {
     const [value, setValue] = useState<string>('');
-    const [isTxProcessing, setIsTxProcessing] = useState(false);
+    const [isTxProcessing, setIsTxProcessing] = useState<boolean>(false);
+    const [isTxError, setIsTxError] = useState<{ txId: string; error: string; hash: string } | null>(null);
 
     const canDeposit = new BigNumber(value).lte(new BigNumber(daiBalance));
     const canWithdraw = new BigNumber(value).lte(new BigNumber(vatBalance));
+
+    const resetModalState = () => {
+      setIsTxProcessing(false);
+      setIsTxError(null);
+    };
 
     const updateValue = (e: { currentTarget: { value: string } }) => {
       const newValueStr = e.currentTarget.value;
@@ -193,19 +199,56 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
       await transactionsApi.getState().track(txCreator, `${isDeposit ? 'Depositing' : 'Withdrawing'} DAI`, {
         pending: () => {
           setIsTxProcessing(true);
+          setIsTxError(null);
         },
         mined: txId => {
           transactionsApi.getState().setMessage(txId, `${isDeposit ? 'Deposit' : 'Withdraw'} DAI finished`);
-          setIsTxProcessing(false);
           onDismiss();
         },
-        error: () => {
+        error: (txId, error, hash) => {
           setIsTxProcessing(false);
+          setIsTxError({ txId, error, hash });
         }
       });
     };
 
-    return (
+    const ErrorContent = () => {
+      return (
+        <Flex sx={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+          <Icon name="warning" color="error" size={6} sx={{ mt: 2 }} />
+          <Text variant="smallHeading" sx={{ mt: 2, mb: 4, fontWeight: 'bold' }}>
+            {`${isDeposit ? 'Deposit' : 'Withdraw'} failed`}
+          </Text>
+          <Text sx={{ px: 4, mb: 5, textAlign: 'center' }}>
+            Something went wrong with your transaction. Please try again.
+          </Text>
+          <Text sx={{ px: 4, mb: 2, fontSize: 2, textAlign: 'center' }}>
+            View more details about the failed transaction.
+          </Text>
+          <Link
+            href={getEtherscanLink(getNetwork(), (isTxError && isTxError.hash) || '', 'transaction')}
+            target="_blank"
+          >
+            <Text
+              variant="text"
+              sx={{
+                color: 'accentBlue',
+                fontSize: 2
+              }}
+            >
+              View on Etherscan <Icon name="arrowTopRight" size="2" color="accentBlue" />
+            </Text>
+          </Link>
+          <Button variant="primaryOutline" onClick={resetModalState} sx={{ width: '100%', mt: 4, mb: 2 }}>
+            Go back and try again
+          </Button>
+        </Flex>
+      );
+    };
+
+    return isTxError ? (
+      <ErrorContent />
+    ) : (
       <>
         <Text sx={{ color: 'secondaryEmphasis', mb: 2 }}>
           You can deposit Dai in the VAT here. This is the DAI that you will be able to use for bidding on
