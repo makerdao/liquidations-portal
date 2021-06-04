@@ -1,9 +1,9 @@
-import { useAuctions, useUnsafeVaults, useTotalDai, useHoleAndDirt } from 'lib/hooks';
+import { useAuctions, useUnsafeVaults, useGlobalMax, useHoleAndDirt } from 'lib/hooks';
 
 export function useSystemStats(): any {
   const { data: auctions, error: auctionsError } = useAuctions('all');
   const { data: unsafeVaults, error: unsafeVaultsError } = useUnsafeVaults();
-  const { data: totalDai, error: totalDaiError } = useTotalDai();
+  const { data: totalDai, error: totalDaiError } = useGlobalMax();
 
   // return data needed for each field in fieldMap and let format function do the rest
   // ['Active Auctions', 'Inactive Auctions', 'Vaults requiring kick', 'Dai required for Auctions', 'Global max available']

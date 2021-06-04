@@ -5,7 +5,7 @@ import { COLLATERAL_MAP } from 'lib/constants';
 
 //as the number of ilks grows, this calculation will require a lot of calls.
 //should think about how to deal with that.
-export async function getTotalDai(): Promise<any> {
+export async function getGlobalMax(): Promise<any> {
   const maker = await getMaker();
 
   const vals = await Promise.all([
