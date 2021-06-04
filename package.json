@@ -56,13 +56,15 @@
     "@typescript-eslint/parser": "^3.7.1",
     "bignumber.js": "^9.0.1",
     "dotenv": "^8.2.0",
+    "duplicate-package-checker-webpack-plugin": "^3.0.0",
     "eslint": "^7.5.0",
     "eslint-plugin-react": "^7.20.5",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.3",
+    "webpack-bundle-analyzer": "^4.4.2"
   },
   "resolutions": {
     "trezor-connect": "8.1.15"

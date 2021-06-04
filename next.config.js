@@ -1,4 +1,6 @@
 require('dotenv').config({ path: './.env' });
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin')
 
 module.exports = {
   // everything in here gets exposed to the frontend.
@@ -9,6 +11,18 @@ module.exports = {
   },
 
   webpack: (config, { isServer }) => {
+    if (process.env.ANALYZE) {
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'server',
+          analyzerPort: isServer ? 8888 : 8889,
+          openAnalyzer: true,
+        })
+      );
+    }
+
+    config.plugins.push(new DuplicatePackageCheckerPlugin());
+
     // Fixes npm packages that depend on `fs` module
     // https://github.com/vercel/next.js/issues/7755#issuecomment-508633125
     if (isServer) {
