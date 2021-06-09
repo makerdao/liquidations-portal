@@ -173,7 +173,7 @@ const MobileMenu = ({ hide, network, router }) => {
   }, []);
 
   return (
-    <Container variant="modal">
+    <Container variant="modal" sx={{ overflow: 'scroll' }}>
       <Close ml="auto" sx={{ display: ['block'], '> svg': { size: [4] } }} onClick={hide} />
       <Flex
         sx={{
@@ -184,8 +184,7 @@ const MobileMenu = ({ hide, network, router }) => {
           height: '100vh',
           '> a': {
             fontSize: 6
-          },
-          overflow: 'scroll'
+          }
         }}
       >
         <Link href={{ pathname: '/', query: { network } }}>
