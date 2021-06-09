@@ -181,10 +181,11 @@ const MobileMenu = ({ hide, network, router }) => {
           alignItems: 'flex-start',
           mt: 4,
           justifyContent: 'space-between',
-          height: '40vh',
+          height: '100vh',
           '> a': {
             fontSize: 6
-          }
+          },
+          overflow: 'scroll'
         }}
       >
         <Link href={{ pathname: '/', query: { network } }}>
