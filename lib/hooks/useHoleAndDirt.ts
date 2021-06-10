@@ -8,7 +8,9 @@ async function fetchHoleAndDirt(ilk: string): Promise<any[]> {
 }
 
 export function useHoleAndDirt(ilk: string): any {
-  const { data, error } = useSWR(`/hole-and-dirt/fetch-${ilk}`, () => fetchHoleAndDirt(ilk));
+  const { data, error } = useSWR(`/hole-and-dirt/fetch-${ilk}`, () => fetchHoleAndDirt(ilk), {
+    refreshInterval: 3600000
+  });
 
   return {
     data,
