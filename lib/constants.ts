@@ -119,17 +119,6 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     colorIconName: 'gusdCircleColor',
     decimals: 2
   },
-  'KNC-A': {
-    name: 'Kyber Network Crystal',
-    ilk: 'KNC-A',
-    symbol: 'KNC',
-    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
-    cardTexturePng: '/assets/knc-card-texture.png',
-    bannerPng: '/assets/knc-banner-texture.png',
-    iconSvg: '/assets/knc-icon.svg',
-    colorIconName: 'kncCircleColor',
-    decimals: 18
-  },
   'LINK-A': {
     name: 'Chainlink',
     ilk: 'LINK-A',
@@ -227,17 +216,6 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     bannerPng: '/assets/usdc-banner-texture.png',
     iconSvg: '/assets/usdc-icon.svg',
     colorIconName: 'usdcCircleColor',
-    decimals: 6
-  },
-  'USDT-A': {
-    name: 'Tether USD',
-    ilk: 'USDT-A',
-    symbol: 'USDT',
-    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
-    cardTexturePng: '/assets/usdt-card-texture.png',
-    bannerPng: '/assets/usdt-banner-texture.png',
-    iconSvg: '/assets/usdt-icon.svg',
-    colorIconName: 'usdtCircleColor',
     decimals: 6
   },
   'WBTC-A': {
