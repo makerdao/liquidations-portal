@@ -4,17 +4,20 @@ import LedgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import TrezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import { Web3ReactPlugin } from './maker/web3react';
 import LiquidationPlugin from '@makerdao/dai-plugin-liquidations';
+import { MakerClass } from '@makerdao/dai/dist/Maker';
 
 import { SupportedNetworks, DEFAULT_NETWORK } from './constants';
 import { networkToRpc } from './maker/network';
 
-export const ETH = Maker.ETH;
-export const USD = Maker.USD;
+export const ETH = Maker.currencies.ETH;
+export const USD = Maker.currencies.USD;
 
 function chainIdToNetworkName(chainId: number): SupportedNetworks {
   switch (chainId) {
     case 1:
       return SupportedNetworks.MAINNET;
+    case 5:
+      return SupportedNetworks.GOERLI;
     case 42:
       return SupportedNetworks.KOVAN;
     case 999:
@@ -40,6 +43,8 @@ function determineNetwork(): SupportedNetworks {
     // 1) check the URL
     if (window.location.search.includes('mainnet')) {
       return SupportedNetworks.MAINNET;
+    } else if (window.location.search.includes('goerli')) {
+      return SupportedNetworks.GOERLI;
     } else if (window.location.search.includes('kovan')) {
       return SupportedNetworks.KOVAN;
     } else if (window.location.search.includes('testnet')) {
@@ -80,8 +85,8 @@ export function getVulcanizeParam(): boolean {
   return false;
 }
 
-let makerSingleton: Promise<Maker>;
-function getMaker(): Promise<Maker> {
+let makerSingleton: Promise<MakerClass>;
+function getMaker(): Promise<MakerClass> {
   const usingVulcanize = getVulcanizeParam();
 
   if (!makerSingleton) {

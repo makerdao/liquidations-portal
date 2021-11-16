@@ -7,6 +7,8 @@ export function networkToRpc(network: SupportedNetworks, nodeProvider?: 'infura'
         return `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`;
       }
       return `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`;
+    case SupportedNetworks.GOERLI:
+      return `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`;
     case SupportedNetworks.KOVAN:
       if (nodeProvider === 'alchemy') {
         return `https://eth-kovan.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`;

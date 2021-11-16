@@ -1,7 +1,9 @@
-import { stringToBytes } from '@makerdao/dai-plugin-mcd/dist/utils';
+import { utils } from '@makerdao/dai';
 import getMaker from 'lib/maker';
 import BigNumber from 'bignumber.js';
 import { COLLATERAL_MAP } from 'lib/constants';
+
+const { stringToBytes } = utils;
 
 //as the number of ilks grows, this calculation will require a lot of calls.
 //should think about how to deal with that.

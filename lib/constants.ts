@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 
 export enum SupportedNetworks {
   MAINNET = 'mainnet',
+  GOERLI = 'goerli',
   KOVAN = 'kovan',
   TESTNET = 'testnet'
 }
@@ -10,7 +11,8 @@ export const DEFAULT_NETWORK = SupportedNetworks.MAINNET;
 
 export const ETHERSCAN_PREFIXES = {
   [SupportedNetworks.MAINNET]: '',
-  [SupportedNetworks.KOVAN]: 'kovan.'
+  [SupportedNetworks.KOVAN]: 'kovan.',
+  [SupportedNetworks.GOERLI]: 'goerli.'
 };
 
 type CollateralInfo = {
