@@ -152,6 +152,17 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     colorIconName: 'manaCircleColor',
     decimals: 18
   },
+  'MATIC-A': {
+    name: 'Matic',
+    ilk: 'MATIC-A',
+    symbol: 'MATIC',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/matic-card-texture.png',
+    bannerPng: '/assets/matic-banner-texture.png',
+    iconSvg: '/assets/matic-icon.svg',
+    colorIconName: 'maticCircleColor',
+    decimals: 18
+  },
   'PAXUSD-A': {
     name: 'Paxos Standard',
     ilk: 'PAXUSD-A',
@@ -226,6 +237,28 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     cardTexturePng: '/assets/wbtc-card-texture.png',
     bannerPng: '/assets/wbtc-banner-texture.png',
     iconSvg: '/assets/wbtc-icon.svg',
+    colorIconName: 'wbtcCircleColor',
+    decimals: 8
+  },
+  // 'WBTC-B': {
+  //   name: 'Wrapped Bitcoin',
+  //   ilk: 'WBTC-B',
+  //   symbol: 'WBTC',
+  //   bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+  //   cardTexturePng: '/assets/wbtc-card-texture.png',
+  //   bannerPng: '/assets/wbtc-banner-texture.png',
+  //   iconSvg: '/assets/wbtc-icon.svg',
+  //   colorIconName: 'wbtcCircleColor',
+  //   decimals: 8
+  // },
+  'WSTETH-A': {
+    name: 'Wrapped Lido Staked Ether',
+    ilk: 'WSTETH-A',
+    symbol: 'WSTETH',
+    bigNumFormatter: (val: BigNumber): string => val.toFormat(2),
+    cardTexturePng: '/assets/wsteth-card-texture.png',
+    bannerPng: '/assets/wsteth-banner-texture.png',
+    iconSvg: '/assets/wsteth-icon.svg',
     colorIconName: 'wbtcCircleColor',
     decimals: 8
   },
