@@ -6,7 +6,7 @@ import { fromRad } from 'lib/utils';
 async function fetchAccountVatBalance(address?: string): Promise<any> {
   const response = await getAccountVatBalance(address);
 
-  return fromRad(new BigNumber(response));
+  return fromRad(new BigNumber(response._hex));
 }
 
 export function useAccountVatBalance(address?: string): { data: BigNumber; loading: boolean; error: string } {

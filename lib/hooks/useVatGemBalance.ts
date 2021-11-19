@@ -4,7 +4,7 @@ import { fromWad } from 'lib/utils';
 
 async function fetchVatGemBalance(ilk?: string, address?: string): Promise<any> {
   const response = await getVatGemBalance(ilk, address);
-  return fromWad(response);
+  return fromWad(response._hex);
 }
 
 export function useVatGemBalance(ilk?: string, address?: string): any {

@@ -1,9 +1,7 @@
-import { utils } from '@makerdao/dai';
 import getMaker from 'lib/maker';
 import BigNumber from 'bignumber.js';
 import { COLLATERAL_MAP } from 'lib/constants';
-
-const { stringToBytes } = utils;
+import { ethers } from 'ethers';
 
 //as the number of ilks grows, this calculation will require a lot of calls.
 //should think about how to deal with that.
@@ -41,7 +39,10 @@ export async function getVatGemBalance(ilk?: string, address?: string): Promise<
 
   const maker = await getMaker();
 
-  return maker.service('smartContract').getContract('MCD_VAT').gem(stringToBytes(ilk), address);
+  return maker
+    .service('smartContract')
+    .getContract('MCD_VAT')
+    .gem(ethers.utils.formatBytes32String(ilk), address);
 }
 
 export async function getAccountVatBalance(address?: string): Promise<any> {
