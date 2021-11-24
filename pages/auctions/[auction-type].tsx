@@ -65,11 +65,8 @@ export default function Auctions(): JSX.Element | null {
     const txCreator = () =>
       maker.service('liquidation').exitGemFromAdapter(
         ilk,
-        //account for non-standard decimals, also subtract one wei to avoid any rounding issues
-        vatGemBalance
-          .times(Math.pow(10, decimals - 18))
-          .minus(Math.pow(10, -18))
-          .toFixed(18)
+        //account for non-standard decimals, also round down to avoid any rounding issues
+        vatGemBalance.toFixed(decimals, BigNumber.ROUND_DOWN)
       );
     await transactionsApi.getState().track(txCreator, `Exiting ${vatGemBalance.toFormat(4)} ${ilk}`, {
       pending: () => {
