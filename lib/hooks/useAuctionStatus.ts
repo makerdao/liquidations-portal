@@ -23,9 +23,9 @@ export function useAuctionStatus(ilk: string, id: number): any {
 
   useEffect(() => {
     if (data) {
-      setCollateralAmount(new BigNumber(data.lot).div(WAD).toString());
-      setAuctionPrice(new BigNumber(data.price).div(RAY));
-      setDaiNeeded(new BigNumber(data.tab).div(RAD).toString());
+      setCollateralAmount(new BigNumber(data.lot._hex).div(WAD).toString());
+      setAuctionPrice(new BigNumber(data.price._hex).div(RAY));
+      setDaiNeeded(new BigNumber(data.tab._hex).div(RAD).toString());
       setNeedsRedo(data.needsRedo);
     }
   }, [data]);

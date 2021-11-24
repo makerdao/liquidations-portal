@@ -14,11 +14,11 @@
     "lint": "eslint --ext .tsx,.ts pages/ components/ lib/ stores/ types/"
   },
   "dependencies": {
-    "@makerdao/dai": "^0.32.11",
+    "@makerdao/dai": "^0.42.3-alpha.0",
     "@makerdao/dai-plugin-ledger-web": "^0.9.10",
-    "@makerdao/dai-plugin-liquidations": "0.1.0-beta30",
-    "@makerdao/dai-plugin-mcd": "^1.6.21",
-    "@makerdao/dai-plugin-trezor-web": "^0.9.6",
+    "@makerdao/dai-plugin-liquidations": "^0.3.4-alpha.2",
+    "@makerdao/dai-plugin-mcd": "^1.8.4-alpha.0",
+    "@makerdao/dai-plugin-trezor-web": "^0.9.7",
     "@makerdao/dai-ui-icons": "^0.0.66",
     "@makerdao/dai-ui-icons-branding": "^0.0.66",
     "@makerdao/dai-ui-theme-maker-neue": "^0.0.47",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@makerdao/test-helpers": "^0.3.0",
-    "@makerdao/testchain": "^1.1.27",
+    "@makerdao/testchain": "1.1.33-beta5",
     "@testing-library/dom": "^7.29.4",
     "@testing-library/jest-dom": "^5.7.0",
     "@testing-library/react": "^10.0.4",
@@ -58,6 +58,7 @@
     "dotenv": "^8.2.0",
     "eslint": "^7.5.0",
     "eslint-plugin-react": "^7.20.5",
+    "ethers": "^5.3.0",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
     "lint-staged": "^10.2.11",
