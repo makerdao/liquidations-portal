@@ -262,7 +262,7 @@ export const COLLATERAL_MAP: Record<string, CollateralInfo> = {
     bannerPng: '/assets/wsteth-banner-texture.png',
     iconSvg: '/assets/wsteth-icon.svg',
     colorIconName: 'wbtcCircleColor',
-    decimals: 8
+    decimals: 18
   },
   'YFI-A': {
     name: 'yearn.finance',
