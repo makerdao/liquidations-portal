@@ -21,11 +21,11 @@ export default function SystemStatsSidebar({ ilk }: Props): JSX.Element {
   const usingVulcanize = getVulcanizeParam();
 
   const fieldMap: SystemStat[] = [
-    {
-      title: 'Undercollateralized Vaults',
-      format: val => val.length,
-      tooltip: TOOLTIP_DICT.UNDERCOLLATERALIZED_VAULTS
-    },
+    // {
+    //   title: 'Undercollateralized Vaults',
+    //   format: val => val.length,
+    //   tooltip: TOOLTIP_DICT.UNDERCOLLATERALIZED_VAULTS
+    // },
     {
       title: 'Active Auctions',
       format: val => getAuctionCountByStatus(val, true).toString(),
