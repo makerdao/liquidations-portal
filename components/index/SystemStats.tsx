@@ -28,11 +28,11 @@ export default function SystemStats(): JSX.Element {
       format: val => (usingVulcanize ? getAuctionCountByStatus(val, false).toString() : '--'),
       tooltip: TOOLTIP_DICT.INACTIVE_AUCTIONS
     },
-    {
-      title: 'Vaults requiring kick',
-      format: val => val.length,
-      tooltip: TOOLTIP_DICT.UNDERCOLLATERALIZED_VAULTS
-    },
+    // {
+    //   title: 'Vaults requiring kick',
+    //   format: val => val.length,
+    //   tooltip: TOOLTIP_DICT.UNDERCOLLATERALIZED_VAULTS
+    // },
     {
       title: 'Dai required for Auctions',
       format: val => `${getDaiRequiredForAuctions(val).toFormat(0)} DAI`,
