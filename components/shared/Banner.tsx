@@ -6,7 +6,7 @@ const Banner = (): JSX.Element => {
       <Text sx={{ fontSize: [2, 3] }}>
         <strong>IMPORTANT:</strong> This website requires you to hold DAI in order to participate in auctions.
         Consider using the new{' '}
-        <ExternalLink href="https://auctions.makerdao.network/collateral/" target="_blank">
+        <ExternalLink href="https://auctions.makerdao.network/collateral?network=mainnet" target="_blank">
           Unified Auctions Portal
         </ExternalLink>{' '}
         where you can use flashloans to participate without your own DAI.
