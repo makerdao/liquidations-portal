@@ -82,8 +82,8 @@ const BidModal = ({
 
   const setMax = () => {
     // if the user's vat balance is greater than the value of the auction, use the auctionPrice
-    const max = vatBalance.gt(auctionPrice) ? auctionPrice : vatBalance;
-    setValue(max.toFixed(decimals));
+    const max = vatBalance.gt(auctionPrice) ? auctionPrice.toFixed(decimals) : vatBalance.toFixed();
+    setValue(max);
   };
 
   // determine if bid would fail dust limit check

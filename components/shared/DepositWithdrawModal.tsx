@@ -183,11 +183,11 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
     };
 
     const depositMax = () => {
-      setValue(daiBalance.toFixed(6));
+      setValue(daiBalance.toFixed(18));
     };
 
     const withdrawMax = () => {
-      setValue(vatBalance.toFixed(6));
+      setValue(vatBalance.toFixed(18));
     };
 
     const moveDai = async () => {
@@ -344,8 +344,8 @@ const DepositWithdrawModal = ({ showDialog, onDismiss, mobile }: Props): JSX.Ele
                 position: 'absolute',
                 right: 152,
                 top: '6px',
-                cursor: daiBalance.lte(0) ? 'not-allowed' : 'cursor',
-                color: daiBalance.lte(0) ? 'textSecondary' : 'primary',
+                cursor: vatBalance.lte(0) ? 'not-allowed' : 'cursor',
+                color: vatBalance.lte(0) ? 'textSecondary' : 'primary',
                 fontSize: '10px',
                 fontWeight: 'bold',
                 textTransform: 'uppercase'
